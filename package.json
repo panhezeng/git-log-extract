@@ -1,0 +1,107 @@
+{
+  "name": "git-log-extract",
+  "productName": "git log extract",
+  "version": "0.0.1",
+  "description": "Git log extract, A Quasar Framework app",
+  "keywords": [
+    "git log extract"
+  ],
+  "homepage": "https://github.com/panhezeng/git-log-extract#readme",
+  "bugs": {
+    "url": "https://github.com/panhezeng/git-log-extract/issues",
+    "email": "panhezeng@gmail.com"
+  },
+  "license": "Apache-2.0",
+  "author": {
+    "name": "潘何增",
+    "email": "panhezeng@gmail.com"
+  },
+  "contributors": [],
+  "files": [],
+  "main": "",
+  "browser": "",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/panhezeng/git-log-extract.git"
+  },
+  "scripts": {
+    "dev": "quasar dev -m electron",
+    "build": "quasar build -m electron",
+    "lint": "eslint . --fix --ext src/**/*.js,.vue,ts,tsx",
+    "lint:production": "cross-env NODE_ENV=production BUILD=production npm run lint",
+    "format": "prettier --write \"src/**/*.{js,.vue,ts,tsx}\""
+  },
+  "config": {},
+  "dependencies": {
+    "@quasar/extras": "^1.9.14",
+    "@vue/composition-api": "^1.0.0-rc.1",
+    "axios": "^0.21.1",
+    "core-js": "^3.8.3",
+    "cross-env": "^7.0.2",
+    "crypto-js": "^4.0.0",
+    "electron-store": "^6.0.1",
+    "fs-extra": "^9.1.0",
+    "monaco-editor": "^0.21.3",
+    "quasar": "^1.15.0",
+    "simple-git": "^2.31.0"
+  },
+  "devDependencies": {
+    "@quasar/app": "^2.1.14",
+    "@types/circular-dependency-plugin": "^5.0.1",
+    "@types/crypto-js": "^4.0.1",
+    "@types/fs-extra": "^9.0.6",
+    "@types/node": "^14.14.22",
+    "@types/webpack-env": "^1.16.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.0",
+    "@typescript-eslint/parser": "^4.14.0",
+    "@vue/eslint-config-prettier": "^6.0.0",
+    "@vue/eslint-config-typescript": "^7.0.0",
+    "babel-eslint": "^10.1.0",
+    "circular-dependency-plugin": "^5.2.2",
+    "cross-env": "^7.0.2",
+    "devtron": "^1.4.0",
+    "electron": "^11.2.0",
+    "electron-debug": "^3.2.0",
+    "electron-devtools-installer": "^3.1.1",
+    "electron-packager": "^15.2.0",
+    "eslint": "^7.18.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-loader": "^4.0.2",
+    "eslint-plugin-prettier": "^3.3.1",
+    "eslint-plugin-vue": "^7.5.0",
+    "husky": "^4.3.8",
+    "less": "^3.13.1",
+    "less-loader": "^7.3.0",
+    "lint-staged": "^10.5.1",
+    "monaco-editor-webpack-plugin": "^2.1.0",
+    "prettier": "^2.1.2",
+    "quasar-app-extension-ide-helper": "^1.0.0",
+    "typescript": "^4.1.2"
+  },
+  "browserslist": [
+    "last 10 Chrome versions",
+    "last 10 Firefox versions",
+    "last 4 Edge versions",
+    "last 7 Safari versions",
+    "last 8 Android versions",
+    "last 8 ChromeAndroid versions",
+    "last 8 FirefoxAndroid versions",
+    "last 10 iOS versions",
+    "last 5 Opera versions"
+  ],
+  "peerdependencies": {},
+  "engines": {
+    "node": ">=14",
+    "npm": ">=6",
+    "yarn": ">=1"
+  },
+  "private": false,
+  "lint-staged": {
+    "src/**/*.{js,vue,ts,tsx}": "npm run lint:production"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  }
+}
