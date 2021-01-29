@@ -3,7 +3,7 @@ export const logQueryInitData = {
     from: "",
     to: "",
   },
-  branches: [],
+  branches: [] as string[],
   author: "",
   loading: false,
   onlyMessage: true,

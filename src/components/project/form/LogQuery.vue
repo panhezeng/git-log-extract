@@ -143,7 +143,7 @@ export default defineComponent({
       dateRange: {
         visible: false,
       },
-      branchesOptions: [],
+      branchesOptions: [] as string[],
     });
 
     const initData = Object.assign(logQueryInitData) as LogQueryData;

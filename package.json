@@ -1,6 +1,6 @@
 {
   "name": "git-log-extract",
-  "productName": "git log extract",
+  "productName": "Git Log Extract",
   "version": "0.0.1",
   "description": "Git log extract, A Quasar Framework app",
   "keywords": [

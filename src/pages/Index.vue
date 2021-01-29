@@ -221,9 +221,11 @@ export default defineComponent({
                 data.log += `\r\n${log.message}`;
               }
             } else {
-              for (const logKey in data.log) {
-                if (Object.prototype.hasOwnProperty.call(data.log, logKey)) {
-                  data.log += `\r\n${logKey}:${log[logKey]}`;
+              for (const logKey in log) {
+                if (logKey in log) {
+                  data.log += `\r\n${logKey}:${
+                    log[logKey as keyof typeof log]
+                  }`;
                 }
               }
             }
