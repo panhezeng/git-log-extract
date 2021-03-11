@@ -91,7 +91,7 @@
   ],
   "peerdependencies": {},
   "engines": {
-    "node": ">=14",
+    "node": "v12.20.1",
     "npm": ">=6",
     "yarn": ">=1"
   },

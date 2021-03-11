@@ -179,11 +179,9 @@ export default defineComponent({
         data.onlyMessage = statePersonalize.value.logQuery.onlyMessage;
         if (statePersonalize.value.logQuery.thisWeek) {
           const dayjsInstance = await dayjs();
-          data.dateRange.from = dayjsInstance()
-            .startOf("week")
+          data.dateRange.from = dayjsInstance().subtract(6, 'day')
             .format("YYYY-MM-DD");
           data.dateRange.to = dayjsInstance()
-            .endOf("week")
             .format("YYYY-MM-DD");
         }
       },
