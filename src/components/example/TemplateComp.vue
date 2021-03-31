@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import {
   computed,
   defineComponent,
@@ -25,13 +25,10 @@ import {
   Ref,
   toRef,
   PropType,
-  onServerPrefetch,
   onMounted,
-  getCurrentInstance,
-  SetupContext,
-} from "@vue/composition-api";
+} from 'vue';
 
-import { Todo } from "@/components/example/models";
+import { Todo } from '@/components/example/models';
 
 function useClickCount() {
   const clickCount = ref(0);
@@ -59,6 +56,11 @@ type PropValueType = {
   todos: Todo[];
 };
 
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { api } from 'boot/axios';
+
+import { useQuasar } from 'quasar';
 export default defineComponent({
   components: {},
   props: {
@@ -72,27 +74,19 @@ export default defineComponent({
       default: () => [] as Todo[],
     },
   },
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props: PropValueType, context: SetupContext) {
-    const internalInstance = getCurrentInstance()!;
-    const componentInstance = internalInstance.proxy as Vue & {
-      [key: string]: any;
-    };
-    const { $axios, $store, $router, $q } = componentInstance;
-    //  $route 不能析构，会丢失反应
-    const $route = computed(() => componentInstance.$route);
-    const $emit = context.emit;
+
+  setup(props: PropValueType, context) {
+    const router = useRouter();
+
+    const route = useRoute();
+    const store = useStore();
+    const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     function danger(event: Event) {
-      $emit("template-comp-danger", event);
+      context.emit('template-comp-danger', event);
       // console.log(event:Event);
     }
-
-    // 在这获得异步数据，服务端渲染会等待结果后再输出页面
-    onServerPrefetch(async () => {
-      // console.log("pages onServerPrefetch ==============");
-    });
 
     // 在这获得 ref 关联的 DOM 元素
     onMounted(async () => {
@@ -102,7 +96,7 @@ export default defineComponent({
     return {
       danger,
       ...useClickCount(),
-      ...useDisplayTodo(toRef(props, "todos")),
+      ...useDisplayTodo(toRef(props, 'todos')),
     };
   },
 });

@@ -1,6 +1,4 @@
-import { Module } from 'vuex';
-
-type ReturnType = { module: Module<any, any>; path: string };
+type ReturnType = { module: { default: any }; path: string };
 
 export default function (
   context: __WebpackModuleApi.RequireContext

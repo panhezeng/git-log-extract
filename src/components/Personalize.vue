@@ -78,37 +78,32 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import {
-  computed,
-  defineComponent,
-  getCurrentInstance,
-  ref,
-  SetupContext,
-} from "@vue/composition-api";
+import { computed, defineComponent, ref } from 'vue';
 
-import { names, StateInterface } from "@/store/personalize";
-import CryptoJS from "crypto-js";
+import { names, StateInterface } from '@/store/personalize';
+
+import CryptoJS from 'crypto-js';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props: { [key: string]: any }, context: SetupContext) {
-    const internalInstance = getCurrentInstance()!;
-    const componentInstance = internalInstance.proxy as Vue & {
-      [key: string]: any;
-    };
-    const { $axios, $store, $router, $q } = componentInstance;
-    //  $route 不能析构，会丢失反应
-    const $route = computed(() => componentInstance.$route);
-    const $emit = context.emit;
+  setup(props, context) {
+    const router = useRouter();
+    const route = useRoute();
+    const store = useStore();
+    const $q = useQuasar();
+
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const state = computed<StateInterface>(() => $store.state[names.module]);
+    const state = computed<StateInterface>(() => store.state[names.module]);
 
     const data = ref<StateInterface>(JSON.parse(JSON.stringify(state.value)));
     data.value.git.password = CryptoJS.AES.decrypt(
       data.value.git.password,
-      "Secret Passphrase"
+      'Secret Passphrase'
     ).toString(CryptoJS.enc.Utf8);
 
     const isPwd = ref(true);
@@ -117,15 +112,15 @@ export default defineComponent({
       const newData = JSON.parse(JSON.stringify(data.value)) as StateInterface;
       newData.git.password = CryptoJS.AES.encrypt(
         newData.git.password,
-        "Secret Passphrase"
+        'Secret Passphrase'
       ).toString();
-      $store.commit(names.module + "/" + names.mutations.SET_DATA, newData);
+      store.commit(names.module + '/' + names.mutations.SET_DATA, newData);
       $q.notify({
-        type: "positive",
-        position: "top",
-        message: "保存成功",
+        type: 'positive',
+        position: 'top',
+        message: '保存成功',
       });
-      $emit("submit", data.value);
+      context.emit('submit', data.value);
     }
 
     function onReset() {

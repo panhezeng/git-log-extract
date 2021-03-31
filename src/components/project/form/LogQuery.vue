@@ -36,7 +36,7 @@
           label="选择时间"
           @click="other.dateRange.visible = true"
         /><template v-if="data.dateRange.from"
-          ><span>{{ data.dateRange.from + " " + data.dateRange.to }}</span
+          ><span>{{ data.dateRange.from + ' ' + data.dateRange.to }}</span
           ><q-btn
             padding="xs"
             label="删除选择"
@@ -88,32 +88,28 @@
         padding="xs"
         flat
         class="q-ml-sm"
+        :loading="data.loading"
       />
     </div>
   </q-form>
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import {
-  computed,
-  defineComponent,
-  getCurrentInstance,
-  SetupContext,
-  reactive,
-  watch,
-} from "@vue/composition-api";
+import { computed, defineComponent, reactive, watch } from 'vue';
 import {
   LogQueryData,
   logQueryInitData,
-} from "@/components/project/form/models";
-import { electronStore } from "@/utils/store";
-import { names, ProjectType } from "@/store/project";
+} from '@/components/project/form/models';
+import { names, ProjectType } from '@/store/project';
 import {
   names as namesPersonalize,
   StateInterface as StateInterfacePersonalize,
-} from "@/store/personalize";
-import dayjs from "@/utils/dayjs";
+} from '@/store/personalize';
+import dayjs from '@/utils/dayjs';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   components: {},
@@ -124,19 +120,15 @@ export default defineComponent({
     },
   },
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props: { ticked: string[] }, context: SetupContext) {
-    const internalInstance = getCurrentInstance()!;
-    const componentInstance = internalInstance.proxy as Vue & {
-      [key: string]: any;
-    };
-    const { $axios, $store, $router, $q } = componentInstance;
-    //  $route 不能析构，会丢失反应
-    const $route = computed(() => componentInstance.$route);
-    const $emit = context.emit;
+  setup(props, context) {
+    const router = useRouter();
+    const route = useRoute();
+    const store = useStore();
+    const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     const statePersonalize = computed<StateInterfacePersonalize>(
-      () => $store.state[namesPersonalize.module]
+      () => store.state[namesPersonalize.module]
     );
 
     const other = reactive({
@@ -156,11 +148,11 @@ export default defineComponent({
         other.branchesOptions = [];
         initData.branches = [];
         for (let i = 0, end = props.ticked.length; i < end; i++) {
-          const repositoryAuthURL = props.ticked[i];
-          const project = $store.getters[
-            names.module + "/" + names.getters.GET_PROJECT
+          const repositoryURL = props.ticked[i];
+          const project = store.getters[
+            names.module + '/' + names.getters.GET_PROJECT
           ]({
-            repositoryAuthURL,
+            repositoryURL,
           });
           const projectData = project.data as ProjectType;
           projectData.branches.forEach((branch, index) => {
@@ -179,10 +171,10 @@ export default defineComponent({
         data.onlyMessage = statePersonalize.value.logQuery.onlyMessage;
         if (statePersonalize.value.logQuery.thisWeek) {
           const dayjsInstance = await dayjs();
-          data.dateRange.from = dayjsInstance().subtract(6, 'day')
-            .format("YYYY-MM-DD");
-          data.dateRange.to = dayjsInstance()
-            .format("YYYY-MM-DD");
+          data.dateRange.from = dayjsInstance()
+            .subtract(6, 'day')
+            .format('YYYY-MM-DD');
+          data.dateRange.to = dayjsInstance().format('YYYY-MM-DD');
         }
       },
       {
@@ -192,18 +184,12 @@ export default defineComponent({
     );
 
     function onReset() {
-      for (const key in data) {
-        if (Object.prototype.hasOwnProperty.call(data, key)) {
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          data[key] = initData[key];
-        }
-      }
+      Object.assign(data, initData);
     }
 
     async function onSubmit() {
       data.loading = true;
-      $emit("submit", data);
+      context.emit('log-query', data);
     }
 
     return {

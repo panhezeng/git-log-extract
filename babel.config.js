@@ -1,4 +1,8 @@
 /* eslint-env node */
 module.exports = {
-  presets: ["@quasar/babel-preset-app"],
-};
+  presets: [
+    "@vue/cli-plugin-babel/preset",
+    '@quasar/babel-preset-app',
+
+  ]
+}

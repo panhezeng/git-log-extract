@@ -4,34 +4,37 @@
  */
 
 // Configuration for your app
-// https://quasar.dev/quasar-cli/quasar-conf-js
+// https://v2.quasar.dev/quasar-cli/quasar-conf-js
+
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const { configure } = require("quasar/wrappers");
-const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
+const {configure} = require('quasar/wrappers');
 
-const path = require("path");
+const path = require('path');
 
-const CircularDependencyPlugin = require("circular-dependency-plugin");
+const CircularDependencyPlugin = require('circular-dependency-plugin');
 
-module.exports = configure(function (ctx) {
+module.exports = configure(function (/* ctx */) {
   return {
-    // https://quasar.dev/quasar-cli/supporting-ts
+    // https://v2.quasar.dev/quasar-cli/supporting-ts
     supportTS: {
       tsCheckerConfig: {
-        eslint: true,
-      },
+        eslint: {
+          enabled: true,
+          files: './src/**/*.{ts,tsx,js,jsx,vue}',
+        },
+      }
     },
 
-    // https://quasar.dev/quasar-cli/prefetch-feature
+    // https://v2.quasar.dev/quasar-cli/prefetch-feature
     // preFetch: true,
 
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
-    // https://quasar.dev/quasar-cli/boot-files
-    boot: ["composition-api", "axios"],
+    // https://v2.quasar.dev/quasar-cli/boot-files
+    boot: ['i18n', 'axios'],
 
-    // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
+    // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ["~src/assets/common/less/index.less"],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
@@ -44,13 +47,13 @@ module.exports = configure(function (ctx) {
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      "roboto-font", // optional, you are not bound to it
-      "material-icons", // optional, you are not bound to it
+      'roboto-font', // optional, you are not bound to it
+      'material-icons', // optional, you are not bound to it
     ],
 
-    // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
+    // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: "hash", // available values: 'hash', 'history'
+      vueRouterMode: 'history', // available values: 'hash', 'history'
 
       // transpile: false,
 
@@ -59,7 +62,7 @@ module.exports = configure(function (ctx) {
       // Applies only if "transpile" is set to true.
       // transpileDependencies: [],
 
-      // rtl: false, // https://quasar.dev/options/rtl-support
+      // rtl: false, // https://v2.quasar.dev/options/rtl-support
       // preloadChunks: true,
       // showProgress: false,
       // gzip: true,
@@ -68,11 +71,12 @@ module.exports = configure(function (ctx) {
       // Options below are automatically set depending on the env, set them if you want to override
       // extractCSS: false,
 
-      // https://quasar.dev/quasar-cli/handling-webpack
-      chainWebpack(config) {
-        config.resolve.alias.set("@", path.resolve(__dirname, "src"));
+      // https://v2.quasar.dev/quasar-cli/handling-webpack
+      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
+      chainWebpack(chain) {
+        chain.resolve.alias.set('@', path.resolve(__dirname, 'src'));
 
-        config.plugin("circular-dependency").use(CircularDependencyPlugin, [
+        chain.plugin('circular-dependency').use(CircularDependencyPlugin, [
           {
             // exclude detection of files based on a RegExp
             exclude: /node_modules/,
@@ -87,44 +91,24 @@ module.exports = configure(function (ctx) {
             cwd: process.cwd(),
           },
         ]);
-        config.plugin("monaco-editor-webpack").use(MonacoWebpackPlugin, [
-          {
-            languages: ["json", "markdown", "javascript"],
-          },
-        ]);
-        // linting is slow in TS projects, we execute it only for production builds
-        if (config.prod) {
-          config.module
-            .rule("eslint")
-            .test(/\.(js|vue)$/)
-            .enforce("pre")
-            .exclude.add(/[\\/]node_modules[\\/]/)
-            .end()
-            .use("eslint-loader")
-            .loader("eslint-loader");
-        }
       },
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
+    // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer
     devServer: {
       https: false,
       port: 8080,
       open: true, // opens browser window automatically
     },
 
-    // https://quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
+    // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-framework
     framework: {
-      iconSet: "material-icons", // Quasar icon set
-      lang: "zh-hans", // Quasar language pack
       config: {},
 
-      // Possible values for "importStrategy":
-      // * 'auto' - (DEFAULT) Auto-import needed Quasar components & directives
-      // * 'all'  - Manually specify what to import
-      importStrategy: "auto",
+      iconSet: 'material-icons', // Quasar icon set
+      lang: 'zh-CN', // Quasar language pack
 
-      // For special cases outside of where "auto" importStrategy can have an impact
+      // For special cases outside of where the auto-import stategy can have an impact
       // (like functional components as one of the examples),
       // you can manually specify Quasar components/directives to be available everywhere:
       //
@@ -132,73 +116,80 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ["Notify", "Dialog"],
+      plugins: [ "Notify", "Dialog"],
     },
 
     // animations: 'all', // --- includes all animations
-    // https://quasar.dev/options/animations
+    // https://v2.quasar.dev/options/animations
     animations: [],
 
-    // https://quasar.dev/quasar-cli/developing-ssr/configuring-ssr
+    // https://v2.quasar.dev/quasar-cli/developing-ssr/configuring-ssr
     ssr: {
       pwa: false,
     },
 
-    // https://quasar.dev/quasar-cli/developing-pwa/configuring-pwa
+    // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
-      workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
+      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
+
+      // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
+      // if using workbox in InjectManifest mode
+      chainWebpackCustomSW(/* chain */) {
+        //
+      },
+
       manifest: {
-        name: "Quasar App",
-        short_name: "Quasar App",
-        description: "A Quasar Framework app",
-        display: "standalone",
-        orientation: "portrait",
-        background_color: "#ffffff",
-        theme_color: "#027be3",
+        name: 'Quasar App',
+        short_name: 'Quasar App',
+        description: 'A Quasar Framework app',
+        display: 'standalone',
+        orientation: 'portrait',
+        background_color: '#ffffff',
+        theme_color: '#027be3',
         icons: [
           {
-            src: "icons/icon-128x128.png",
-            sizes: "128x128",
-            type: "image/png",
+            src: 'icons/icon-128x128.png',
+            sizes: '128x128',
+            type: 'image/png',
           },
           {
-            src: "icons/icon-192x192.png",
-            sizes: "192x192",
-            type: "image/png",
+            src: 'icons/icon-192x192.png',
+            sizes: '192x192',
+            type: 'image/png',
           },
           {
-            src: "icons/icon-256x256.png",
-            sizes: "256x256",
-            type: "image/png",
+            src: 'icons/icon-256x256.png',
+            sizes: '256x256',
+            type: 'image/png',
           },
           {
-            src: "icons/icon-384x384.png",
-            sizes: "384x384",
-            type: "image/png",
+            src: 'icons/icon-384x384.png',
+            sizes: '384x384',
+            type: 'image/png',
           },
           {
-            src: "icons/icon-512x512.png",
-            sizes: "512x512",
-            type: "image/png",
+            src: 'icons/icon-512x512.png',
+            sizes: '512x512',
+            type: 'image/png',
           },
         ],
       },
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
+    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-cordova-apps/configuring-cordova
     cordova: {
       // noIosLegacyBuildFlag: true, // uncomment only if you know what you are doing
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
+    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-capacitor-apps/configuring-capacitor
     capacitor: {
       hideSplashscreen: true,
     },
 
-    // Full list of options: https://quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
+    // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
-      bundler: "packager", // 'packager' or 'builder'
+      bundler: 'packager', // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -214,15 +205,19 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "git-log-extract",
+        appId: 'git-log-extract',
       },
 
-      // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
-      nodeIntegration: true,
+      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
+      chainWebpack(/* chain */) {
+        // do something with the Electron main process Webpack cfg
+        // extendWebpackMain also available besides this chainWebpackMain
+      },
 
-      extendWebpack(/* cfg */) {
-        // do something with Electron main process Webpack cfg
-        // chainWebpack also available besides this extendWebpack
+      // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
+      chainWebpackPreload(/* chain */) {
+        // do something with the Electron main process Webpack cfg
+        // extendWebpackPreload also available besides this chainWebpackPreload
       },
     },
   };

@@ -1,55 +1,42 @@
-import { Module, MutationTree } from "vuex";
-import { StateInterface as StateInterfaceIndex } from "@/store/index";
-import { electronStore } from "@/utils/store/index";
+import { Module, MutationTree } from 'vuex';
+import { StateInterface as StateInterfaceIndex } from '@/store/index';
+import { toRaw } from 'vue';
 export const names = {
-  module: "personalize",
+  module: 'personalize',
 
   mutations: {
-    SET_DATA: "SET_DATA",
+    SET_DATA: 'SET_DATA',
   },
 };
 
-export interface StateInterface {
+const initState = {
   git: {
-    username: string;
-    password: string;
-  };
-  logQuery: {
-    author: string;
-    onlyMessage: boolean;
-    noMerges: boolean;
-    dedup: boolean;
-    thisWeek: boolean;
-  };
-}
-const state: StateInterface = Object.assign(
-  {
-    git: {
-      username: "",
-      password: "",
-    },
-    logQuery: {
-      author: "",
-      onlyMessage: true,
-      noMerges: true,
-      dedup: true,
-      thisWeek: true,
-    },
+    username: '',
+    password: '',
   },
-  electronStore.get(`store_${names.module}`, {})
-);
+  logQuery: {
+    author: '',
+    onlyMessage: true,
+    noMerges: true,
+    dedup: true,
+    thisWeek: true,
+  },
+};
+export type StateInterface = typeof initState;
+
+Object.assign(initState, window.electronStore.get(`store_${names.module}`, {}));
 
 const mutations: MutationTree<StateInterface> = {
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   [names.mutations.SET_DATA](state, data: Partial<StateInterface>) {
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
     Object.assign(state, data);
-    electronStore.set({ [`store_${names.module}`]: state });
+    window.electronStore.set({ [`store_${names.module}`]: toRaw(state) });
   },
 };
 
 export default {
   namespaced: true,
-  state: () => state,
+  state: () => initState,
   mutations,
 } as Module<StateInterface, StateInterfaceIndex>;

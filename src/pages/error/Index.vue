@@ -1,15 +1,21 @@
 <template>
-  <router-view class="main-layout" />
+  <div class="fullscreen bg-white text-negative q-pa-md">
+    <div>
+      <h6 class="text-negative">错误提示：</h6>
+      <div style="white-space: pre-line">
+        {{ message }}
+      </div>
+    </div>
+  </div>
 </template>
-<script lang="ts">
-import { defineComponent, onMounted } from 'vue';
 
+<script lang="ts">
+import { defineComponent, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { useQuasar } from 'quasar';
 
 export default defineComponent({
-  components: {},
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(props, context) {
     const router = useRouter();
@@ -17,18 +23,10 @@ export default defineComponent({
     const store = useStore();
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-
-    // 在这获得 ref 关联的 DOM 元素
-    onMounted(async () => {
-      // console.log("pages onMounted ==============");
-    });
-
-    return {};
+    const message = ref(route.query.message || '404 not found');
+    return {
+      message,
+    };
   },
 });
 </script>
-<style lang="less">
-.main-layout {
-  height: 100%;
-}
-</style>

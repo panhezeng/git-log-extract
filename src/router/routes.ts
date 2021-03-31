@@ -1,26 +1,17 @@
-import { RouteConfig } from "vue-router";
+import { RouteRecordRaw } from 'vue-router';
 
-const routes: RouteConfig[] = [
+const routes: RouteRecordRaw[] = [
   {
-    path: "/",
-    component: () =>
-      import(/* webpackChunkName: "main-layout" */ "@/layouts/Main.vue"),
-    children: [
-      {
-        path: "",
-        component: () =>
-          import(/* webpackChunkName: "index-page" */ "@/pages/Index.vue"),
-      },
-    ],
+    path: '/',
+    component: () => import('layouts/Main.vue'),
+    children: [{ path: '', component: () => import('pages/Index.vue') }],
   },
+
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: "*",
-    component: () =>
-      import(
-        /* webpackChunkName: "error-404-page" */ "@/pages/error/Error404.vue"
-      ),
+    path: '/:catchAll(.*)*',
+    component: () => import('pages/error/Index.vue'),
   },
 ];
 

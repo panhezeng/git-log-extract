@@ -1,14 +1,14 @@
 export const logQueryInitData = {
   dateRange: {
-    from: "",
-    to: "",
+    from: '',
+    to: '',
   },
   branches: [] as string[],
-  author: "",
+  author: '',
   loading: false,
   onlyMessage: true,
   noMerges: true,
-  dedup:true
+  dedup: true,
 };
 
 export type LogQueryData = typeof logQueryInitData;

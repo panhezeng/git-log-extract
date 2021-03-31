@@ -1,28 +1,21 @@
 <template>
-  <div class="example-layout"><router-view /></div>
+  <router-view class="example-layout" />
 </template>
 <script lang="ts">
-import Vue from "vue";
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  getCurrentInstance,
-  SetupContext,
-} from "@vue/composition-api";
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
+import { defineComponent, onMounted } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { api } from 'boot/axios';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   components: {},
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props: { [key: string]: any }, context: SetupContext) {
-    const internalInstance = getCurrentInstance()!;
-    const componentInstance = internalInstance.proxy as Vue & {
-      [key: string]: any;
-    };
-    const { $axios, $store, $router, $q } = componentInstance;
-    //  $route 不能析构，会丢失反应
-    const $route = computed(() => componentInstance.$route);
-    const $emit = context.emit;
+  setup(props, context) {
+    const router = useRouter();
+    const route = useRoute();
+    const store = useStore();
+    const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     // 在这获得 ref 关联的 DOM 元素

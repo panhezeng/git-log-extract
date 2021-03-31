@@ -1,25 +1,26 @@
-import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
-import { StateInterface as StateInterfaceIndex } from "@/store/index";
+import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
+import { StateInterface as StateInterfaceIndex } from '@/store/index';
 
 export const names = {
-  module: "exampleModule",
+  module: 'exampleModule',
   getters: {
-    SOME_GETTER: "SOME_GETTER",
+    SOME_GETTER: 'SOME_GETTER',
   },
   mutations: {
-    SOME_MUTATION: "SOME_MUTATION",
+    SOME_MUTATION: 'SOME_MUTATION',
   },
   actions: {
-    SOME_ACTION: "SOME_ACTION",
+    SOME_ACTION: 'SOME_ACTION',
   },
 };
 
-export interface StateInterface {
-  prop: boolean;
-}
-const state: StateInterface = {
-  prop: false,
+const initState = {
+  example: '',
+  exampleArray: [] as any[],
+  exampleObject: {} as { [key: string]: any },
 };
+export type StateInterface = typeof initState;
+
 const getters: GetterTree<StateInterface, StateInterfaceIndex> = {
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   [names.getters.SOME_GETTER](state, getters, rootState, rootGetters) {
@@ -44,7 +45,7 @@ const actions: ActionTree<StateInterface, StateInterfaceIndex> = {
 
 export default {
   namespaced: true,
-  state: () => state,
+  state: () => initState,
   getters,
   mutations,
   actions,

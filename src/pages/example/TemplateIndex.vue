@@ -18,50 +18,44 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import {
-  defineComponent,
-  ref,
-  computed,
-  onMounted,
-  getCurrentInstance,
-  SetupContext,
-} from "@vue/composition-api";
-import TemplateComp from "@/components/example/TemplateComp.vue";
-import { StateInterface, names } from "@/store/example-module";
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
+import { defineComponent, ref, computed, onMounted } from 'vue';
+
+import { StateInterface, names } from '@/store/example-module';
+import TemplateComp from '@/components/example/TemplateComp.vue';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { api } from 'boot/axios';
+import { useQuasar } from 'quasar';
 
 export default defineComponent({
   components: {
     TemplateComp,
   },
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props: { [key: string]: any }, context: SetupContext) {
-    const internalInstance = getCurrentInstance()!;
-    const componentInstance = internalInstance.proxy as Vue & {
-      [key: string]: any;
-    };
-    const { $axios, $store, $router, $q } = componentInstance;
-    //  $route 不能析构，会丢失反应
-    const $route = computed(() => componentInstance.$route);
-    const $emit = context.emit;
+  setup(props, context) {
+    const router = useRouter();
+    const route = useRoute();
+    const store = useStore();
+    const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const state = computed<StateInterface>(() => $store.state[names.module]);
+    const state = computed<StateInterface>(() => store.state[names.module]);
 
-    // $store.commit(names.module + "/" + names.mutations.SOME_MUTATION)
-    // $store.dispatch(names.module + "/" + names.actions.SOME_ACTION)
+    // store.commit(names.module + "/" + names.mutations.SOME_MUTATION)
+    // store.dispatch(names.module + "/" + names.actions.SOME_ACTION)
 
     const rootElement = ref<HTMLElement | null>(null);
-    const rootElementTagName = ref("");
+    const rootElementTagName = ref('');
     const compProps = {
       user: {
-        firstName: "s",
-        lastName: "b",
+        firstName: 's',
+        lastName: 'b',
       },
     };
 
-    const localTodo = ref(state.value.prop);
-    const eventTip = ref("");
+    const localTodo = ref(state.value.example);
+    const eventTip = ref('');
     function eventHandler(event: Event) {
       eventTip.value = JSON.stringify(event);
     }

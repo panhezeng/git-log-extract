@@ -28,14 +28,14 @@
         <q-tree
           v-if="projects.length"
           :nodes="projects"
-          node-key="repositoryAuthURL"
+          node-key="repositoryURL"
           label-key="name"
           control-color="primary"
           text-color="white"
           tick-strategy="strict"
           class="bg-dark"
           style="width: 100%; height: calc(100% - 54px)"
-          :ticked.sync="data.ticked"
+          v-model:ticked="data.ticked"
         ></q-tree>
       </div>
     </template>
@@ -47,12 +47,25 @@
         </q-tab-panel>
         <q-tab-panel name="log">
           <div class="text-h6">Git Log</div>
-          <log-query-form :ticked="data.ticked" @submit="logQuery" />
-          <editor
-            v-model="data.log"
-            :options="{ language: '' }"
-            style="height: 500px"
-          />
+          <log-query-form :ticked="data.ticked" @log-query="logQuery" />
+          <div>
+            <div>cmd：</div>
+            <q-input
+              input-class="bg-dark text-grey-1"
+              input-style="min-height: 20px"
+              v-model="data.cmd"
+              label=""
+            />
+          </div>
+          <div>
+            <div>log：</div>
+            <q-input
+              input-class="bg-dark text-grey-1"
+              input-style="min-height: 300px"
+              v-model="data.log"
+              type="textarea"
+            />
+          </div>
         </q-tab-panel>
         <q-tab-panel name="add">
           <div class="text-h6">添加项目</div>
@@ -72,87 +85,82 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import {
-  defineComponent,
-  computed,
-  getCurrentInstance,
-  reactive,
-  SetupContext,
-  watch,
-} from "@vue/composition-api";
+import { defineComponent, computed, reactive, watch } from 'vue';
 import {
   names,
   names as namesProject,
   ProjectType,
   StateInterface as StateInterfaceProject,
-} from "@/store/project";
-import Personalize from "@/components/Personalize.vue";
-import ProjectForm from "@/components/project/form/Index.vue";
-import LogQueryForm from "@/components/project/form/LogQuery.vue";
-import Editor from "@/components/editor/Index.vue";
-import path from "path";
-import simpleGit, { LogResult } from "simple-git";
-import { LogQueryData } from "@/components/project/form/models";
+} from '@/store/project';
+import Personalize from '@/components/Personalize.vue';
+import ProjectForm from '@/components/project/form/Index.vue';
+import LogQueryForm from '@/components/project/form/LogQuery.vue';
+import { LogQueryData } from '@/components/project/form/models';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+import PathType from 'path';
+import { DefaultLogFields, ListLogLine } from 'simple-git';
 
 export default defineComponent({
-  components: { Personalize, ProjectForm, LogQueryForm, Editor },
+  components: { Personalize, ProjectForm, LogQueryForm },
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props: { [key: string]: any }, context: SetupContext) {
-    const internalInstance = getCurrentInstance()!;
-    const componentInstance = internalInstance.proxy as Vue & {
-      [key: string]: any;
-    };
-    const { $axios, $store, $router, $q } = componentInstance;
-    //  $route 不能析构，会丢失反应
-    const $route = computed(() => componentInstance.$route);
-    const $emit = context.emit;
+  setup(props, context) {
+    const router = useRouter();
+    const route = useRoute();
+    const store = useStore();
+    const $q = useQuasar();
+
+    const path = window.electronPath as typeof PathType;
+    const git = window.electronGit;
+
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     const stateProject = computed<StateInterfaceProject>(
-      () => $store.state[namesProject.module]
+      () => store.state[namesProject.module]
     );
-
     const projects = computed(() => stateProject.value.projects);
-
     const ticked = [] as string[];
 
     projects.value.forEach((value) => {
-      ticked.push(value.repositoryAuthURL);
+      ticked.push(value.repositoryURL);
     });
 
     const data = reactive({
-      tab: ticked.length ? "log" : "add",
+      tab: ticked.length ? 'log' : 'add',
       editProject: {
         data: null as ProjectType | null,
         index: -1,
       },
       ticked,
-      log: "",
+      log: '',
+      cmd: '',
       splitterModel: 50,
     });
 
     function deleteProject() {
       $q.dialog({
-        title: "删除确认",
-        message: "确认要删除勾选的项目吗? ",
+        title: '删除确认',
+        message: '确认要删除勾选的项目吗? ',
         ok: true,
         cancel: true,
       }).onOk(() => {
         for (let i = data.ticked.length - 1; i >= 0; i--) {
-          const repositoryAuthURL = data.ticked[i];
-          $store.commit(
-            namesProject.module + "/" + namesProject.mutations.SET_PROJECT,
+          const repositoryURL = data.ticked[i];
+          store.commit(
+            namesProject.module + '/' + namesProject.mutations.SET_PROJECT,
             Object.assign(
               {
-                action: "delete",
+                action: 'delete',
               },
-              $store.getters[names.module + "/" + names.getters.GET_PROJECT]({
-                repositoryAuthURL,
+              store.getters[names.module + '/' + names.getters.GET_PROJECT]({
+                repositoryURL,
               })
             )
           );
           data.ticked.splice(i, 1);
+          data.tab = ticked.length ? 'log' : 'add';
         }
       });
     }
@@ -160,15 +168,15 @@ export default defineComponent({
     watch(
       computed(() => data.tab),
       (val) => {
-        if (val === "edit") {
-          const project = $store.getters[
-            names.module + "/" + names.getters.GET_PROJECT
+        if (val === 'edit') {
+          const project = store.getters[
+            names.module + '/' + names.getters.GET_PROJECT
           ]({
-            repositoryAuthURL: data.ticked[0],
+            repositoryURL: data.ticked[0],
           });
           data.editProject.data = project.data;
           data.editProject.index = project.index;
-        } else if (val === "add") {
+        } else if (val === 'add') {
           data.editProject.data = null;
           data.editProject.index = -1;
         }
@@ -177,29 +185,23 @@ export default defineComponent({
 
     async function logQuery(logQueryData: LogQueryData) {
       for (let i = 0, end = data.ticked.length; i < end; i++) {
-        const repositoryAuthURL = data.ticked[i];
-        const project = $store.getters[
-          names.module + "/" + names.getters.GET_PROJECT
+        const repositoryURL = data.ticked[i];
+        const project = store.getters[
+          names.module + '/' + names.getters.GET_PROJECT
         ]({
-          repositoryAuthURL,
+          repositoryURL,
         });
         const projectData = project.data as ProjectType;
 
         data.log = projectData.name;
 
-        const gitPath = path.resolve(
-          process.cwd(),
-          "temp/git/" + projectData.name
-        );
-        const git = simpleGit(gitPath);
-        await git.remote(["update"]);
         const logOptions: string[] = [];
         if (logQueryData.author) {
           logOptions.push(`--author=${logQueryData.author}`);
         }
         if (logQueryData.dateRange.from) {
-          logOptions.push(`--since=${logQueryData.dateRange.from} 00:00:00`);
-          logOptions.push(`--until=${logQueryData.dateRange.to} 23:59:59`);
+          logOptions.push(`--since="${logQueryData.dateRange.from} 00:00:00"`);
+          logOptions.push(`--until="${logQueryData.dateRange.to} 23:59:59"`);
         }
         if (logQueryData.noMerges) {
           logOptions.push(`--no-merges`);
@@ -210,8 +212,13 @@ export default defineComponent({
             logOptions.shift();
           }
           logOptions.unshift(branch);
-          const logResult: LogResult = await git.log(logOptions);
-          logResult.all.forEach((log) => {
+          data.cmd = `git log ${logOptions.join(' ')}`;
+          // console.log(data.cmd);
+          const logResult = await git.logResult(
+            projectData.gitPath,
+            logOptions
+          );
+          logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
             if (logQueryData.onlyMessage) {
               if (logQueryData.dedup) {
                 if (!data.log.includes(log.message)) {
