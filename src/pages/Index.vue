@@ -97,7 +97,7 @@ import Personalize from '@/components/Personalize.vue';
 import ProjectForm from '@/components/project/form/Index.vue';
 import LogQueryForm from '@/components/project/form/LogQuery.vue';
 import { LogQueryData } from '@/components/project/form/models';
-// import Editor from '@/components/editor/Ace.vue';
+// import Editor from '@/components/editor/Ace.vue'
 import Editor from '@/components/editor/Monaco.vue';
 
 import { useRouter, useRoute } from 'vue-router';
