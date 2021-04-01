@@ -59,13 +59,13 @@
           </div>
           <div>
             <div>log：</div>
-            <!--            <q-input-->
-            <!--              input-class="bg-dark text-grey-1"-->
-            <!--              input-style="min-height: 300px"-->
-            <!--              v-model="data.log"-->
-            <!--              type="textarea"-->
-            <!--            />-->
-            <editor v-model="data.log" style="height: 300px" />
+            <q-input
+              input-class="bg-dark text-grey-1"
+              input-style="min-height: 300px"
+              v-model="data.log"
+              type="textarea"
+            />
+            <!--            <editor v-model="data.log" style="height: 300px" />-->
           </div>
         </q-tab-panel>
         <q-tab-panel name="add">
@@ -98,7 +98,7 @@ import ProjectForm from '@/components/project/form/Index.vue';
 import LogQueryForm from '@/components/project/form/LogQuery.vue';
 import { LogQueryData } from '@/components/project/form/models';
 // import Editor from '@/components/editor/Ace.vue';
-import Editor from '@/components/editor/Monaco.vue';
+// import Editor from '@/components/editor/Monaco.vue';
 
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
@@ -106,8 +106,8 @@ import { useQuasar } from 'quasar';
 import { DefaultLogFields, ListLogLine } from 'simple-git';
 
 export default defineComponent({
-  components: { Personalize, ProjectForm, LogQueryForm, Editor },
-  // components: { Personalize, ProjectForm, LogQueryForm },
+  // components: { Personalize, ProjectForm, LogQueryForm, Editor },
+  components: { Personalize, ProjectForm, LogQueryForm },
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(props, context) {
     const router = useRouter();
