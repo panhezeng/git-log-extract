@@ -13,7 +13,7 @@ const { configure } = require('quasar/wrappers');
 const path = require('path');
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -93,12 +93,12 @@ module.exports = configure(function (/* ctx */) {
           },
         ]);
 
-        // chain.plugin('monaco-editor').use(MonacoWebpackPlugin, [
-        //   {
-        //     // Languages are loaded on demand at runtime
-        //     languages: ['json', 'javascript', 'markdown'],
-        //   },
-        // ]);
+        chain.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+          {
+            // Languages are loaded on demand at runtime
+            languages: ['json', 'javascript', 'markdown'],
+          },
+        ]);
       },
     },
 

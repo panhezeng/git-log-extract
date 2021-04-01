@@ -52,11 +52,10 @@ export default defineComponent({
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     const editorElement = ref<HTMLElement | null>(null);
-    const editor = ref<monaco.editor.IStandaloneCodeEditor | null>(null);
+    let editor: monaco.editor.IStandaloneCodeEditor;
     // 格式化json
     function format() {
-      editor.value &&
-        editor.value.getAction('editor.action.formatDocument').run();
+      editor && editor.getAction('editor.action.formatDocument').run();
     }
 
     // 初始化
@@ -74,22 +73,19 @@ export default defineComponent({
           props.options
         );
 
-        editor.value = monaco.editor.create(editorElement.value, options);
+        editor = monaco.editor.create(editorElement.value, options);
 
         if (props.sync) {
-          editor.value.onDidChangeModelContent(() => {
-            if (editor.value && props.modelValue !== editor.value.getValue()) {
-              context.emit('update:modelValue', editor.value.getValue());
+          editor.onDidChangeModelContent(() => {
+            if (editor && props.modelValue !== editor.getValue()) {
+              context.emit('update:modelValue', editor.getValue());
             }
           });
           watch(
             computed(() => props.modelValue),
             () => {
-              if (
-                editor.value &&
-                props.modelValue !== editor.value.getValue()
-              ) {
-                editor.value.setValue(props.modelValue);
+              if (editor && props.modelValue !== editor.getValue()) {
+                editor.setValue(props.modelValue);
               }
             }
           );
@@ -97,35 +93,22 @@ export default defineComponent({
 
         // 绑定键值
         // cmd + f
-        editor.value.addCommand(
-          monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_F,
-          () => {
-            format();
-          }
-        );
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_F, () => {
+          format();
+        });
         // cmd + s
-        editor.value.addCommand(
-          monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S,
-          () => {
-            if (editor.value) {
-              const value = editor.value.getValue();
-              format();
-              context.emit('save', value);
-              context.emit('update:modelValue', value);
-            }
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
+          if (editor) {
+            const value = editor.getValue();
+            format();
+            context.emit('save', value);
+            context.emit('update:modelValue', value);
           }
-        );
-        // cmd + y
-        editor.value.addCommand(
-          monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_Y,
-          () => {
-            context.emit('user-snippet', editor.value);
-          }
-        );
+        });
       }
 
       // 编辑器生成完成
-      context.emit('editor-ready', editor.value);
+      context.emit('editor-ready', editor);
     }
 
     onMounted(async () => {
@@ -136,12 +119,11 @@ export default defineComponent({
 
     onBeforeUnmount(() => {
       // 销毁编辑器
-      editor.value && editor.value.dispose();
+      editor && editor.dispose();
     });
 
     return {
       editorElement,
-      editor,
     };
   },
 });
