@@ -65,6 +65,7 @@
               v-model="data.log"
               type="textarea"
             />
+            <!--            <editor v-model="data.log" style="height: 500px" />-->
           </div>
         </q-tab-panel>
         <q-tab-panel name="add">
@@ -96,14 +97,15 @@ import Personalize from '@/components/Personalize.vue';
 import ProjectForm from '@/components/project/form/Index.vue';
 import LogQueryForm from '@/components/project/form/LogQuery.vue';
 import { LogQueryData } from '@/components/project/form/models';
+// import Editor from '@/components/editor/Index.vue';
 
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { useQuasar } from 'quasar';
-import PathType from 'path';
 import { DefaultLogFields, ListLogLine } from 'simple-git';
 
 export default defineComponent({
+  // components: { Personalize, ProjectForm, LogQueryForm, Editor },
   components: { Personalize, ProjectForm, LogQueryForm },
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(props, context) {
@@ -112,7 +114,6 @@ export default defineComponent({
     const store = useStore();
     const $q = useQuasar();
 
-    const path = window.electronPath as typeof PathType;
     const git = window.electronGit;
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
