@@ -8,12 +8,12 @@
 
 /* eslint-env node */
 /* eslint-disable @typescript-eslint/no-var-requires */
-const {configure} = require('quasar/wrappers');
+const { configure } = require('quasar/wrappers');
 
 const path = require('path');
 
 const CircularDependencyPlugin = require('circular-dependency-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
 
 module.exports = configure(function (/* ctx */) {
   return {
@@ -24,7 +24,7 @@ module.exports = configure(function (/* ctx */) {
           enabled: true,
           files: './src/**/*.{ts,tsx,js,jsx,vue}',
         },
-      }
+      },
     },
 
     // https://v2.quasar.dev/quasar-cli/prefetch-feature
@@ -36,7 +36,7 @@ module.exports = configure(function (/* ctx */) {
     boot: ['i18n', 'axios'],
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
-    css: ["~src/assets/common/less/index.less"],
+    css: ['~src/assets/common/less/index.less'],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -93,12 +93,12 @@ module.exports = configure(function (/* ctx */) {
           },
         ]);
 
-        chain.plugin('monaco-editor').use(MonacoWebpackPlugin, [
-          {
-            // Languages are loaded on demand at runtime
-            languages: ['json', 'javascript', 'markdown']
-          }
-        ])
+        // chain.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+        //   {
+        //     // Languages are loaded on demand at runtime
+        //     languages: ['json', 'javascript', 'markdown'],
+        //   },
+        // ]);
       },
     },
 
@@ -124,7 +124,7 @@ module.exports = configure(function (/* ctx */) {
       // directives: [],
 
       // Quasar plugins
-      plugins: [ "Notify", "Dialog"],
+      plugins: ['Notify', 'Dialog'],
     },
 
     // animations: 'all', // --- includes all animations
