@@ -23,8 +23,7 @@
     "fs-extra": "^9.1.0",
     "monaco-editor": "^0.23.0",
     "quasar": "^2.0.0-beta.1",
-    "simple-git": "^2.31.0",
-    "vue-i18n": "^9.0.0-beta.0"
+    "simple-git": "^2.31.0"
   },
   "devDependencies": {
     "@quasar/app": "^3.0.0-beta.1",
@@ -72,6 +71,6 @@
     "yarn": ">= 1"
   },
   "lint-staged": {
-    "src/**/*.{js,vue,ts,tsx}": "npm run lint"
+    "src/**/*.{js,vue,ts,tsx}": "yarn run lint"
   }
 }
