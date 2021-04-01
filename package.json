@@ -72,6 +72,6 @@
     "yarn": ">= 1"
   },
   "lint-staged": {
-    "src/**/*.{js,vue,ts,tsx}": "npm run lint"
+    "src/**/*.{js,vue,ts,tsx}": "eslint --fix --ext .js,.vue,ts,tsx src/"
   }
 }
