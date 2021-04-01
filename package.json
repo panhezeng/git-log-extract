@@ -72,6 +72,6 @@
     "yarn": ">= 1"
   },
   "lint-staged": {
-    "src/**/*.{js,vue,ts,tsx}": "eslint --fix"
+    "src/**/*.{js,vue,ts,tsx}": ["eslint --fix", "git add"]
   }
 }
