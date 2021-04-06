@@ -88,7 +88,6 @@
 <script lang="ts">
 import { defineComponent, computed, reactive, watch } from 'vue';
 import {
-  names,
   names as namesProject,
   ProjectType,
   StateInterface as StateInterfaceProject,
@@ -156,7 +155,9 @@ export default defineComponent({
               {
                 action: 'delete',
               },
-              store.getters[names.module + '/' + names.getters.GET_PROJECT]({
+              store.getters[
+                namesProject.module + '/' + namesProject.getters.GET_PROJECT
+              ]({
                 repositoryURL,
               })
             )
@@ -172,7 +173,7 @@ export default defineComponent({
       (val) => {
         if (val === 'edit') {
           const project = store.getters[
-            names.module + '/' + names.getters.GET_PROJECT
+            namesProject.module + '/' + namesProject.getters.GET_PROJECT
           ]({
             repositoryURL: data.ticked[0],
           });
@@ -189,7 +190,7 @@ export default defineComponent({
       for (let i = 0, end = data.ticked.length; i < end; i++) {
         const repositoryURL = data.ticked[i];
         const project = store.getters[
-          names.module + '/' + names.getters.GET_PROJECT
+          namesProject.module + '/' + namesProject.getters.GET_PROJECT
         ]({
           repositoryURL,
         });
@@ -217,7 +218,7 @@ export default defineComponent({
           data.cmd = `git log ${logOptions.join(' ')}`;
           // console.log(data.cmd);
           const logResult = await git.logResult(
-            projectData.gitPath,
+            projectData.directoryPath,
             logOptions
           );
           logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {

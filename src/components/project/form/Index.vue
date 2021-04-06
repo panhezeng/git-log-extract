@@ -178,8 +178,8 @@ export default defineComponent({
       fileNameValidation,
       (val: string) => {
         if (val) {
-          const gitPath = path.resolve('temp/git/' + val);
-          fs.removeSync(gitPath);
+          const directoryPath = path.resolve('temp/git/' + val);
+          fs.removeSync(directoryPath);
         }
         if (
           !props.data &&
@@ -208,10 +208,13 @@ export default defineComponent({
         project.username,
         project.password
       );
-      const gitPath = path.resolve('temp/git/' + project.name);
-      project.gitPath = gitPath;
-      fs.emptyDirSync(gitPath);
-      const branchSummary = await git.branchSummary(gitPath, repositoryAuthURL);
+      const directoryPath = path.resolve('temp/git/' + project.name);
+      project.directoryPath = directoryPath;
+      fs.emptyDirSync(directoryPath);
+      const branchSummary = await git.branchSummary(
+        directoryPath,
+        repositoryAuthURL
+      );
       project.branches = branchSummary.all;
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;
       data.password = CryptoJS.AES.encrypt(

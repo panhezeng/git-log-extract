@@ -13,10 +13,10 @@ export const names = {
 
 export const project = {
   name: '',
+  directoryPath: '',
   repositoryURL: '',
   username: '',
   password: '',
-  gitPath: '',
   branches: [] as string[],
 };
 
