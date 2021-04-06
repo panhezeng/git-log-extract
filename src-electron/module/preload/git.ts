@@ -1,6 +1,6 @@
 import { contextBridge } from 'electron';
 import { URL } from 'url';
-import simpleGit, { BranchSummary, LogResult } from "simple-git";
+import simpleGit, { BranchSummary, LogResult } from 'simple-git';
 
 export default () => {
   contextBridge.exposeInMainWorld('electronGit', {
