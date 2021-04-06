@@ -11,8 +11,8 @@ export default () => {
 
       return urlObj.href;
     },
-    branchSummary: async (gitPath: string, repositoryAuthURL: string) => {
-      const git = simpleGit(gitPath);
+    branchSummary: async (directoryPath: string, repositoryAuthURL: string) => {
+      const git = simpleGit(directoryPath);
       // git.outputHandler((bin, stdout, stderr, args) => {
       //   stdout.pipe(process.stdout);
       //   stderr.pipe(process.stderr);
@@ -26,8 +26,8 @@ export default () => {
       const branchSummary: BranchSummary = await git.branch(['-r']);
       return branchSummary;
     },
-    logResult: async (gitPath: string, logOptions: string[]) => {
-      const git = simpleGit(gitPath);
+    logResult: async (directoryPath: string, logOptions: string[]) => {
+      const git = simpleGit(directoryPath);
       // console.log(await git.status())
       // git.outputHandler((bin, stdout, stderr, args) => {
       //   stdout.pipe(process.stdout);
