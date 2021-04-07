@@ -87,6 +87,11 @@
 
 <script lang="ts">
 import { defineComponent, computed, reactive, watch } from 'vue';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+
 import {
   names as namesProject,
   ProjectType,
@@ -99,10 +104,9 @@ import { LogQueryData } from '@/components/project/form/models';
 // import Editor from '@/components/editor/Ace.vue';
 // import Editor from '@/components/editor/Monaco.vue';
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
 import { DefaultLogFields, ListLogLine } from 'simple-git';
+
+import { git } from '@/utils/electron-preload';
 
 export default defineComponent({
   // components: { Personalize, ProjectForm, LogQueryForm, Editor },
@@ -113,8 +117,6 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
     const $q = useQuasar();
-
-    const git = window.electronGit;
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 

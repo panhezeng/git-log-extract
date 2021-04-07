@@ -80,13 +80,13 @@
 <script lang="ts">
 import { computed, defineComponent, ref } from 'vue';
 
-import { names, StateInterface } from '@/store/personalize';
-
-import CryptoJS from 'crypto-js';
-
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import { useQuasar } from 'quasar';
+
+import { names, StateInterface } from '@/store/personalize';
+
+import CryptoJS from 'crypto-js';
 
 export default defineComponent({
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */

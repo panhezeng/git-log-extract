@@ -28,6 +28,11 @@ import {
   onMounted,
 } from 'vue';
 
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+import { api } from 'boot/axios';
+
 import { Todo } from '@/components/example/models';
 
 function useClickCount() {
@@ -56,11 +61,6 @@ type PropValueType = {
   todos: Todo[];
 };
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { api } from 'boot/axios';
-
-import { useQuasar } from 'quasar';
 export default defineComponent({
   components: {},
   props: {
@@ -77,10 +77,10 @@ export default defineComponent({
 
   setup(props: PropValueType, context) {
     const router = useRouter();
-
     const route = useRoute();
     const store = useStore();
     const $q = useQuasar();
+
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     function danger(event: Event) {

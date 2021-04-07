@@ -80,6 +80,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, ref, reactive } from 'vue';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+
 import {
   names,
   project as initProjectData,
@@ -91,12 +96,8 @@ import {
 } from '@/store/personalize';
 import CryptoJS from 'crypto-js';
 import { fileName as fileNameValidation } from '@/utils/validation';
-import PathType from 'path';
-import FSType from 'fs-extra';
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { path, fs, git } from '@/utils/electron-preload';
 
 export default defineComponent({
   components: {},
@@ -117,9 +118,6 @@ export default defineComponent({
     const store = useStore();
     const $q = useQuasar();
 
-    const fs = window.electronFS as typeof FSType;
-    const path = window.electronPath as typeof PathType;
-    const git = window.electronGit;
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     const isEdit = computed(() => props.index > -1);

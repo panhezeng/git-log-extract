@@ -21,13 +21,13 @@
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { defineComponent, ref, computed, onMounted } from 'vue';
 
-import { StateInterface, names } from '@/store/example-module';
-import TemplateComp from '@/components/example/TemplateComp.vue';
-
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { api } from 'boot/axios';
 import { useQuasar } from 'quasar';
+import { api } from 'boot/axios';
+
+import { StateInterface, names } from '@/store/example-module';
+import TemplateComp from '@/components/example/TemplateComp.vue';
 
 export default defineComponent({
   components: {
@@ -38,6 +38,7 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
     const $q = useQuasar();
+
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     const state = computed<StateInterface>(() => store.state[names.module]);

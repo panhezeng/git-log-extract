@@ -4,10 +4,11 @@
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 import { defineComponent, onMounted } from 'vue';
+
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
-import { api } from 'boot/axios';
 import { useQuasar } from 'quasar';
+import { api } from 'boot/axios';
 
 export default defineComponent({
   components: {},
@@ -16,6 +17,7 @@ export default defineComponent({
     const route = useRoute();
     const store = useStore();
     const $q = useQuasar();
+
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     // 在这获得 ref 关联的 DOM 元素

@@ -1,8 +1,8 @@
 import { GetterTree, Module, MutationTree } from 'vuex';
 import { StateInterface as StateInterfaceIndex } from '@/store/index';
 import { toRaw } from 'vue';
-import StoreType from 'electron-store';
-const electronStore = window.electronStore as StoreType;
+
+import { electronStore } from '@/utils/electron-preload';
 
 export const names = {
   module: 'project',

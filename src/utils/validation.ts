@@ -1,5 +1,4 @@
-import FSType from 'fs-extra';
-const fs = window.electronFS as typeof FSType;
+import { fs } from '@/utils/electron-preload';
 export const localDirectoryPath = (val: string, fail: any) => {
   if (fs.existsSync(val)) {
     return true;

@@ -96,6 +96,11 @@
 
 <script lang="ts">
 import { computed, defineComponent, reactive, watch } from 'vue';
+
+import { useRouter, useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useQuasar } from 'quasar';
+
 import {
   LogQueryData,
   logQueryInitData,
@@ -106,10 +111,6 @@ import {
   StateInterface as StateInterfacePersonalize,
 } from '@/store/personalize';
 import dayjs from '@/utils/dayjs';
-
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
 
 export default defineComponent({
   components: {},

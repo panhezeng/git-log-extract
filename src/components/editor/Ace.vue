@@ -69,14 +69,18 @@ export default defineComponent({
         editor = ace.edit(editorElement.value, options);
 
         if (props.sync) {
-          editor.on('change', () => {
+          const emitValue = () => {
             if (editor && props.modelValue !== editor.getValue()) {
               context.emit('update:modelValue', editor.getValue());
             }
-          });
+          };
+
+          editor.on('input', emitValue);
+          editor.on('paste', emitValue);
+          editor.on('blur', emitValue);
 
           watch(
-            computed(() => props.modelValue),
+            () => props.modelValue,
             () => {
               if (editor && props.modelValue !== editor.getValue()) {
                 editor.setValue(props.modelValue);

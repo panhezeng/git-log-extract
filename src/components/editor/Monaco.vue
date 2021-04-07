@@ -62,16 +62,14 @@ export default defineComponent({
     function initEditor() {
       if (editorElement.value) {
         // 合并配置
-        const options = Object.assign(
-          {
-            value: props.modelValue,
-            theme: 'vs-dark',
-            language: 'markdown',
-            automaticLayout: true,
-            scrollBeyondLastLine: false,
-          },
-          props.options
-        );
+        const options: monaco.editor.IStandaloneEditorConstructionOptions = {
+          value: props.modelValue,
+          theme: 'vs-dark',
+          language: 'markdown',
+          automaticLayout: true,
+          scrollBeyondLastLine: false,
+        };
+        Object.assign(options, props.options);
 
         editor = monaco.editor.create(editorElement.value, options);
 
@@ -82,7 +80,7 @@ export default defineComponent({
             }
           });
           watch(
-            computed(() => props.modelValue),
+            () => props.modelValue,
             () => {
               if (editor && props.modelValue !== editor.getValue()) {
                 editor.setValue(props.modelValue);
