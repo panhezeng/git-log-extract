@@ -2,6 +2,8 @@
 
 在 quasar 升级到 webpack5 之前，node 只能使用 v12 即 lts/erbium
 
+**monaco-editor 不要把编辑器的实例变成响应数据和挂载到模板数据上，会卡死**
+
 ## ui 组件库
 
 quasar ui

@@ -1,8 +1,8 @@
-import PathType from 'path';
-import FSType from 'fs-extra';
-import StoreType from 'electron-store';
-import { BranchSummary, LogResult } from 'simple-git';
-import { OpenDialogOptions, OpenDialogReturnValue } from 'electron';
+import PathType from "path";
+import FSType from "fs-extra";
+import StoreType from "electron-store";
+import { BranchSummary, LogResult } from "simple-git";
+import { OpenDialogOptions, OpenDialogReturnValue } from "electron";
 
 export const electronStore = window.electronStore as StoreType;
 export const path = window.electronPath as typeof PathType;

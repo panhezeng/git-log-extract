@@ -5,19 +5,18 @@
 import {
   defineComponent,
   ref,
-  computed,
   onMounted,
   onBeforeUnmount,
   PropType,
   nextTick,
   watch,
-} from 'vue';
+} from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
-import * as monaco from 'monaco-editor';
+import * as monaco from "monaco-editor";
 
 export default defineComponent({
   props: {
@@ -53,9 +52,18 @@ export default defineComponent({
 
     const editorElement = ref<HTMLElement | null>(null);
     let editor: monaco.editor.IStandaloneCodeEditor;
+
     // 格式化json
     function format() {
-      editor && editor.getAction('editor.action.formatDocument').run();
+      editor && editor.getAction("editor.action.formatDocument").run();
+    }
+    function save() {
+      if (editor) {
+        format();
+        const value = editor.getValue();
+        context.emit("update:modelValue", value);
+        context.emit("save", value);
+      }
     }
 
     // 初始化
@@ -64,8 +72,8 @@ export default defineComponent({
         // 合并配置
         const options: monaco.editor.IStandaloneEditorConstructionOptions = {
           value: props.modelValue,
-          theme: 'vs-dark',
-          language: 'markdown',
+          theme: "vs-dark",
+          language: "markdown",
           automaticLayout: true,
           scrollBeyondLastLine: false,
         };
@@ -76,7 +84,7 @@ export default defineComponent({
         if (props.sync) {
           editor.onDidChangeModelContent(() => {
             if (editor && props.modelValue !== editor.getValue()) {
-              context.emit('update:modelValue', editor.getValue());
+              context.emit("update:modelValue", editor.getValue());
             }
           });
           watch(
@@ -96,17 +104,12 @@ export default defineComponent({
         });
         // cmd + s
         editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
-          if (editor) {
-            const value = editor.getValue();
-            format();
-            context.emit('save', value);
-            context.emit('update:modelValue', value);
-          }
+          save();
         });
       }
 
       // 编辑器生成完成
-      context.emit('editor-ready', editor);
+      context.emit("ready", editor);
     }
 
     onMounted(async () => {

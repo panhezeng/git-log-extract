@@ -1,6 +1,6 @@
-import { store } from 'quasar/wrappers';
-import { createStore } from 'vuex';
-import requireContext from '@/utils/require-context';
+import { store } from "quasar/wrappers";
+import { createStore } from "vuex";
+import requireContext from "@/utils/require-context";
 
 // import example from './module-example'
 // import { ExampleStateInterface } from './module-example/state';
@@ -21,9 +21,9 @@ export type StateInterface = typeof initState;
 // 文件名的模块名部分，以及 module.name 都来自 src/config/vuex/types 目录内模块配置文件内导出的name
 const modules = {} as { [name: string]: any };
 requireContext(
-  require.context('@/store/', true, /(?<!\.\/index|\.d)\.ts$/)
+  require.context("@/store/", true, /(?<!\.\/index|\.d)\.ts$/)
 ).forEach(({ module }: any) => {
-  if (Object.prototype.hasOwnProperty.call(module, 'names')) {
+  if (Object.prototype.hasOwnProperty.call(module, "names")) {
     if (Object.prototype.hasOwnProperty.call(modules, module.names.module)) {
       throw new Error(`已存在同名vuex module ${module.name}，请修改命名`);
     }

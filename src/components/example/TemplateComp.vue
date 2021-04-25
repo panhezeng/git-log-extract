@@ -26,14 +26,14 @@ import {
   toRef,
   PropType,
   onMounted,
-} from 'vue';
+} from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import { api } from 'boot/axios';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
+import { api } from "boot/axios";
 
-import { Todo } from '@/components/example/models';
+import { Todo } from "@/components/example/models";
 
 function useClickCount() {
   const clickCount = ref(0);
@@ -84,7 +84,7 @@ export default defineComponent({
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     function danger(event: Event) {
-      context.emit('template-comp-danger', event);
+      context.emit("template-comp-danger", event);
       // console.log(event:Event);
     }
 
@@ -96,7 +96,7 @@ export default defineComponent({
     return {
       danger,
       ...useClickCount(),
-      ...useDisplayTodo(toRef(props, 'todos')),
+      ...useDisplayTodo(toRef(props, "todos")),
     };
   },
 });

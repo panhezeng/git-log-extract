@@ -19,15 +19,15 @@
 
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, computed, onMounted } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import { api } from 'boot/axios';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
+import { api } from "boot/axios";
 
-import { StateInterface, names } from '@/store/example-module';
-import TemplateComp from '@/components/example/TemplateComp.vue';
+import { StateInterface, names } from "@/store/example-module";
+import TemplateComp from "@/components/example/TemplateComp.vue";
 
 export default defineComponent({
   components: {
@@ -47,16 +47,16 @@ export default defineComponent({
     // store.dispatch(names.module + "/" + names.actions.SOME_ACTION)
 
     const rootElement = ref<HTMLElement | null>(null);
-    const rootElementTagName = ref('');
+    const rootElementTagName = ref("");
     const compProps = {
       user: {
-        firstName: 's',
-        lastName: 'b',
+        firstName: "s",
+        lastName: "b",
       },
     };
 
     const localTodo = ref(state.value.example);
-    const eventTip = ref('');
+    const eventTip = ref("");
     function eventHandler(event: Event) {
       eventTip.value = JSON.stringify(event);
     }

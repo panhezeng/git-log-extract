@@ -79,25 +79,25 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, reactive } from 'vue';
+import { computed, defineComponent, ref, reactive } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 import {
   names,
   project as initProjectData,
   ProjectType,
-} from '@/store/project';
+} from "@/store/project";
 import {
   names as namesPersonalize,
   StateInterface as StateInterfacePersonalize,
-} from '@/store/personalize';
-import CryptoJS from 'crypto-js';
-import { fileName as fileNameValidation } from '@/utils/validation';
+} from "@/store/personalize";
+import CryptoJS from "crypto-js";
+import { fileName as fileNameValidation } from "@/utils/validation";
 
-import { path, fs, git } from '@/utils/electron-preload';
+import { path, fs, git } from "@/utils/electron-preload";
 
 export default defineComponent({
   components: {},
@@ -137,7 +137,7 @@ export default defineComponent({
     if (initData.password) {
       initData.password = CryptoJS.AES.decrypt(
         initData.password,
-        'Secret Passphrase'
+        "Secret Passphrase"
       ).toString(CryptoJS.enc.Utf8);
     }
 
@@ -148,17 +148,17 @@ export default defineComponent({
         if (/^https?:\/\/.*\.git$/.test(val)) {
           return true;
         } else {
-          return '请输入有效的git仓库地址，http开始，.git结尾';
+          return "请输入有效的git仓库地址，http开始，.git结尾";
         }
       },
       (val: string) => {
         if (
           !props.data &&
-          store.getters[names.module + '/' + names.getters.GET_PROJECT]({
+          store.getters[names.module + "/" + names.getters.GET_PROJECT]({
             repositoryURL: val,
           }).data
         ) {
-          return '已存在相同仓库地址项目，请修改仓库地址';
+          return "已存在相同仓库地址项目，请修改仓库地址";
         } else {
           return true;
         }
@@ -176,16 +176,16 @@ export default defineComponent({
       fileNameValidation,
       (val: string) => {
         if (val) {
-          const directoryPath = path.resolve('temp/git/' + val);
+          const directoryPath = path.resolve("temp/git/" + val);
           fs.removeSync(directoryPath);
         }
         if (
           !props.data &&
-          store.getters[names.module + '/' + names.getters.GET_PROJECT]({
+          store.getters[names.module + "/" + names.getters.GET_PROJECT]({
             name: val,
           }).data
         ) {
-          return '已存在同名项目，请修改项目名称';
+          return "已存在同名项目，请修改项目名称";
         } else {
           return true;
         }
@@ -206,7 +206,7 @@ export default defineComponent({
         project.username,
         project.password
       );
-      const directoryPath = path.resolve('temp/git/' + project.name);
+      const directoryPath = path.resolve("temp/git/" + project.name);
       project.directoryPath = directoryPath;
       fs.emptyDirSync(directoryPath);
       const branchSummary = await git.branchSummary(
@@ -217,18 +217,18 @@ export default defineComponent({
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;
       data.password = CryptoJS.AES.encrypt(
         data.password,
-        'Secret Passphrase'
+        "Secret Passphrase"
       ).toString();
-      store.commit(names.module + '/' + names.mutations.SET_PROJECT, {
+      store.commit(names.module + "/" + names.mutations.SET_PROJECT, {
         data,
-        action: isEdit.value ? 'edit' : 'add',
+        action: isEdit.value ? "edit" : "add",
         index: props.index,
       });
-      context.emit('submit-success', data);
+      context.emit("submit-success", data);
       $q.notify({
-        message: '保存成功',
-        type: 'positive',
-        position: 'bottom-right',
+        message: "保存成功",
+        type: "positive",
+        position: "bottom-right",
       });
       submitLoading.value = false;
     }

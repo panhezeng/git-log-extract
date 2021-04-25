@@ -78,15 +78,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, reactive, ref } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
-import { names, StateInterface } from '@/store/personalize';
+import { names, StateInterface } from "@/store/personalize";
 
-import CryptoJS from 'crypto-js';
+import CryptoJS from "crypto-js";
 
 export default defineComponent({
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
@@ -100,31 +100,34 @@ export default defineComponent({
 
     const state = computed<StateInterface>(() => store.state[names.module]);
 
-    const data = ref<StateInterface>(JSON.parse(JSON.stringify(state.value)));
-    data.value.git.password = CryptoJS.AES.decrypt(
-      data.value.git.password,
-      'Secret Passphrase'
+    const data = reactive<StateInterface>(
+      JSON.parse(JSON.stringify(state.value))
+    );
+
+    data.git.password = CryptoJS.AES.decrypt(
+      data.git.password,
+      "Secret Passphrase"
     ).toString(CryptoJS.enc.Utf8);
 
     const isPwd = ref(true);
 
     async function onSubmit() {
-      const newData = JSON.parse(JSON.stringify(data.value)) as StateInterface;
+      const newData = JSON.parse(JSON.stringify(data)) as StateInterface;
       newData.git.password = CryptoJS.AES.encrypt(
         newData.git.password,
-        'Secret Passphrase'
+        "Secret Passphrase"
       ).toString();
-      store.commit(names.module + '/' + names.mutations.SET_DATA, newData);
+      store.commit(names.module + "/" + names.mutations.SET_DATA, newData);
       $q.notify({
-        type: 'positive',
-        position: 'top',
-        message: '保存成功',
+        type: "positive",
+        position: "top",
+        message: "保存成功",
       });
-      context.emit('submit', data.value);
+      context.emit("submit-success", data);
     }
 
     function onReset() {
-      data.value = JSON.parse(JSON.stringify(state.value));
+      Object.assign(data, JSON.parse(JSON.stringify(state.value)));
     }
 
     return {

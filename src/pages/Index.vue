@@ -86,27 +86,27 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, watch } from 'vue';
+import { defineComponent, computed, reactive, watch } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 import {
   names as namesProject,
   ProjectType,
   StateInterface as StateInterfaceProject,
-} from '@/store/project';
-import Personalize from '@/components/Personalize.vue';
-import ProjectForm from '@/components/project/form/Index.vue';
-import LogQueryForm from '@/components/project/form/LogQuery.vue';
-import { LogQueryData } from '@/components/project/form/models';
+} from "@/store/project";
+import Personalize from "@/components/Personalize.vue";
+import ProjectForm from "@/components/project/form/Index.vue";
+import LogQueryForm from "@/components/project/form/LogQuery.vue";
+import { LogQueryData } from "@/components/project/form/models";
 // import Editor from '@/components/editor/Ace.vue';
 // import Editor from '@/components/editor/Monaco.vue';
 
-import { DefaultLogFields, ListLogLine } from 'simple-git';
+import { DefaultLogFields, ListLogLine } from "simple-git";
 
-import { git } from '@/utils/electron-preload';
+import { git } from "@/utils/electron-preload";
 
 export default defineComponent({
   // components: { Personalize, ProjectForm, LogQueryForm, Editor },
@@ -131,41 +131,41 @@ export default defineComponent({
     });
 
     const data = reactive({
-      tab: ticked.length ? 'log' : 'add',
+      tab: ticked.length ? "log" : "add",
       editProject: {
         data: null as ProjectType | null,
         index: -1,
       },
       ticked,
-      log: '',
-      cmd: '',
+      log: "",
+      cmd: "",
       splitterModel: 50,
     });
 
     function deleteProject() {
       $q.dialog({
-        title: '删除确认',
-        message: '确认要删除勾选的项目吗? ',
+        title: "删除确认",
+        message: "确认要删除勾选的项目吗? ",
         ok: true,
         cancel: true,
       }).onOk(() => {
         for (let i = data.ticked.length - 1; i >= 0; i--) {
           const repositoryURL = data.ticked[i];
           store.commit(
-            namesProject.module + '/' + namesProject.mutations.SET_PROJECT,
+            namesProject.module + "/" + namesProject.mutations.SET_PROJECT,
             Object.assign(
               {
-                action: 'delete',
+                action: "delete",
               },
               store.getters[
-                namesProject.module + '/' + namesProject.getters.GET_PROJECT
+                namesProject.module + "/" + namesProject.getters.GET_PROJECT
               ]({
                 repositoryURL,
               })
             )
           );
           data.ticked.splice(i, 1);
-          data.tab = ticked.length ? 'log' : 'add';
+          data.tab = ticked.length ? "log" : "add";
         }
       });
     }
@@ -173,15 +173,15 @@ export default defineComponent({
     watch(
       computed(() => data.tab),
       (val) => {
-        if (val === 'edit') {
+        if (val === "edit") {
           const project = store.getters[
-            namesProject.module + '/' + namesProject.getters.GET_PROJECT
+            namesProject.module + "/" + namesProject.getters.GET_PROJECT
           ]({
             repositoryURL: data.ticked[0],
           });
           data.editProject.data = project.data;
           data.editProject.index = project.index;
-        } else if (val === 'add') {
+        } else if (val === "add") {
           data.editProject.data = null;
           data.editProject.index = -1;
         }
@@ -192,7 +192,7 @@ export default defineComponent({
       for (let i = 0, end = data.ticked.length; i < end; i++) {
         const repositoryURL = data.ticked[i];
         const project = store.getters[
-          namesProject.module + '/' + namesProject.getters.GET_PROJECT
+          namesProject.module + "/" + namesProject.getters.GET_PROJECT
         ]({
           repositoryURL,
         });
@@ -217,7 +217,7 @@ export default defineComponent({
             logOptions.shift();
           }
           logOptions.unshift(branch);
-          data.cmd = `git log ${logOptions.join(' ')}`;
+          data.cmd = `git log ${logOptions.join(" ")}`;
           // console.log(data.cmd);
           const logResult = await git.logResult(
             projectData.directoryPath,

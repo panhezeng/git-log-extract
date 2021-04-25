@@ -1,6 +1,6 @@
-import { contextBridge } from 'electron';
-import fs from 'fs-extra';
+import { contextBridge } from "electron";
+import fs from "fs-extra";
 
 export default () => {
-  contextBridge.exposeInMainWorld('electronFS', fs);
+  contextBridge.exposeInMainWorld("electronFS", fs);
 };

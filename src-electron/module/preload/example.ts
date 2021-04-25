@@ -6,9 +6,10 @@
  命名请用 electron 开头，因为 api 会挂载在 window ，避免覆盖 window 原生 api
  */
 
-import { contextBridge } from 'electron';
+import { contextBridge } from "electron";
+
 export default () => {
-  contextBridge.exposeInMainWorld('electronExample', {
-    example: () => 'example',
+  contextBridge.exposeInMainWorld("electronExample", {
+    example: () => "example",
   });
 };

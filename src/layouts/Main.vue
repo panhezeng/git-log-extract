@@ -2,11 +2,11 @@
   <router-view class="main-layout" />
 </template>
 <script lang="ts">
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   components: {},

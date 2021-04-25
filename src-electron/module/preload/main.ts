@@ -3,11 +3,11 @@ import {
   ipcRenderer,
   OpenDialogOptions,
   OpenDialogReturnValue,
-} from 'electron';
+} from "electron";
 export default () => {
-  contextBridge.exposeInMainWorld('electronMain', {
+  contextBridge.exposeInMainWorld("electronMain", {
     dialog: async (options: OpenDialogOptions) => {
-      const result = await ipcRenderer.invoke('electronDialog', options);
+      const result = await ipcRenderer.invoke("electronDialog", options);
       return result as OpenDialogReturnValue;
     },
   });

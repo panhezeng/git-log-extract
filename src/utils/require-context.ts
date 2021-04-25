@@ -1,4 +1,4 @@
-import { Module } from 'vuex';
+import { Module } from "vuex";
 
 type ReturnType = { module: Module<any, any>; path: string };
 

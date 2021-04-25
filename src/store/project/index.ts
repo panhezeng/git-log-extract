@@ -1,25 +1,25 @@
-import { GetterTree, Module, MutationTree } from 'vuex';
-import { StateInterface as StateInterfaceIndex } from '@/store/index';
-import { toRaw } from 'vue';
+import { GetterTree, Module, MutationTree } from "vuex";
+import { StateInterface as StateInterfaceIndex } from "@/store/index";
+import { toRaw } from "vue";
 
-import { electronStore } from '@/utils/electron-preload';
+import { electronStore } from "@/utils/electron-preload";
 
 export const names = {
-  module: 'project',
+  module: "project",
   getters: {
-    GET_PROJECT: 'GET_PROJECT',
+    GET_PROJECT: "GET_PROJECT",
   },
   mutations: {
-    SET_PROJECT: 'SET_PROJECT',
+    SET_PROJECT: "SET_PROJECT",
   },
 };
 
 export const project = {
-  name: '',
-  directoryPath: '',
-  repositoryURL: '',
-  username: '',
-  password: '',
+  name: "",
+  directoryPath: "",
+  repositoryURL: "",
+  username: "",
+  password: "",
   branches: [] as string[],
 };
 
@@ -74,11 +74,11 @@ const mutations: MutationTree<StateInterface> = {
       index = -1,
     }: {
       data: ProjectType;
-      action: 'add' | 'edit' | 'delete';
+      action: "add" | "edit" | "delete";
       index: number;
     }
   ) {
-    if (action === 'add') {
+    if (action === "add") {
       state.projects.push(data);
     } else {
       if (index < 0 || index >= state.projects.length) {
@@ -87,9 +87,9 @@ const mutations: MutationTree<StateInterface> = {
         );
       }
       if (index > -1) {
-        if (action === 'delete') {
+        if (action === "delete") {
           state.projects.splice(index, 1);
-        } else if (action === 'edit') {
+        } else if (action === "edit") {
           state.projects.splice(index, 1, data);
         }
       }

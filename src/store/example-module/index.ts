@@ -1,21 +1,21 @@
-import { ActionTree, GetterTree, Module, MutationTree } from 'vuex';
-import { StateInterface as StateInterfaceIndex } from '@/store/index';
+import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
+import { StateInterface as StateInterfaceIndex } from "@/store/index";
 
 export const names = {
-  module: 'exampleModule',
+  module: "exampleModule",
   getters: {
-    SOME_GETTER: 'SOME_GETTER',
+    SOME_GETTER: "SOME_GETTER",
   },
   mutations: {
-    SOME_MUTATION: 'SOME_MUTATION',
+    SOME_MUTATION: "SOME_MUTATION",
   },
   actions: {
-    SOME_ACTION: 'SOME_ACTION',
+    SOME_ACTION: "SOME_ACTION",
   },
 };
 
 const initState = {
-  example: '',
+  example: "",
   exampleArray: [] as any[],
   exampleObject: {} as { [key: string]: any },
 };

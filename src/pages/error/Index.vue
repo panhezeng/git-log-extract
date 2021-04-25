@@ -10,11 +10,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 export default defineComponent({
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
@@ -24,7 +24,7 @@ export default defineComponent({
     const store = useStore();
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-    const message = ref(route.query.message || '404 not found');
+    const message = ref(route.query.message || "404 not found");
     return {
       message,
     };

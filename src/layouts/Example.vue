@@ -3,12 +3,12 @@
 </template>
 <script lang="ts">
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import { defineComponent, onMounted } from 'vue';
+import { defineComponent, onMounted } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
-import { api } from 'boot/axios';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
+import { api } from "boot/axios";
 
 export default defineComponent({
   components: {},

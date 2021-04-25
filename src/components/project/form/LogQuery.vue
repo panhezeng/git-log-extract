@@ -36,7 +36,7 @@
           label="选择时间"
           @click="other.dateRange.visible = true"
         /><template v-if="data.dateRange.from"
-          ><span>{{ data.dateRange.from + ' ' + data.dateRange.to }}</span
+          ><span>{{ data.dateRange.from + " " + data.dateRange.to }}</span
           ><q-btn
             padding="xs"
             label="删除选择"
@@ -95,22 +95,22 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, watch } from 'vue';
+import { computed, defineComponent, reactive, watch } from "vue";
 
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import { useQuasar } from 'quasar';
+import { useRouter, useRoute } from "vue-router";
+import { useStore } from "vuex";
+import { useQuasar } from "quasar";
 
 import {
   LogQueryData,
   logQueryInitData,
-} from '@/components/project/form/models';
-import { names, ProjectType } from '@/store/project';
+} from "@/components/project/form/models";
+import { names, ProjectType } from "@/store/project";
 import {
   names as namesPersonalize,
   StateInterface as StateInterfacePersonalize,
-} from '@/store/personalize';
-import dayjs from '@/utils/dayjs';
+} from "@/store/personalize";
+import dayjs from "@/utils/dayjs";
 
 export default defineComponent({
   components: {},
@@ -151,7 +151,7 @@ export default defineComponent({
         for (let i = 0, end = props.ticked.length; i < end; i++) {
           const repositoryURL = props.ticked[i];
           const project = store.getters[
-            names.module + '/' + names.getters.GET_PROJECT
+            names.module + "/" + names.getters.GET_PROJECT
           ]({
             repositoryURL,
           });
@@ -173,9 +173,9 @@ export default defineComponent({
         if (statePersonalize.value.logQuery.thisWeek) {
           const dayjsInstance = await dayjs();
           data.dateRange.from = dayjsInstance()
-            .subtract(6, 'day')
-            .format('YYYY-MM-DD');
-          data.dateRange.to = dayjsInstance().format('YYYY-MM-DD');
+            .subtract(6, "day")
+            .format("YYYY-MM-DD");
+          data.dateRange.to = dayjsInstance().format("YYYY-MM-DD");
         }
       },
       {
@@ -190,7 +190,7 @@ export default defineComponent({
 
     async function onSubmit() {
       data.loading = true;
-      context.emit('log-query', data);
+      context.emit("log-query", data);
     }
 
     return {

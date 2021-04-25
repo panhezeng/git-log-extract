@@ -1,24 +1,24 @@
-import { Module, MutationTree } from 'vuex';
-import { StateInterface as StateInterfaceIndex } from '@/store/index';
-import { toRaw } from 'vue';
+import { Module, MutationTree } from "vuex";
+import { StateInterface as StateInterfaceIndex } from "@/store/index";
+import { toRaw } from "vue";
 
-import { electronStore } from '@/utils/electron-preload';
+import { electronStore } from "@/utils/electron-preload";
 
 export const names = {
-  module: 'personalize',
+  module: "personalize",
 
   mutations: {
-    SET_DATA: 'SET_DATA',
+    SET_DATA: "SET_DATA",
   },
 };
 
 const initState = {
   git: {
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   },
   logQuery: {
-    author: '',
+    author: "",
     onlyMessage: true,
     noMerges: true,
     dedup: true,
