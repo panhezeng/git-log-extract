@@ -1,3 +1,4 @@
+/* eslint-env node */
 /**
 
  https://www.electronjs.org/docs/api/context-bridge

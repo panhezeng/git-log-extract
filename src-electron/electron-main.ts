@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { app, BrowserWindow, nativeTheme } from "electron";
 import path from "path";
 import fs from "fs-extra";

@@ -1,3 +1,4 @@
+/* eslint-env node */
 /**
  * This file is used specifically for security reasons.
  * Here you can access Nodejs stuff and inject functionality into

@@ -1,3 +1,4 @@
+/* eslint-env node */
 type ReturnType = { module: { default: any }; path: string };
 
 export default function (

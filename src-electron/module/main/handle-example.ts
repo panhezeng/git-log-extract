@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { ipcMain, BrowserWindow } from "electron";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars

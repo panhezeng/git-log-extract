@@ -32,8 +32,7 @@
     "src/**/*.vue",
     "src-electron/**/*.ts",
     "src-electron/**/*.tsx",
-    "src-electron/**/*.vue",
-    "**/*.conf*.js"
+    "src-electron/**/*.vue"
   ],
   // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
   // to be evaluated by TS when their original files has been updated

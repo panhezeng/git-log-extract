@@ -1,3 +1,4 @@
+/* eslint-env node */
 import { contextBridge } from "electron";
 import Store from "electron-store";
 
