@@ -8,12 +8,12 @@
 // Configuration for your app
 // https://v2.quasar.dev/quasar-cli/quasar-conf-js
 
-const { configure } = require('quasar/wrappers');
+const { configure } = require("quasar/wrappers");
 
-const path = require('path');
+const path = require("path");
 
-const CircularDependencyPlugin = require('circular-dependency-plugin');
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+const CircularDependencyPlugin = require("circular-dependency-plugin");
+const MonacoWebpackPlugin = require("monaco-editor-webpack-plugin");
 
 module.exports = configure(function (ctx) {
   return {
@@ -22,7 +22,7 @@ module.exports = configure(function (ctx) {
       tsCheckerConfig: {
         eslint: {
           enabled: true,
-          files: './src/**/*.{ts,tsx,js,jsx,vue}',
+          files: "./src/**/*.{ts,tsx,js,jsx,vue}",
         },
       },
     },
@@ -33,10 +33,10 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ['axios'],
+    boot: ["axios"],
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
-    css: ['~src/assets/common/less/index.less'],
+    css: ["~src/assets/common/less/index.less"],
 
     // https://github.com/quasarframework/quasar/tree/dev/extras
     extras: [
@@ -48,13 +48,13 @@ module.exports = configure(function (ctx) {
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      'roboto-font', // optional, you are not bound to it
-      'material-icons', // optional, you are not bound to it
+      "roboto-font", // optional, you are not bound to it
+      "material-icons", // optional, you are not bound to it
     ],
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-build
     build: {
-      vueRouterMode: 'history', // available values: 'hash', 'history'
+      vueRouterMode: "history", // available values: 'hash', 'history'
 
       // transpile: false,
 
@@ -75,9 +75,18 @@ module.exports = configure(function (ctx) {
       // https://v2.quasar.dev/quasar-cli/handling-webpack
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
       chainWebpack(chain) {
-        chain.resolve.alias.set('@', path.resolve(__dirname, 'src'));
+        chain.resolve.alias
+          .set("@", path.resolve(__dirname, "src"))
+          .set("process", "process/browser.js")
+          .set("buffer", "buffer");
 
-        chain.plugin('circular-dependency').use(CircularDependencyPlugin, [
+        chain
+          .plugin("provide")
+          .use(require.resolve("webpack/lib/ProvidePlugin"), [
+            { process: "process/browser.js", Buffer: ["buffer", "Buffer"] },
+          ]);
+
+        chain.plugin("circular-dependency").use(CircularDependencyPlugin, [
           {
             // exclude detection of files based on a RegExp
             exclude: /node_modules/,
@@ -93,10 +102,10 @@ module.exports = configure(function (ctx) {
           },
         ]);
 
-        chain.plugin('monaco-editor').use(MonacoWebpackPlugin, [
+        chain.plugin("monaco-editor").use(MonacoWebpackPlugin, [
           {
             // Languages are loaded on demand at runtime
-            languages: ['json', 'javascript', 'markdown'],
+            languages: ["json", "javascript", "markdown"],
           },
         ]);
       },
@@ -113,8 +122,8 @@ module.exports = configure(function (ctx) {
     framework: {
       config: {},
 
-      // iconSet: 'material-icons', // Quasar icon set
-      lang: 'zh-CN', // Quasar language pack
+      iconSet: 'material-icons', // Quasar icon set
+      lang: "zh-CN", // Quasar language pack
 
       // For special cases outside of where the auto-import stategy can have an impact
       // (like functional components as one of the examples),
@@ -124,7 +133,7 @@ module.exports = configure(function (ctx) {
       // directives: [],
 
       // Quasar plugins
-      plugins: ['Notify', 'Dialog'],
+      plugins: ["Notify", "Dialog"],
     },
 
     // animations: 'all', // --- includes all animations
@@ -149,14 +158,14 @@ module.exports = configure(function (ctx) {
       },
 
       middlewares: [
-        ctx.prod ? 'compression' : '',
-        'render', // keep this as last one
+        ctx.prod ? "compression" : "",
+        "render", // keep this as last one
       ],
     },
 
     // https://v2.quasar.dev/quasar-cli/developing-pwa/configuring-pwa
     pwa: {
-      workboxPluginMode: 'GenerateSW', // 'GenerateSW' or 'InjectManifest'
+      workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
 
       // for the custom service worker ONLY (/src-pwa/custom-service-worker.[js|ts])
@@ -166,38 +175,38 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: 'Quasar App',
-        short_name: 'Quasar App',
-        description: 'A Quasar Framework app',
-        display: 'standalone',
-        orientation: 'portrait',
-        background_color: '#ffffff',
-        theme_color: '#027be3',
+        name: "Quasar App",
+        short_name: "Quasar App",
+        description: "A Quasar Framework app",
+        display: "standalone",
+        orientation: "portrait",
+        background_color: "#ffffff",
+        theme_color: "#027be3",
         icons: [
           {
-            src: 'icons/icon-128x128.png',
-            sizes: '128x128',
-            type: 'image/png',
+            src: "icons/icon-128x128.png",
+            sizes: "128x128",
+            type: "image/png",
           },
           {
-            src: 'icons/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
+            src: "icons/icon-192x192.png",
+            sizes: "192x192",
+            type: "image/png",
           },
           {
-            src: 'icons/icon-256x256.png',
-            sizes: '256x256',
-            type: 'image/png',
+            src: "icons/icon-256x256.png",
+            sizes: "256x256",
+            type: "image/png",
           },
           {
-            src: 'icons/icon-384x384.png',
-            sizes: '384x384',
-            type: 'image/png',
+            src: "icons/icon-384x384.png",
+            sizes: "384x384",
+            type: "image/png",
           },
           {
-            src: 'icons/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
+            src: "icons/icon-512x512.png",
+            sizes: "512x512",
+            type: "image/png",
           },
         ],
       },
@@ -215,7 +224,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/developing-electron-apps/configuring-electron
     electron: {
-      bundler: 'packager', // 'packager' or 'builder'
+      bundler: "packager", // 'packager' or 'builder'
 
       packager: {
         // https://github.com/electron-userland/electron-packager/blob/master/docs/api.md#options
@@ -231,7 +240,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'git-log-extract',
+        appId: "git-log-extract",
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain
