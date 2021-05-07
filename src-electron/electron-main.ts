@@ -1,6 +1,6 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
 import { app, BrowserWindow, nativeTheme } from "electron";
 import path from "path";
+import fs from "fs-extra";
 import requireContext from "./utils/require-context";
 
 try {
@@ -8,9 +8,7 @@ try {
     process.platform === "win32" &&
     nativeTheme.shouldUseDarkColors === true
   ) {
-    require("fs").unlinkSync(
-      require("path").join(app.getPath("userData"), "DevTools Extensions")
-    );
+    fs.unlinkSync(path.join(app.getPath("userData"), "DevTools Extensions"));
   }
   // eslint-disable-next-line no-empty
 } catch (_) {}
@@ -35,7 +33,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadURL(process.env.APP_URL || "");
+  void mainWindow.loadURL(process.env.APP_URL || "");
 
   if (process.env.DEBUGGING) {
     // if on DEV or Production with debug enabled

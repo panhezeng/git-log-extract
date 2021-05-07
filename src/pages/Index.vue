@@ -120,8 +120,8 @@ export default defineComponent({
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const stateProject = computed<StateInterfaceProject>(
-      () => store.state[namesProject.module]
+    const stateProject = computed(
+      () => store.state[namesProject.module] as StateInterfaceProject
     );
     const projects = computed(() => stateProject.value.projects);
     const ticked = [] as string[];
@@ -178,7 +178,10 @@ export default defineComponent({
             namesProject.module + "/" + namesProject.getters.GET_PROJECT
           ]({
             repositoryURL: data.ticked[0],
-          });
+          }) as {
+            data: ProjectType | null,
+            index: number,
+          };
           data.editProject.data = project.data;
           data.editProject.index = project.index;
         } else if (val === "add") {
@@ -236,7 +239,7 @@ export default defineComponent({
               for (const logKey in log) {
                 if (logKey in log) {
                   data.log += `\r\n${logKey}:${
-                    log[logKey as keyof typeof log]
+                    String(log[logKey as keyof typeof log])
                   }`;
                 }
               }

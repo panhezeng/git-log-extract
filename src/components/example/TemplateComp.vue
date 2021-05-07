@@ -31,7 +31,7 @@ import {
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
-import { api } from "boot/axios";
+import { api } from "@/boot/axios";
 
 import { Todo } from "@/components/example/models";
 

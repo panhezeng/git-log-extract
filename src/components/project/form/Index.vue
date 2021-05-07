@@ -94,7 +94,7 @@ import {
   names as namesPersonalize,
   StateInterface as StateInterfacePersonalize,
 } from "@/store/personalize";
-import CryptoJS from "crypto-js";
+import CryptoES from "crypto-es";
 import { fileName as fileNameValidation } from "@/utils/validation";
 
 import { path, fs, git } from "@/utils/electron-preload";
@@ -122,8 +122,8 @@ export default defineComponent({
 
     const isEdit = computed(() => props.index > -1);
 
-    const statePersonalize = computed<StateInterfacePersonalize>(
-      () => store.state[namesPersonalize.module]
+    const statePersonalize = computed(
+      () => store.state[namesPersonalize.module] as StateInterfacePersonalize
     );
 
     let initData = JSON.parse(JSON.stringify(initProjectData)) as ProjectType;
@@ -135,10 +135,10 @@ export default defineComponent({
       initData.password = statePersonalize.value.git.password;
     }
     if (initData.password) {
-      initData.password = CryptoJS.AES.decrypt(
+      initData.password = CryptoES.AES.decrypt(
         initData.password,
         "Secret Passphrase"
-      ).toString(CryptoJS.enc.Utf8);
+      ).toString(CryptoES.enc.Utf8);
     }
 
     const project = reactive<ProjectType>(JSON.parse(JSON.stringify(initData)));
@@ -166,7 +166,7 @@ export default defineComponent({
     ];
 
     function repositoryURLInput() {
-      const found = project.repositoryURL.match(/^https?:\/\/.*\/(.*)\.git$/);
+      const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryURL);
       if (Array.isArray(found)) {
         project.name = found[1];
       }
@@ -215,7 +215,7 @@ export default defineComponent({
       );
       project.branches = branchSummary.all;
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;
-      data.password = CryptoJS.AES.encrypt(
+      data.password = CryptoES.AES.encrypt(
         data.password,
         "Secret Passphrase"
       ).toString();

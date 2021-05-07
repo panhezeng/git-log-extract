@@ -128,8 +128,8 @@ export default defineComponent({
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const statePersonalize = computed<StateInterfacePersonalize>(
-      () => store.state[namesPersonalize.module]
+    const statePersonalize = computed(
+      () => store.state[namesPersonalize.module] as StateInterfacePersonalize
     );
 
     const other = reactive({
@@ -188,7 +188,7 @@ export default defineComponent({
       Object.assign(data, initData);
     }
 
-    async function onSubmit() {
+    function onSubmit() {
       data.loading = true;
       context.emit("log-query", data);
     }

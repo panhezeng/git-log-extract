@@ -97,7 +97,7 @@ export function objectKeyAndValueType(
             const key = validationKeys[i];
             let currentChainKey = "";
             if (data[chainKey]) {
-              currentChainKey = data[chainKey] + ".";
+              currentChainKey = String(data[chainKey]) + ".";
             }
             currentChainKey += key;
             let dataChild = data[key];

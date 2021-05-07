@@ -86,7 +86,7 @@ import { useQuasar } from "quasar";
 
 import { names, StateInterface } from "@/store/personalize";
 
-import CryptoJS from "crypto-js";
+import CryptoES from "crypto-es";
 
 export default defineComponent({
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
@@ -98,22 +98,22 @@ export default defineComponent({
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const state = computed<StateInterface>(() => store.state[names.module]);
+    const state = computed(() => store.state[names.module] as StateInterface);
 
     const data = reactive<StateInterface>(
       JSON.parse(JSON.stringify(state.value))
     );
 
-    data.git.password = CryptoJS.AES.decrypt(
+    data.git.password = CryptoES.AES.decrypt(
       data.git.password,
       "Secret Passphrase"
-    ).toString(CryptoJS.enc.Utf8);
+    ).toString(CryptoES.enc.Utf8);
 
     const isPwd = ref(true);
 
-    async function onSubmit() {
+     function onSubmit() {
       const newData = JSON.parse(JSON.stringify(data)) as StateInterface;
-      newData.git.password = CryptoJS.AES.encrypt(
+      newData.git.password = CryptoES.AES.encrypt(
         newData.git.password,
         "Secret Passphrase"
       ).toString();

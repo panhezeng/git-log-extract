@@ -24,7 +24,7 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
 import { useQuasar } from "quasar";
-import { api } from "boot/axios";
+import { api } from "@/boot/axios";
 
 import { StateInterface, names } from "@/store/example-module";
 import TemplateComp from "@/components/example/TemplateComp.vue";
@@ -41,7 +41,7 @@ export default defineComponent({
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const state = computed<StateInterface>(() => store.state[names.module]);
+    const state = computed(() => store.state[names.module] as StateInterface);
 
     // store.commit(names.module + "/" + names.mutations.SOME_MUTATION)
     // store.dispatch(names.module + "/" + names.actions.SOME_ACTION)
@@ -61,7 +61,7 @@ export default defineComponent({
       eventTip.value = JSON.stringify(event);
     }
 
-    onMounted(async () => {
+    onMounted( () => {
       // console.log("pages onMounted ==============");
 
       // console.log(rootElement.value);

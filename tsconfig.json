@@ -2,7 +2,7 @@
   "compilerOptions": {
     "allowJs": true,
     // Needed to address https://github.com/quasarframework/app-extension-typescript/issues/36
-//    "noEmit": true,
+    //    "noEmit": true,
     "resolveJsonModule": true,
     "target": "esnext",
     "module": "esnext",
@@ -19,26 +19,12 @@
     // Removing this would break `quasar/wrappers` imports if `quasar`
     //  isn't referenced anywhere, because those typings are declared
     //  into `@quasar/app` which is imported by `quasar` typings
-    "types": ["quasar","webpack-env"],
+    "types": ["quasar", "webpack-env"],
     // Quasar-defined webpack aliases
     "paths": {
-      "@/*": [
-        "src/*"
-      ],
-      "src/*": ["src/*"],
-      "app/*": ["*"],
-      "components/*": ["src/components/*"],
-      "layouts/*": ["src/layouts/*"],
-      "pages/*": ["src/pages/*"],
-      "assets/*": ["src/assets/*"],
-      "boot/*": ["src/boot/*"]
+      "@/*": ["src/*"]
     },
-    "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
   "include": [
     "src/**/*.ts",
@@ -46,7 +32,8 @@
     "src/**/*.vue",
     "src-electron/**/*.ts",
     "src-electron/**/*.tsx",
-    "src-electron/**/*.vue"
+    "src-electron/**/*.vue",
+    "**/*.conf*.js"
   ],
   // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
   // to be evaluated by TS when their original files has been updated
