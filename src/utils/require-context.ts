@@ -1,4 +1,4 @@
-import { Module } from 'vuex';
+import { Module } from "vuex";
 
 type ReturnType = {
   module: Module<any, any> & {
@@ -7,9 +7,8 @@ type ReturnType = {
       getters?: { [key: string]: string };
       mutations?: { [key: string]: string };
       actions?: { [key: string]: string };
-
     };
-    default:any;
+    default: any;
   };
   path: string;
 };

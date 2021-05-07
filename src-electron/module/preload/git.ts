@@ -27,8 +27,8 @@ function createGit(
   git.outputHandler((bin, stdout, stderr, args) => {
     stdout.pipe(process.stdout);
     stderr.pipe(process.stderr);
-    stderr.on("data", function (stdData: any) {
-      console.log(stdData.toString());
+    stderr.on("data", function (stdData: { toString: () => string }) {
+      // console.log(stdData.toString());
       if (onProgress) {
         onProgress(stdData.toString());
       }
