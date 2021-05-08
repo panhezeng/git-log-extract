@@ -1,5 +1,7 @@
 # Quasar App (git-log-extract)
 
+暂时只能使用 npm 6 或者 yarn
+
 **monaco-editor 不要把编辑器的实例变成响应数据和挂载到模板数据上，会卡死**
 
 ## ui 组件库
@@ -59,11 +61,11 @@ Languages and Frameworks | JavaScript ，选择 JSX
 
 - 初始化前端环境 ** 有些系统 nvm 命令需要手动添加到 bash，所以下面命令会找不到 nvm 报错中断，请查看 nvm 安装文档 **
   ```bash
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash && export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node && nvm install --lts=erbium && nvm use --lts=erbium && npm i -g yarn npm pm2 @vue/cli @quasar/cli
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash && export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node && nvm install --lts/fermium && nvm use --lts/fermium && npm i -g yarn npm@6 pm2 @vue/cli @quasar/cli
   ```
-    - nvm install --lts=erbium --reinstall-packages-from=node
+    - nvm install --lts/fermium --reinstall-packages-from=node
       ```bash
-      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash && export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node && nvm install --lts=erbium --reinstall-packages-from=node && nvm use --lts=erbium && npm i -g yarn npm pm2 @vue/cli @quasar/cli
+      curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash && export NVM_NODEJS_ORG_MIRROR=https://npm.taobao.org/mirrors/node && nvm install --lts/fermium --reinstall-packages-from=node && nvm use --lts/fermium && npm i -g yarn npm@6 pm2 @vue/cli @quasar/cli
       ```
 
 ## Build Setup
