@@ -1,4 +1,4 @@
 /dist
 /.quasar
 /node_modules
-/*.js
+*.js
