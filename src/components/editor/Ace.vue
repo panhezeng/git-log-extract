@@ -14,6 +14,7 @@ import {
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { storeKey } from "@/store";
 import { useQuasar } from "quasar";
 
 import * as ace from "ace-builds";
@@ -48,7 +49,7 @@ export default defineComponent({
   ) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore();
+const store = useStore(storeKey);
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 

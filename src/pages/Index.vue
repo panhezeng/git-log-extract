@@ -90,6 +90,7 @@ import { defineComponent, computed, reactive, watch } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
+import { storeKey } from "@/store";
 import { useQuasar } from "quasar";
 
 import {
@@ -115,7 +116,7 @@ export default defineComponent({
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore();
+const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
