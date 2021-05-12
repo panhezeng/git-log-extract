@@ -1,5 +1,5 @@
 import { ActionTree, GetterTree, Module, MutationTree } from "vuex";
-import { StateInterface as StateInterfaceIndex } from "@/store/index";
+import { StateInterface as StateInterfaceIndex } from "src/store/index";
 
 export const names = {
   module: "exampleModule",

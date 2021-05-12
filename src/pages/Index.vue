@@ -90,24 +90,24 @@ import { defineComponent, computed, reactive, watch } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
 
 import {
   names as namesProject,
   ProjectType,
   StateInterface as StateInterfaceProject,
-} from "@/store/project";
-import Personalize from "@/components/Personalize.vue";
-import ProjectForm from "@/components/project/form/Index.vue";
-import LogQueryForm from "@/components/project/form/LogQuery.vue";
-import { LogQueryData } from "@/components/project/form/models";
-// import Editor from '@/components/editor/Ace.vue';
-// import Editor from '@/components/editor/Monaco.vue';
+} from "src/store/project";
+import Personalize from "src/components/Personalize.vue";
+import ProjectForm from "src/components/project/form/Index.vue";
+import LogQueryForm from "src/components/project/form/LogQuery.vue";
+import { LogQueryData } from "src/components/project/form/models";
+// import Editor from 'src/components/editor/Ace.vue';
+// import Editor from 'src/components/editor/Monaco.vue';
 
 import { DefaultLogFields, ListLogLine } from "simple-git";
 
-import { git } from "@/utils/electron-preload";
+import { git } from "src/utils/electron-preload";
 
 export default defineComponent({
   // components: { Personalize, ProjectForm, LogQueryForm, Editor },

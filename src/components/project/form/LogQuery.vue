@@ -99,19 +99,19 @@ import { computed, defineComponent, reactive, watch } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
 
 import {
   LogQueryData,
   logQueryInitData,
-} from "@/components/project/form/models";
-import { names, ProjectType } from "@/store/project";
+} from "src/components/project/form/models";
+import { names, ProjectType } from "src/store/project";
 import {
   names as namesPersonalize,
   StateInterface as StateInterfacePersonalize,
-} from "@/store/personalize";
-import dayjs from "@/utils/dayjs";
+} from "src/store/personalize";
+import dayjs from "src/utils/dayjs";
 
 export default defineComponent({
   components: {},

@@ -83,22 +83,22 @@ import { computed, defineComponent, ref, reactive } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
 
 import {
   names,
   project as initProjectData,
   ProjectType,
-} from "@/store/project";
+} from "src/store/project";
 import {
   names as namesPersonalize,
   StateInterface as StateInterfacePersonalize,
-} from "@/store/personalize";
+} from "src/store/personalize";
 import CryptoES from "crypto-es";
-import { fileName as fileNameValidation } from "@/utils/validation";
+import { fileName as fileNameValidation } from "src/utils/validation";
 
-import { path, fs, git } from "@/utils/electron-preload";
+import { path, fs, git } from "src/utils/electron-preload";
 
 export default defineComponent({
   components: {},

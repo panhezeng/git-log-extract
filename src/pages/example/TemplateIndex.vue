@@ -23,12 +23,12 @@ import { defineComponent, ref, computed, onMounted } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
-import { api } from "@/boot/axios";
+import { api } from "src/boot/axios";
 
-import { StateInterface, names } from "@/store/example-module";
-import TemplateComp from "@/components/example/TemplateComp.vue";
+import { StateInterface, names } from "src/store/example-module";
+import TemplateComp from "src/components/example/TemplateComp.vue";
 
 export default defineComponent({
   components: {

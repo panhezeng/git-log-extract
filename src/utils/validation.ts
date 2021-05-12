@@ -1,4 +1,4 @@
-import { fs } from "@/utils/electron-preload";
+import { fs } from "src/utils/electron-preload";
 
 import { Notify } from "quasar";
 

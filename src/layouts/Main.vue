@@ -6,7 +6,7 @@ import { defineComponent, onMounted } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
 
 export default defineComponent({

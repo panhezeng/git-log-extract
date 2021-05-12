@@ -82,10 +82,10 @@ import { computed, defineComponent, reactive, ref } from "vue";
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
 
-import { names, StateInterface } from "@/store/personalize";
+import { names, StateInterface } from "src/store/personalize";
 
 import CryptoES from "crypto-es";
 

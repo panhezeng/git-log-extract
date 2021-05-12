@@ -30,11 +30,11 @@ import {
 
 import { useRouter, useRoute } from "vue-router";
 import { useStore } from "vuex";
-import { storeKey } from "@/store";
+import { storeKey } from "src/store";
 import { useQuasar } from "quasar";
-import { api } from "@/boot/axios";
+import { api } from "src/boot/axios";
 
-import { Todo } from "@/components/example/models";
+import { Todo } from "src/components/example/models";
 
 function useClickCount() {
   const clickCount = ref(0);

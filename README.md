@@ -1,6 +1,6 @@
 # Quasar App (git-log-extract)
 
-electron 项目只能使用 yarn
+如果使用 npm run dev 出现 错误 Command name was not available. Please run again. 可以使用 yarn 或者 `cd node_modules/electron && sudo node install.js` 重新安装 electron 模块
 
 **monaco-editor 不要把编辑器的实例变成响应数据和挂载到模板数据上，会卡死**
 

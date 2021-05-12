@@ -22,7 +22,8 @@
     "types": ["quasar", "webpack-env"],
     // Quasar-defined webpack aliases
     "paths": {
-      "@/*": ["src/*"]
+      "src/*": ["src/*"],
+      "app/*": ["*"]
     },
     "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
   },
