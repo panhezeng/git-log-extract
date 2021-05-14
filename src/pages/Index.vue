@@ -54,14 +54,14 @@
               input-class="bg-dark text-grey-1"
               input-style="min-height: 20px"
               v-model="data.cmd"
-              label=""
+              type="textarea"
             />
           </div>
           <div>
             <div>log：</div>
             <q-input
               input-class="bg-dark text-grey-1"
-              input-style="min-height: 300px"
+              input-style="min-height: 300px;"
               v-model="data.log"
               type="textarea"
             />
@@ -116,7 +116,7 @@ export default defineComponent({
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-const store = useStore(storeKey);
+    const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
@@ -180,8 +180,8 @@ const store = useStore(storeKey);
           ]({
             repositoryURL: data.ticked[0],
           }) as {
-            data: ProjectType | null,
-            index: number,
+            data: ProjectType | null;
+            index: number;
           };
           data.editProject.data = project.data;
           data.editProject.index = project.index;
@@ -193,6 +193,8 @@ const store = useStore(storeKey);
     );
 
     async function logQuery(logQueryData: LogQueryData) {
+      data.log = "";
+      data.cmd = "";
       for (let i = 0, end = data.ticked.length; i < end; i++) {
         const repositoryURL = data.ticked[i];
         const project = store.getters[
@@ -202,9 +204,26 @@ const store = useStore(storeKey);
         });
         const projectData = project.data as ProjectType;
 
-        data.log = projectData.name;
+        if (i) {
+          data.log += `
+
+${projectData.name}
+
+`;
+        } else {
+          data.log += `${projectData.name}
+
+`;
+        }
 
         const logOptions: string[] = [];
+
+        logQueryData.branches.forEach((branch) => {
+          if (projectData.branches.includes(branch)) {
+            logOptions.push(branch);
+          }
+        });
+
         if (logQueryData.author) {
           logOptions.push(`--author=${logQueryData.author}`);
         }
@@ -215,38 +234,70 @@ const store = useStore(storeKey);
         if (logQueryData.noMerges) {
           logOptions.push(`--no-merges`);
         }
-        for (let j = 0, jEnd = logQueryData.branches.length; j < jEnd; j++) {
-          const branch = logQueryData.branches[j];
-          if (j) {
-            logOptions.shift();
-          }
-          logOptions.unshift(branch);
-          data.cmd = `git log ${logOptions.join(" ")}`;
-          // console.log(data.cmd);
-          const logResult = await git.logResult(
-            projectData.directoryPath,
-            logOptions
-          );
-          logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
-            if (logQueryData.onlyMessage) {
-              if (logQueryData.dedup) {
-                if (!data.log.includes(log.message)) {
-                  data.log += `\r\n${log.message}`;
-                }
-              } else {
-                data.log += `\r\n${log.message}`;
+
+        data.cmd += `git log ${logOptions.join(" ")}
+`;
+        // console.log(data.cmd);
+
+        const logResult = await git.logResult(
+          projectData.directoryPath,
+          logOptions
+        );
+        logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
+          if (logQueryData.onlyMessage) {
+            if (logQueryData.dedup) {
+              if (!data.log.includes(log.message)) {
+                data.log += `${log.message}
+`;
               }
             } else {
-              for (const logKey in log) {
-                if (logKey in log) {
-                  data.log += `\r\n${logKey}:${
-                    String(log[logKey as keyof typeof log])
-                  }`;
-                }
+              data.log += `${log.message}
+`;
+            }
+          } else {
+            for (const logKey in log) {
+              if (logKey in log) {
+                data.log += `${logKey}:${String(
+                  log[logKey as keyof typeof log]
+                )}
+`;
               }
             }
-          });
-        }
+          }
+        });
+
+        // for (let j = 0, jEnd = logQueryData.branches.length; j < jEnd; j++) {
+        //   const branch = logQueryData.branches[j];
+        //   if (j) {
+        //     logOptions.shift();
+        //   }
+        //   logOptions.unshift(branch);
+        //   data.cmd = `git log ${logOptions.join(" ")}`;
+        //   // console.log(data.cmd);
+        //   const logResult = await git.logResult(
+        //     projectData.directoryPath,
+        //     logOptions
+        //   );
+        //   logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
+        //     if (logQueryData.onlyMessage) {
+        //       if (logQueryData.dedup) {
+        //         if (!data.log.includes(log.message)) {
+        //           data.log += `\r\n${log.message}`;
+        //         }
+        //       } else {
+        //         data.log += `\r\n${log.message}`;
+        //       }
+        //     } else {
+        //       for (const logKey in log) {
+        //         if (logKey in log) {
+        //           data.log += `\r\n${logKey}:${
+        //             String(log[logKey as keyof typeof log])
+        //           }`;
+        //         }
+        //       }
+        //     }
+        //   });
+        // }
       }
       logQueryData.loading = false;
     }
