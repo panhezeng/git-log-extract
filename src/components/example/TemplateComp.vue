@@ -79,7 +79,7 @@ export default defineComponent({
   setup(props: PropValueType, context) {
     const router = useRouter();
     const route = useRoute();
-const store = useStore(storeKey);
+    const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */

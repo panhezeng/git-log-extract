@@ -37,7 +37,7 @@ export default defineComponent({
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-const store = useStore(storeKey);
+    const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
@@ -62,7 +62,7 @@ const store = useStore(storeKey);
       eventTip.value = JSON.stringify(event);
     }
 
-    onMounted( () => {
+    onMounted(() => {
       // console.log("pages onMounted ==============");
 
       // console.log(rootElement.value);
