@@ -14,7 +14,7 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
+    "baseUrl": "./",
     // Forces quasar typings to be included, even if they aren't referenced directly
     // Removing this would break `quasar/wrappers` imports if `quasar`
     //  isn't referenced anywhere, because those typings are declared
@@ -22,6 +22,7 @@
     "types": ["quasar", "webpack-env"],
     // Quasar-defined webpack aliases
     "paths": {
+      "@/*": ["src/*"],
       "src/*": ["src/*"],
       "app/*": ["*"]
     },
