@@ -238,33 +238,34 @@ ${projectData.name}
         data.cmd += `git log ${logOptions.join(" ")}
 `;
         // console.log(data.cmd);
-
-        const logResult = await git.logResult(
-          projectData.directoryPath,
-          logOptions
-        );
-        logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
-          if (logQueryData.onlyMessage) {
-            if (logQueryData.dedup) {
-              if (!data.log.includes(log.message)) {
+        try {
+          const logResult = await git.logResult(
+            projectData.directoryPath,
+            logOptions
+          );
+          logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
+            if (logQueryData.onlyMessage) {
+              if (logQueryData.dedup) {
+                if (!data.log.includes(log.message)) {
+                  data.log += `${log.message}
+`;
+                }
+              } else {
                 data.log += `${log.message}
 `;
               }
             } else {
-              data.log += `${log.message}
+              for (const logKey in log) {
+                if (logKey in log) {
+                  data.log += `${logKey}:${String(
+                    log[logKey as keyof typeof log]
+                  )}
 `;
-            }
-          } else {
-            for (const logKey in log) {
-              if (logKey in log) {
-                data.log += `${logKey}:${String(
-                  log[logKey as keyof typeof log]
-                )}
-`;
+                }
               }
             }
-          }
-        });
+          });
+        } catch (e) {}
 
         // for (let j = 0, jEnd = logQueryData.branches.length; j < jEnd; j++) {
         //   const branch = logQueryData.branches[j];

@@ -52,9 +52,9 @@ export default async function () {
     meridiem(hour: any, minute: any) {
       if (hour < 9) {
         return "早上";
-      } else if (hour < 11 && minute < 30) {
+      } else if (hour < 11) {
         return "上午";
-      } else if (hour < 13 && minute < 30) {
+      } else if (hour < 13) {
         return "中午";
       } else if (hour < 18) {
         return "下午";

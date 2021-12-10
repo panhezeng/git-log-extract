@@ -46,31 +46,31 @@ function createWindow() {
     });
   }
 
-  mainWindow.on("closed", () => {
-    mainWindow = null;
-  });
-
-  // 自动加载 module/main 目录下非 *exclude.js命名规则的 js 文件，并执行 export default function , 传入参数 mainWindow
-  // 所有需要在主进程执行的功能代码，都可以放到 module/main 目录下，会自动执行，代码分离解耦
-  requireContext(
-    require.context("./module/main", true, /(?<!exclude)\.ts$/)
-  ).forEach(({ module }) => {
-    if (module && typeof module.default === "function") {
-      module.default(mainWindow);
-    }
-  });
+  // mainWindow.on("closed", () => {
+  //   mainWindow = null;
+  // });
 }
+
+// 自动加载 module/main 目录下非 *exclude.js命名规则的 js 文件，并执行 export default function
+// 所有需要在主进程执行的功能代码，都可以放到 module/main 目录下，会自动执行，代码分离解耦
+requireContext(
+  require.context("./module/main", true, /(?<!exclude)\.ts$/)
+).forEach(({ module }) => {
+  if (module && typeof module.default === "function") {
+    module.default();
+  }
+});
 
 app.on("ready", createWindow);
 
 app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
-    app.quit();
-  }
+  // if (process.platform !== "darwin") {
+  app.quit();
+  // }
 });
 
-app.on("activate", () => {
-  if (!mainWindow) {
-    createWindow();
-  }
-});
+// app.on("activate", () => {
+//   if (!mainWindow) {
+//     createWindow();
+//   }
+// });

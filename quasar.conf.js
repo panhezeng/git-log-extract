@@ -108,6 +108,15 @@ module.exports = configure(function (ctx) {
             languages: ["json", "javascript", "markdown"],
           },
         ]);
+
+        // chain.module.rule('mdx')
+        //   .test(/\.mdx?$/i)
+        //   .use('babel')
+        //   .loader('babel-loader')
+        //   .end()
+        //   .use('mdx')
+        //   .loader('@mdx-js/vue-loader')
+        //   .end();
       },
     },
 

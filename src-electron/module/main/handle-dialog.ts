@@ -1,7 +1,7 @@
 /* eslint-env node */
-import { ipcMain, dialog, OpenDialogOptions, BrowserWindow } from "electron";
+import { ipcMain, dialog, OpenDialogOptions } from "electron";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export default (window: BrowserWindow) => {
+export default () => {
   ipcMain.handle(
     "electronDialog",
     async (event, options: OpenDialogOptions) => {
