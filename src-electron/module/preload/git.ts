@@ -52,14 +52,16 @@ export default () => {
       });
       await git.init();
       await git.addRemote("origin", repositoryAuthURL);
-      await git.remote(["update"]);
+      await git.fetch(['--shallow-since="1 months ago"']);
+      // await git.remote(["update"]);
       const branchSummary: BranchSummary = await git.branch(["-r"]);
       return branchSummary;
     },
     logResult: async (directoryPath: string, logOptions: string[]) => {
       const git = createGit({ baseDir: directoryPath });
+      await git.fetch(['--shallow-since="1 months ago"']);
       // console.log('git 1');
-      await git.remote(["update"]);
+      // await git.remote(["update"]);
       // // console.log('git 2');
       const logResult: LogResult = await git.log(logOptions);
       // console.log('git 3');
