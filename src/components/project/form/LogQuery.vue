@@ -160,7 +160,7 @@ export default defineComponent({
           projectData.branches.forEach((branch, index) => {
             if (!other.branchesOptions.includes(branch)) {
               other.branchesOptions.push(branch);
-              if (index === 0) {
+              if (/master|develop|main|phz/.test(branch)) {
                 initData.branches.push(branch);
               }
             }
