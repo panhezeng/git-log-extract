@@ -11,6 +11,7 @@ export function localDirectoryPath(val: string, fail?: string) {
     }
   }
 }
+
 export function fileName(val: string, fail?: string) {
   if (val.length && !/[\\/:*?"<>|]/gi.test(val)) {
     return true;
