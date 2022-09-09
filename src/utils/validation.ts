@@ -1,9 +1,7 @@
-import { fs } from "src/utils/electron-preload";
-
 import { Notify } from "quasar";
 
 export function localDirectoryPath(val: string, fail?: string) {
-  if (fs.existsSync(val)) {
+  if (window.electronFs.existsSync(val)) {
     return true;
   } else {
     if (typeof fail === "undefined") {
@@ -25,7 +23,7 @@ export function fileName(val: string, fail?: string) {
   }
 }
 
-export function apiURLSegment(val: string, fail?: string) {
+export function apiUrlSegment(val: string, fail?: string) {
   if (val.length && /^\/(\w|\d)+/.test(val)) {
     return true;
   } else {
@@ -37,7 +35,7 @@ export function apiURLSegment(val: string, fail?: string) {
   }
 }
 
-export function apiURL(
+export function apiUrl(
   url: string,
   validation: { prefix: string; suffix: string },
   notify = true
@@ -49,7 +47,7 @@ export function apiURL(
         color: "red",
         textColor: "white",
         icon: "warning",
-        message: "api接口URL必填",
+        message: "api接口url必填",
       });
     }
     return false;

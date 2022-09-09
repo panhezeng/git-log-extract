@@ -98,8 +98,6 @@ import {
 import CryptoES from "crypto-es";
 import { fileName as fileNameValidation } from "src/utils/validation";
 
-import { path, fs, git } from "src/utils/electron-preload";
-
 export default defineComponent({
   components: {},
   props: {
@@ -177,8 +175,8 @@ export default defineComponent({
       fileNameValidation,
       (val: string) => {
         if (val) {
-          const directoryPath = path.resolve("temp/git/" + val);
-          fs.removeSync(directoryPath);
+          const directoryPath = window.electronPath.resolve("temp/git/" + val);
+          window.electronFs.removeSync(directoryPath);
         }
         if (
           !props.data &&
@@ -202,17 +200,19 @@ export default defineComponent({
 
     async function onSubmit() {
       submitLoading.value = true;
-      const repositoryAuthURL = git.repositoryAuthURL(
+      const repositoryAuthUrl = window.electronGit.repositoryAuthUrl(
         project.repositoryURL,
         project.username,
         project.password
       );
-      const directoryPath = path.resolve("temp/git/" + project.name);
+      const directoryPath = window.electronPath.resolve(
+        "temp/git/" + project.name
+      );
       project.directoryPath = directoryPath;
-      fs.emptyDirSync(directoryPath);
-      const branchSummary = await git.branchSummary(
+      window.electronFs.emptyDirSync(directoryPath);
+      const branchSummary = await window.electronGit.branchSummary(
         directoryPath,
-        repositoryAuthURL
+        repositoryAuthUrl
       );
       project.branches = branchSummary.all;
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;

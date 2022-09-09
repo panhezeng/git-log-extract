@@ -2,8 +2,6 @@ import { GetterTree, Module, MutationTree } from "vuex";
 import { StateInterface as StateInterfaceIndex } from "src/store/index";
 import { toRaw } from "vue";
 
-import { electronStore } from "src/utils/electron-preload";
-
 export const names = {
   module: "project",
   getters: {
@@ -25,7 +23,7 @@ export const project = {
 
 export type ProjectType = typeof project;
 
-const projects = electronStore.get(
+const projects = window.electronStore.get(
   `store_${names.module}.projects`,
   []
 ) as ProjectType[];
@@ -94,7 +92,7 @@ const mutations: MutationTree<StateInterface> = {
         }
       }
     }
-    electronStore.set({
+    window.electronStore.set({
       [`store_${names.module}`]: { projects: toRaw(state.projects) },
     });
   },

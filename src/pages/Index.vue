@@ -107,8 +107,6 @@ import { LogQueryData } from "src/components/project/form/models";
 
 import { DefaultLogFields, ListLogLine } from "simple-git";
 
-import { git } from "src/utils/electron-preload";
-
 export default defineComponent({
   // components: { Personalize, ProjectForm, LogQueryForm, Editor },
   components: { Personalize, ProjectForm, LogQueryForm },
@@ -239,7 +237,7 @@ ${projectData.name}
 `;
         // console.log(data.cmd);
         try {
-          const logResult = await git.logResult(
+          const logResult = await window.electronGit.logResult(
             projectData.directoryPath,
             logOptions
           );

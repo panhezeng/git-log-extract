@@ -2,8 +2,6 @@ import { Module, MutationTree } from "vuex";
 import { StateInterface as StateInterfaceIndex } from "src/store/index";
 import { toRaw } from "vue";
 
-import { electronStore } from "src/utils/electron-preload";
-
 export const names = {
   module: "personalize",
 
@@ -27,14 +25,14 @@ const initState = {
 };
 export type StateInterface = typeof initState;
 
-Object.assign(initState, electronStore.get(`store_${names.module}`, {}));
+Object.assign(initState, window.electronStore.get(`store_${names.module}`, {}));
 
 const mutations: MutationTree<StateInterface> = {
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   [names.mutations.SET_DATA](state, data: Partial<StateInterface>) {
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
     Object.assign(state, data);
-    electronStore.set({ [`store_${names.module}`]: toRaw(state) });
+    window.electronStore.set({ [`store_${names.module}`]: toRaw(state) });
   },
 };
 

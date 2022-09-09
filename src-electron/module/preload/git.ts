@@ -40,18 +40,18 @@ function createGit(
 
 export default () => {
   contextBridge.exposeInMainWorld("electronGit", {
-    repositoryAuthURL: (url: string, username: string, password: string) => {
+    repositoryAuthUrl: (url: string, username: string, password: string) => {
       const urlObj = new URL(url);
       urlObj.username = username;
       urlObj.password = password;
       return urlObj.href;
     },
-    branchSummary: async (directoryPath: string, repositoryAuthURL: string) => {
+    branchSummary: async (directoryPath: string, repositoryAuthUrl: string) => {
       const git = createGit({
         baseDir: directoryPath,
       });
       await git.init();
-      await git.addRemote("origin", repositoryAuthURL);
+      await git.addRemote("origin", repositoryAuthUrl);
       await git.fetch(['--shallow-since="1 months ago"']);
       // await git.remote(["update"]);
       const branchSummary: BranchSummary = await git.branch(["-r"]);
