@@ -6,18 +6,18 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-input clearable v-model="data.git.username" label="用户名" />
+          <q-input v-model="data.git.username" clearable label="用户名" />
         </q-item-section>
       </q-item>
       <q-item>
         <q-item-section>
           <q-input
-            clearable
             v-model="data.git.password"
+            clearable
             label="密码"
             :type="isPwd ? 'password' : 'text'"
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon
                 :name="isPwd ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer"
@@ -32,7 +32,7 @@
       </q-item>
       <q-item>
         <q-item-section>
-          <q-input clearable v-model="data.logQuery.author" label="Author" />
+          <q-input v-model="data.logQuery.author" clearable label="Author" />
         </q-item-section>
       </q-item>
       <q-item>
@@ -78,57 +78,57 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from "vue";
+import { defineComponent, reactive, ref, toRaw, unref } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { storeKey } from "src/store";
-import { useQuasar } from "quasar";
+import { useRouter, useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 
-import { names, StateInterface } from "src/store/personalize";
-
-import CryptoES from "crypto-es";
+import CryptoJS from 'crypto-js';
+import { usePersonalizeStore, StateType } from '@/stores/personalize';
 
 export default defineComponent({
+  emits: ['submit-success'],
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const state = computed(() => store.state[names.module] as StateInterface);
+    const personalizeStore = usePersonalizeStore();
 
-    const data = reactive<StateInterface>(
-      JSON.parse(JSON.stringify(state.value))
+    const data = reactive<StateType>(
+      JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state))))
     );
 
-    data.git.password = CryptoES.AES.decrypt(
+    data.git.password = CryptoJS.AES.decrypt(
       data.git.password,
-      "Secret Passphrase"
-    ).toString(CryptoES.enc.Utf8);
+      'Secret Passphrase'
+    ).toString(CryptoJS.enc.Utf8);
 
     const isPwd = ref(true);
 
     function onSubmit() {
-      const newData = JSON.parse(JSON.stringify(data)) as StateInterface;
-      newData.git.password = CryptoES.AES.encrypt(
+      const newData = JSON.parse(JSON.stringify(toRaw(data))) as StateType;
+      newData.git.password = CryptoJS.AES.encrypt(
         newData.git.password,
-        "Secret Passphrase"
+        'Secret Passphrase'
       ).toString();
-      store.commit(names.module + "/" + names.mutations.SET_DATA, newData);
+      personalizeStore.setData(newData);
       $q.notify({
-        type: "positive",
-        position: "top",
-        message: "保存成功",
+        type: 'positive',
+        position: 'top',
+        message: '保存成功',
       });
-      context.emit("submit-success", data);
+      context.emit('submit-success', data);
     }
 
     function onReset() {
-      Object.assign(data, JSON.parse(JSON.stringify(state.value)));
+      Object.assign(
+        data,
+        JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state))))
+      );
     }
 
     return {

@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-comp" ref="editorElement"></div>
+  <div ref="editorElement" class="editor-comp"></div>
 </template>
 <script lang="ts">
 import {
@@ -10,16 +10,14 @@ import {
   PropType,
   nextTick,
   watch,
-} from "vue";
+} from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { storeKey } from "src/store";
-import { useQuasar } from "quasar";
+import { useRouter, useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 
-import * as ace from "ace-builds";
-import "ace-builds/src-noconflict/theme-nord_dark";
-import "ace-builds/src-noconflict/mode-markdown";
+import * as ace from 'ace-builds';
+import 'ace-builds/src-noconflict/theme-nord_dark';
+import 'ace-builds/src-noconflict/mode-markdown';
 
 export default defineComponent({
   props: {
@@ -38,6 +36,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['update:modelValue', 'ready'],
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(
     props: {
@@ -49,7 +48,6 @@ export default defineComponent({
   ) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore(storeKey);
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
@@ -62,8 +60,8 @@ export default defineComponent({
         // 合并配置
         const options: Partial<ace.Ace.EditorOptions> = {
           value: props.modelValue,
-          theme: "ace/theme/nord_dark",
-          mode: "ace/mode/markdown",
+          theme: 'ace/theme/nord_dark',
+          mode: 'ace/mode/markdown',
         };
 
         editor = ace.edit(editorElement.value, options);
@@ -71,13 +69,13 @@ export default defineComponent({
         if (props.sync) {
           const emitValue = () => {
             if (editor && props.modelValue !== editor.getValue()) {
-              context.emit("update:modelValue", editor.getValue());
+              context.emit('update:modelValue', editor.getValue());
             }
           };
 
-          editor.on("input", emitValue);
-          editor.on("paste", emitValue);
-          editor.on("blur", emitValue);
+          editor.on('input', emitValue);
+          editor.on('paste', emitValue);
+          editor.on('blur', emitValue);
 
           watch(
             () => props.modelValue,
@@ -91,7 +89,7 @@ export default defineComponent({
       }
 
       // 编辑器生成完成
-      context.emit("ready", editor);
+      context.emit('ready', editor);
     }
 
     onMounted(async () => {

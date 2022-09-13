@@ -4,14 +4,14 @@
       <q-item>
         <q-item-section>
           <q-input
-            v-model="project.repositoryURL"
+            v-model="project.repositoryUrl"
             label="Git仓库地址"
             hint="项目Git远程仓库地址"
             lazy-rules
-            :rules="repositoryURLValidation"
+            :rules="repositoryUrlValidation"
             :disable="isEdit"
             clearable
-            @update:model-value="repositoryURLInput"
+            @update:model-value="repositoryUrlInput"
           />
         </q-item-section>
       </q-item>
@@ -48,7 +48,7 @@
             :rules="[(val) => !!val || '输入项目Git账户密码']"
             clearable
           >
-            <template v-slot:append>
+            <template #append>
               <q-icon
                 :name="isPwd ? 'visibility_off' : 'visibility'"
                 class="cursor-pointer"
@@ -79,24 +79,20 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref, reactive } from "vue";
+import { computed, defineComponent, ref, reactive } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { storeKey } from "src/store";
-import { useQuasar } from "quasar";
+import { useRouter, useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 import {
-  names,
   project as initProjectData,
   ProjectType,
-} from "src/store/project";
-import {
-  names as namesPersonalize,
-  StateInterface as StateInterfacePersonalize,
-} from "src/store/personalize";
-import CryptoES from "crypto-es";
-import { fileName as fileNameValidation } from "src/utils/validation";
+  useProjectStore,
+} from '@/stores/project';
+
+import CryptoJS from 'crypto-js';
+import { fileName as fileNameValidation } from '@/utils/validation';
+import { usePersonalizeStore } from '@/stores/personalize';
 
 export default defineComponent({
   components: {},
@@ -110,62 +106,61 @@ export default defineComponent({
       default: -1,
     },
   },
+  emits: ['submit-success'],
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
     const isEdit = computed(() => props.index > -1);
 
-    const statePersonalize = computed(
-      () => store.state[namesPersonalize.module] as StateInterfacePersonalize
-    );
+    const personalizeStore = usePersonalizeStore();
+    const projectStore = useProjectStore();
 
     let initData = JSON.parse(JSON.stringify(initProjectData)) as ProjectType;
 
     if (isEdit.value && props.data) {
       initData = JSON.parse(JSON.stringify(props.data)) as ProjectType;
     } else {
-      initData.username = statePersonalize.value.git.username;
-      initData.password = statePersonalize.value.git.password;
+      initData.username = personalizeStore.git.username;
+      initData.password = personalizeStore.git.password;
     }
     if (initData.password) {
-      initData.password = CryptoES.AES.decrypt(
+      initData.password = CryptoJS.AES.decrypt(
         initData.password,
-        "Secret Passphrase"
-      ).toString(CryptoES.enc.Utf8);
+        'Secret Passphrase'
+      ).toString(CryptoJS.enc.Utf8);
     }
 
     const project = reactive<ProjectType>(JSON.parse(JSON.stringify(initData)));
 
-    const repositoryURLValidation = [
+    const repositoryUrlValidation = [
       (val: string) => {
         if (/^https?:\/\/.*\.git$/.test(val)) {
           return true;
         } else {
-          return "请输入有效的git仓库地址，http开始，.git结尾";
+          return '请输入有效的git仓库地址，http开始，.git结尾';
         }
       },
       (val: string) => {
         if (
           !props.data &&
-          store.getters[names.module + "/" + names.getters.GET_PROJECT]({
-            repositoryURL: val,
+          projectStore.getProject({
+            repositoryUrl: val,
           }).data
         ) {
-          return "已存在相同仓库地址项目，请修改仓库地址";
+          return '已存在相同仓库地址项目，请修改仓库地址';
         } else {
           return true;
         }
       },
     ];
 
-    function repositoryURLInput() {
-      const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryURL);
+    function repositoryUrlInput() {
+      const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryUrl);
       if (Array.isArray(found)) {
         project.name = found[1];
       }
@@ -175,16 +170,16 @@ export default defineComponent({
       fileNameValidation,
       (val: string) => {
         if (val) {
-          const directoryPath = window.electronPath.resolve("temp/git/" + val);
+          const directoryPath = window.electronPath.resolve('temp/git/' + val);
           window.electronFs.removeSync(directoryPath);
         }
         if (
           !props.data &&
-          store.getters[names.module + "/" + names.getters.GET_PROJECT]({
+          projectStore.getProject({
             name: val,
           }).data
         ) {
-          return "已存在同名项目，请修改项目名称";
+          return '已存在同名项目，请修改项目名称';
         } else {
           return true;
         }
@@ -201,12 +196,12 @@ export default defineComponent({
     async function onSubmit() {
       submitLoading.value = true;
       const repositoryAuthUrl = window.electronGit.repositoryAuthUrl(
-        project.repositoryURL,
+        project.repositoryUrl,
         project.username,
         project.password
       );
       const directoryPath = window.electronPath.resolve(
-        "temp/git/" + project.name
+        'temp/git/' + project.name
       );
       project.directoryPath = directoryPath;
       window.electronFs.emptyDirSync(directoryPath);
@@ -216,20 +211,20 @@ export default defineComponent({
       );
       project.branches = branchSummary.all;
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;
-      data.password = CryptoES.AES.encrypt(
+      data.password = CryptoJS.AES.encrypt(
         data.password,
-        "Secret Passphrase"
+        'Secret Passphrase'
       ).toString();
-      store.commit(names.module + "/" + names.mutations.SET_PROJECT, {
+      projectStore.setProject({
         data,
-        action: isEdit.value ? "edit" : "add",
+        action: isEdit.value ? 'edit' : 'add',
         index: props.index,
       });
-      context.emit("submit-success", data);
+      context.emit('submit-success', data);
       $q.notify({
-        message: "保存成功",
-        type: "positive",
-        position: "bottom-right",
+        message: '保存成功',
+        type: 'positive',
+        position: 'bottom-right',
       });
       submitLoading.value = false;
     }
@@ -237,8 +232,8 @@ export default defineComponent({
     return {
       isEdit,
       project,
-      repositoryURLValidation,
-      repositoryURLInput,
+      repositoryUrlValidation,
+      repositoryUrlInput,
       projectNameValidation,
       isPwd,
       submitLoading,

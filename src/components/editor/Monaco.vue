@@ -1,5 +1,5 @@
 <template>
-  <div class="editor-comp" ref="editorElement"></div>
+  <div ref="editorElement" class="editor-comp"></div>
 </template>
 <script lang="ts">
 import {
@@ -10,14 +10,12 @@ import {
   PropType,
   nextTick,
   watch,
-} from "vue";
+} from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { storeKey } from "src/store";
-import { useQuasar } from "quasar";
+import { useRouter, useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 
-import * as monaco from "monaco-editor";
+import * as monaco from 'monaco-editor';
 
 export default defineComponent({
   props: {
@@ -36,6 +34,7 @@ export default defineComponent({
       default: true,
     },
   },
+  emits: ['update:modelValue', 'ready', 'save'],
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(
     props: {
@@ -47,7 +46,6 @@ export default defineComponent({
   ) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore(storeKey);
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
@@ -56,14 +54,14 @@ export default defineComponent({
 
     // 格式化json
     function format() {
-      editor && editor.getAction("editor.action.formatDocument").run();
+      editor && editor.getAction('editor.action.formatDocument').run();
     }
     function save() {
       if (editor) {
         format();
         const value = editor.getValue();
-        context.emit("update:modelValue", value);
-        context.emit("save", value);
+        context.emit('update:modelValue', value);
+        context.emit('save', value);
       }
     }
 
@@ -73,8 +71,8 @@ export default defineComponent({
         // 合并配置
         const options: monaco.editor.IStandaloneEditorConstructionOptions = {
           value: props.modelValue,
-          theme: "vs-dark",
-          language: "markdown",
+          theme: 'vs-dark',
+          language: 'markdown',
           automaticLayout: true,
           scrollBeyondLastLine: false,
         };
@@ -85,7 +83,7 @@ export default defineComponent({
         if (props.sync) {
           editor.onDidChangeModelContent(() => {
             if (editor && props.modelValue !== editor.getValue()) {
-              context.emit("update:modelValue", editor.getValue());
+              context.emit('update:modelValue', editor.getValue());
             }
           });
           watch(
@@ -100,17 +98,17 @@ export default defineComponent({
 
         // 绑定键值
         // cmd + f
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_F, () => {
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
           format();
         });
         // cmd + s
-        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KEY_S, () => {
+        editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyS, () => {
           save();
         });
       }
 
       // 编辑器生成完成
-      context.emit("ready", editor);
+      context.emit('ready', editor);
     }
 
     onMounted(async () => {

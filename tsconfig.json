@@ -1,35 +1,14 @@
 {
+  "extends": "@quasar/app-webpack/tsconfig-preset",
   "compilerOptions": {
-    "allowJs": true,
-    // Needed to address https://github.com/quasarframework/app-extension-typescript/issues/36
-    //    "noEmit": true,
-    "resolveJsonModule": true,
-    "target": "esnext",
-    "module": "esnext",
-    "strict": true,
-    "jsx": "preserve",
-    "importHelpers": true,
-    "moduleResolution": "node",
-    "skipLibCheck": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "sourceMap": true,
-    "baseUrl": "./",
-    // Forces quasar typings to be included, even if they aren't referenced directly
-    // Removing this would break `quasar/wrappers` imports if `quasar`
-    //  isn't referenced anywhere, because those typings are declared
-    //  into `@quasar/app` which is imported by `quasar` typings
-    "types": ["quasar", "webpack-env"],
-    // Quasar-defined webpack aliases
+    "baseUrl": ".",
+    "types": [
+      "webpack-env"
+    ],
     "paths": {
-      "@/*": ["src/*"],
-      "src/*": ["src/*"],
-      "app/*": ["*"]
-    },
-    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
-  },
-  "include": ["src*/**/*.ts", "src*/**/*.tsx", "src*/**/*.vue"],
-  // Needed to avoid files copied into 'dist' folder (eg. a `.d.ts` file inside `src-ssr` folder)
-  // to be evaluated by TS when their original files has been updated
-  "exclude": ["/dist", ".quasar", "node_modules"]
+      "@/*": [
+        "src/*"
+      ]
+    }
+  }
 }

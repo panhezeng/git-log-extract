@@ -1,15 +1,15 @@
-import { RouteRecordRaw } from "vue-router";
+import { RouteRecordRaw } from 'vue-router';
 
 const routes: RouteRecordRaw[] = [
   {
-    path: "/",
+    path: '/',
     component: () =>
-      import(/* webpackChunkName: "main-layout" */ "layouts/Main.vue"),
+      import(/* webpackChunkName: "main-layout" */ 'layouts/Main.vue'),
     children: [
       {
-        path: "",
+        path: '',
         component: () =>
-          import(/* webpackChunkName: "index-page" */ "pages/Index.vue"),
+          import(/* webpackChunkName: "index-page" */ 'pages/Index.vue'),
       },
     ],
   },
@@ -17,9 +17,9 @@ const routes: RouteRecordRaw[] = [
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: "/:catchAll(.*)*",
+    path: '/:catchAll(.*)*',
     component: () =>
-      import(/* webpackChunkName: "error-page" */ "pages/error/Index.vue"),
+      import(/* webpackChunkName: "error-page" */ 'pages/error/Index.vue'),
   },
 ];
 

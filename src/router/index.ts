@@ -1,12 +1,23 @@
-import { route } from "quasar/wrappers";
+import { route } from 'quasar/wrappers';
 import {
   createMemoryHistory,
   createRouter,
   createWebHashHistory,
   createWebHistory,
-} from "vue-router";
-import { StateInterface } from "../store";
-import routes from "./routes";
+  Router,
+} from 'vue-router';
+import routes from './routes';
+
+/*
+ * When adding new properties to stores, you should also
+ * extend the `PiniaCustomProperties` interface.
+ * @see https://pinia.vuejs.org/core-concepts/plugins.html#typing-new-store-properties
+ */
+declare module 'pinia' {
+  export interface PiniaCustomProperties {
+    readonly router: Router;
+  }
+}
 
 /*
  * If not building with SSR mode, you can
@@ -17,10 +28,10 @@ import routes from "./routes";
  * with the Router instance.
  */
 
-export default route<StateInterface>(function (/* { store, ssrContext } */) {
+export default route(function (/* { store, ssrContext } */) {
   const createHistory = process.env.SERVER
     ? createMemoryHistory
-    : process.env.VUE_ROUTER_MODE === "history"
+    : process.env.VUE_ROUTER_MODE === 'history'
     ? createWebHistory
     : createWebHashHistory;
 
@@ -32,7 +43,7 @@ export default route<StateInterface>(function (/* { store, ssrContext } */) {
     // quasar.conf.js -> build -> vueRouterMode
     // quasar.conf.js -> build -> publicPath
     history: createHistory(
-      process.env.MODE === "ssr" ? void 0 : process.env.VUE_ROUTER_BASE
+      process.env.MODE === 'ssr' ? void 0 : process.env.VUE_ROUTER_BASE
     ),
   });
 

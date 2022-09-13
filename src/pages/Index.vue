@@ -1,10 +1,10 @@
 <template>
   <q-splitter
-    class="index-page"
     v-model="data.splitterModel"
+    class="index-page"
     style="height: 100%"
   >
-    <template v-slot:before>
+    <template #before>
       <div style="min-width: 400px; height: 100%">
         <q-toolbar>
           <q-tabs v-model="data.tab">
@@ -27,19 +27,19 @@
         </q-toolbar>
         <q-tree
           v-if="projects.length"
+          v-model:ticked="data.ticked"
           :nodes="projects"
-          node-key="repositoryURL"
+          node-key="repositoryUrl"
           label-key="name"
           control-color="primary"
           text-color="white"
           tick-strategy="strict"
           class="bg-dark"
           style="width: 100%; height: calc(100% - 54px)"
-          v-model:ticked="data.ticked"
         ></q-tree>
       </div>
     </template>
-    <template v-slot:after>
+    <template #after>
       <q-tab-panels v-model="data.tab">
         <q-tab-panel name="settings">
           <div class="text-h6">设置</div>
@@ -51,18 +51,18 @@
           <div>
             <div>cmd：</div>
             <q-input
+              v-model="data.cmd"
               input-class="bg-dark text-grey-1"
               input-style="min-height: 20px"
-              v-model="data.cmd"
               type="textarea"
             />
           </div>
           <div>
             <div>log：</div>
             <q-input
+              v-model="data.log"
               input-class="bg-dark text-grey-1"
               input-style="min-height: 300px;"
-              v-model="data.log"
               type="textarea"
             />
             <!--            <editor v-model="data.log" style="height: 300px" />-->
@@ -86,26 +86,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, watch } from "vue";
+import { defineComponent, computed, reactive, watch } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { storeKey } from "src/store";
-import { useQuasar } from "quasar";
+import { useRouter, useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 
-import {
-  names as namesProject,
-  ProjectType,
-  StateInterface as StateInterfaceProject,
-} from "src/store/project";
-import Personalize from "src/components/Personalize.vue";
-import ProjectForm from "src/components/project/form/Index.vue";
-import LogQueryForm from "src/components/project/form/LogQuery.vue";
-import { LogQueryData } from "src/components/project/form/models";
-// import Editor from 'src/components/editor/Ace.vue';
-// import Editor from 'src/components/editor/Monaco.vue';
+import Personalize from '@/components/Personalize.vue';
+import ProjectForm from '@/components/project/form/Index.vue';
+import LogQueryForm from '@/components/project/form/LogQuery.vue';
+import { LogQueryData } from '@/components/project/form/models';
+// import Editor from '@/components/editor/Ace.vue';
+// import Editor from '@/components/editor/Monaco.vue';
 
-import { DefaultLogFields, ListLogLine } from "simple-git";
+import { DefaultLogFields, ListLogLine } from 'simple-git';
+
+import { useProjectStore, ProjectType } from '@/stores/project';
 
 export default defineComponent({
   // components: { Personalize, ProjectForm, LogQueryForm, Editor },
@@ -114,57 +109,51 @@ export default defineComponent({
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore(storeKey);
     const $q = useQuasar();
 
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const stateProject = computed(
-      () => store.state[namesProject.module] as StateInterfaceProject
-    );
-    const projects = computed(() => stateProject.value.projects);
+    const projectStore = useProjectStore();
+    const projects = computed(() => projectStore.projects);
     const ticked = [] as string[];
 
     projects.value.forEach((value) => {
-      ticked.push(value.repositoryURL);
+      ticked.push(value.repositoryUrl);
     });
 
     const data = reactive({
-      tab: ticked.length ? "log" : "add",
+      tab: ticked.length ? 'log' : 'add',
       editProject: {
         data: null as ProjectType | null,
         index: -1,
       },
       ticked,
-      log: "",
-      cmd: "",
+      log: '',
+      cmd: '',
       splitterModel: 50,
     });
 
     function deleteProject() {
       $q.dialog({
-        title: "删除确认",
-        message: "确认要删除勾选的项目吗? ",
+        title: '删除确认',
+        message: '确认要删除勾选的项目吗? ',
         ok: true,
         cancel: true,
       }).onOk(() => {
         for (let i = data.ticked.length - 1; i >= 0; i--) {
-          const repositoryURL = data.ticked[i];
-          store.commit(
-            namesProject.module + "/" + namesProject.mutations.SET_PROJECT,
-            Object.assign(
-              {
-                action: "delete",
-              },
-              store.getters[
-                namesProject.module + "/" + namesProject.getters.GET_PROJECT
-              ]({
-                repositoryURL,
-              })
-            )
-          );
+          const repositoryUrl = data.ticked[i];
+          const project = projectStore.getProject({
+            repositoryUrl,
+          });
+          if (project.data) {
+            projectStore.setProject({
+              data: project.data,
+              index: project.index,
+              action: 'delete',
+            });
+          }
           data.ticked.splice(i, 1);
-          data.tab = ticked.length ? "log" : "add";
+          data.tab = ticked.length ? 'log' : 'add';
         }
       });
     }
@@ -172,18 +161,13 @@ export default defineComponent({
     watch(
       computed(() => data.tab),
       (val) => {
-        if (val === "edit") {
-          const project = store.getters[
-            namesProject.module + "/" + namesProject.getters.GET_PROJECT
-          ]({
-            repositoryURL: data.ticked[0],
-          }) as {
-            data: ProjectType | null;
-            index: number;
-          };
+        if (val === 'edit') {
+          const project = projectStore.getProject({
+            repositoryUrl: data.ticked[0],
+          });
           data.editProject.data = project.data;
           data.editProject.index = project.index;
-        } else if (val === "add") {
+        } else if (val === 'add') {
           data.editProject.data = null;
           data.editProject.index = -1;
         }
@@ -191,14 +175,12 @@ export default defineComponent({
     );
 
     async function logQuery(logQueryData: LogQueryData) {
-      data.log = "";
-      data.cmd = "";
+      data.log = '';
+      data.cmd = '';
       for (let i = 0, end = data.ticked.length; i < end; i++) {
-        const repositoryURL = data.ticked[i];
-        const project = store.getters[
-          namesProject.module + "/" + namesProject.getters.GET_PROJECT
-        ]({
-          repositoryURL,
+        const repositoryUrl = data.ticked[i];
+        const project = projectStore.getProject({
+          repositoryUrl,
         });
         const projectData = project.data as ProjectType;
 
@@ -230,10 +212,10 @@ ${projectData.name}
           logOptions.push(`--until="${logQueryData.dateRange.to} 23:59:59"`);
         }
         if (logQueryData.noMerges) {
-          logOptions.push(`--no-merges`);
+          logOptions.push('--no-merges');
         }
 
-        data.cmd += `git log ${logOptions.join(" ")}
+        data.cmd += `git log ${logOptions.join(' ')}
 `;
         // console.log(data.cmd);
         try {
@@ -263,6 +245,7 @@ ${projectData.name}
               }
             }
           });
+          // eslint-disable-next-line no-empty
         } catch (e) {}
 
         // for (let j = 0, jEnd = logQueryData.branches.length; j < jEnd; j++) {

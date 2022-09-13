@@ -1,18 +1,18 @@
 /* eslint-env node */
-import { contextBridge } from "electron";
-import { URL } from "url";
+import { contextBridge } from 'electron';
+import { URL } from 'url';
 import simpleGit, {
   BranchSummary,
   LogResult,
   SimpleGitOptions,
-} from "simple-git";
+} from 'simple-git';
 
 function createGit(
   options?: Partial<SimpleGitOptions>,
   onProgress?: (data: string) => void
 ) {
-  if (typeof options === "undefined") {
-    options = { baseDir: "" };
+  if (typeof options === 'undefined') {
+    options = { baseDir: '' };
   }
   // if (onProgress) {
   //   options.progress  = (data: SimpleGitProgressEvent) => {
@@ -28,7 +28,7 @@ function createGit(
   git.outputHandler((bin, stdout, stderr, args) => {
     stdout.pipe(process.stdout);
     stderr.pipe(process.stderr);
-    stderr.on("data", function (stdData: { toString: () => string }) {
+    stderr.on('data', function (stdData: { toString: () => string }) {
       // console.log(stdData.toString());
       if (onProgress) {
         onProgress(stdData.toString());
@@ -39,7 +39,7 @@ function createGit(
 }
 
 export default () => {
-  contextBridge.exposeInMainWorld("electronGit", {
+  contextBridge.exposeInMainWorld('electronGit', {
     repositoryAuthUrl: (url: string, username: string, password: string) => {
       const urlObj = new URL(url);
       urlObj.username = username;
@@ -51,10 +51,10 @@ export default () => {
         baseDir: directoryPath,
       });
       await git.init();
-      await git.addRemote("origin", repositoryAuthUrl);
+      await git.addRemote('origin', repositoryAuthUrl);
       await git.fetch(['--shallow-since="1 months ago"']);
       // await git.remote(["update"]);
-      const branchSummary: BranchSummary = await git.branch(["-r"]);
+      const branchSummary: BranchSummary = await git.branch(['-r']);
       return branchSummary;
     },
     logResult: async (directoryPath: string, logOptions: string[]) => {

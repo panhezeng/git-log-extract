@@ -36,7 +36,7 @@
           label="选择时间"
           @click="other.dateRange.visible = true"
         /><template v-if="data.dateRange.from"
-          ><span>{{ data.dateRange.from + " " + data.dateRange.to }}</span
+          ><span>{{ data.dateRange.from + ' ' + data.dateRange.to }}</span
           ><q-btn
             padding="xs"
             label="删除选择"
@@ -48,8 +48,8 @@
               <q-date v-model="data.dateRange" range mask="YYYY-MM-DD" />
             </q-card-section>
             <q-card-actions align="right">
-              <q-btn flat label="取消" color="primary" v-close-popup />
-              <q-btn flat label="确认" color="primary" v-close-popup />
+              <q-btn v-close-popup flat label="取消" color="primary" />
+              <q-btn v-close-popup flat label="确认" color="primary" />
             </q-card-actions>
           </q-card>
         </q-dialog>
@@ -95,43 +95,38 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, watch } from "vue";
+import { computed, defineComponent, PropType, reactive, watch } from 'vue';
 
-import { useRouter, useRoute } from "vue-router";
-import { useStore } from "vuex";
-import { storeKey } from "src/store";
-import { useQuasar } from "quasar";
+import { useRouter, useRoute } from 'vue-router';
+import { useQuasar } from 'quasar';
 
 import {
   LogQueryData,
   logQueryInitData,
-} from "src/components/project/form/models";
-import { names, ProjectType } from "src/store/project";
-import {
-  names as namesPersonalize,
-  StateInterface as StateInterfacePersonalize,
-} from "src/store/personalize";
-import dayjs from "src/utils/dayjs";
+} from '@/components/project/form/models';
+
+import dayjs from '@/utils/dayjs';
+import { usePersonalizeStore } from '@/stores/personalize';
+import { ProjectType, useProjectStore } from '@/stores/project';
 
 export default defineComponent({
   components: {},
   props: {
     ticked: {
-      type: Array,
+      type: Array as PropType<string[]>,
       required: true,
     },
   },
+  emits: ['log-query'],
   /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
   setup(props, context) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore(storeKey);
     const $q = useQuasar();
     /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const statePersonalize = computed(
-      () => store.state[namesPersonalize.module] as StateInterfacePersonalize
-    );
+    const personalizeStore = usePersonalizeStore();
+    const projectStore = useProjectStore();
 
     const other = reactive({
       dateRange: {
@@ -150,11 +145,9 @@ export default defineComponent({
         other.branchesOptions = [];
         initData.branches = [];
         for (let i = 0, end = props.ticked.length; i < end; i++) {
-          const repositoryURL = props.ticked[i];
-          const project = store.getters[
-            names.module + "/" + names.getters.GET_PROJECT
-          ]({
-            repositoryURL,
+          const repositoryUrl = props.ticked[i];
+          const project = projectStore.getProject({
+            repositoryUrl,
           });
           const projectData = project.data as ProjectType;
           projectData.branches.forEach((branch, index) => {
@@ -167,16 +160,16 @@ export default defineComponent({
           });
         }
         data.branches = initData.branches.slice();
-        data.author = statePersonalize.value.logQuery.author;
-        data.dedup = statePersonalize.value.logQuery.dedup;
-        data.noMerges = statePersonalize.value.logQuery.noMerges;
-        data.onlyMessage = statePersonalize.value.logQuery.onlyMessage;
-        if (statePersonalize.value.logQuery.thisWeek) {
+        data.author = personalizeStore.logQuery.author;
+        data.dedup = personalizeStore.logQuery.dedup;
+        data.noMerges = personalizeStore.logQuery.noMerges;
+        data.onlyMessage = personalizeStore.logQuery.onlyMessage;
+        if (personalizeStore.logQuery.thisWeek) {
           const dayjsInstance = await dayjs();
           data.dateRange.from = dayjsInstance()
-            .subtract(6, "day")
-            .format("YYYY-MM-DD");
-          data.dateRange.to = dayjsInstance().format("YYYY-MM-DD");
+            .subtract(6, 'day')
+            .format('YYYY-MM-DD');
+          data.dateRange.to = dayjsInstance().format('YYYY-MM-DD');
         }
       },
       {
@@ -191,7 +184,7 @@ export default defineComponent({
 
     function onSubmit() {
       data.loading = true;
-      context.emit("log-query", data);
+      context.emit('log-query', data);
     }
 
     return {
