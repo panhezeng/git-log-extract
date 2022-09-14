@@ -49,17 +49,18 @@ function createWindow() {
   });
 }
 
-app.whenReady().then(createWindow);
+app.whenReady().then(() => {
+  createWindow();
+  app.on('activate', () => {
+    if (mainWindow === undefined) {
+      createWindow();
+    }
+  });
+});
 
 app.on('window-all-closed', () => {
   if (platform !== 'darwin') {
     app.quit();
-  }
-});
-
-app.on('activate', () => {
-  if (mainWindow === undefined) {
-    createWindow();
   }
 });
 
