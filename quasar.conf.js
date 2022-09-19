@@ -59,6 +59,11 @@ module.exports = configure(function (ctx) {
     build: {
       vueRouterMode: 'hash', // available values: 'hash', 'history'
 
+      productName: 'Git Log Extract',
+      env: {
+        PRODUCT_NAME: 'Git Log Extract',
+      },
+
       // transpile: false,
       // publicPath: '/',
 
@@ -158,7 +163,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'quasar-project',
+        appId: 'git-log-extract',
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

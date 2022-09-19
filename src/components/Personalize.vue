@@ -99,12 +99,12 @@ export default defineComponent({
     const personalizeStore = usePersonalizeStore();
 
     const data = reactive<StateType>(
-      JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state))))
+      JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))),
     );
 
     data.git.password = CryptoJS.AES.decrypt(
       data.git.password,
-      'Secret Passphrase'
+      'Secret Passphrase',
     ).toString(CryptoJS.enc.Utf8);
 
     const isPwd = ref(true);
@@ -113,7 +113,7 @@ export default defineComponent({
       const newData = JSON.parse(JSON.stringify(toRaw(data))) as StateType;
       newData.git.password = CryptoJS.AES.encrypt(
         newData.git.password,
-        'Secret Passphrase'
+        'Secret Passphrase',
       ).toString();
       personalizeStore.setData(newData);
       $q.notify({
@@ -127,7 +127,7 @@ export default defineComponent({
     function onReset() {
       Object.assign(
         data,
-        JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state))))
+        JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))),
       );
     }
 

@@ -171,7 +171,7 @@ export default defineComponent({
           data.editProject.data = null;
           data.editProject.index = -1;
         }
-      }
+      },
     );
 
     async function logQuery(logQueryData: LogQueryData) {
@@ -219,9 +219,9 @@ ${projectData.name}
 `;
         // console.log(data.cmd);
         try {
-          const logResult = await window.electronGit.logResult(
+          const logResult = await window.electron.git.logResult(
             projectData.directoryPath,
-            logOptions
+            logOptions,
           );
           logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
             if (logQueryData.onlyMessage) {
@@ -238,7 +238,7 @@ ${projectData.name}
               for (const logKey in log) {
                 if (logKey in log) {
                   data.log += `${logKey}:${String(
-                    log[logKey as keyof typeof log]
+                    log[logKey as keyof typeof log],
                   )}
 `;
                 }

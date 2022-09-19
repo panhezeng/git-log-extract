@@ -131,7 +131,7 @@ export default defineComponent({
     if (initData.password) {
       initData.password = CryptoJS.AES.decrypt(
         initData.password,
-        'Secret Passphrase'
+        'Secret Passphrase',
       ).toString(CryptoJS.enc.Utf8);
     }
 
@@ -170,8 +170,8 @@ export default defineComponent({
       fileNameValidation,
       (val: string) => {
         if (val) {
-          const directoryPath = window.electronPath.resolve('temp/git/' + val);
-          window.electronFs.removeSync(directoryPath);
+          const directoryPath = window.electron.path.resolve('temp/git/' + val);
+          window.electron.fs.removeSync(directoryPath);
         }
         if (
           !props.data &&
@@ -195,25 +195,25 @@ export default defineComponent({
 
     async function onSubmit() {
       submitLoading.value = true;
-      const repositoryAuthUrl = window.electronGit.repositoryAuthUrl(
+      const repositoryAuthUrl = await window.electron.git.repositoryAuthUrl(
         project.repositoryUrl,
         project.username,
-        project.password
+        project.password,
       );
-      const directoryPath = window.electronPath.resolve(
-        'temp/git/' + project.name
-      );
+      const appDataPath =
+        window.electron.app.getPath('appData') + '/' + process.env.PRODUCT_NAME;
+      const directoryPath = appDataPath + '/temp/git/' + project.name;
       project.directoryPath = directoryPath;
-      window.electronFs.emptyDirSync(directoryPath);
-      const branchSummary = await window.electronGit.branchSummary(
+      window.electron.fs.emptyDirSync(directoryPath);
+      const branchSummary = await window.electron.git.branchSummary(
         directoryPath,
-        repositoryAuthUrl
+        repositoryAuthUrl,
       );
       project.branches = branchSummary.all;
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;
       data.password = CryptoJS.AES.encrypt(
         data.password,
-        'Secret Passphrase'
+        'Secret Passphrase',
       ).toString();
       projectStore.setProject({
         data,

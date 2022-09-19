@@ -21,7 +21,7 @@ export const usePersonalizeStore = defineStore('personalize', {
   actions: {
     setData(data: Partial<StateType>) {
       this.$patch(data);
-      window.electronStore.set({ [`store_${id}`]: toRaw(unref(this.$state)) });
+      window.electron.store.set({ [`store_${id}`]: toRaw(unref(this.$state)) });
     },
   },
 });

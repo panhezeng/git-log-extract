@@ -1,7 +1,7 @@
 import { Notify } from 'quasar';
 
 export function localDirectoryPath(val: string, fail?: string) {
-  if (window.electronFs.existsSync(val)) {
+  if (window.electron.fs.existsSync(val)) {
     return true;
   } else {
     if (typeof fail === 'undefined') {
@@ -39,7 +39,7 @@ export function apiUrlSegment(val: string, fail?: string) {
 export function apiUrl(
   url: string,
   validation: { prefix: string; suffix: string },
-  notify = true
+  notify = true,
 ) {
   if (url === '') {
     if (notify) {
@@ -77,7 +77,7 @@ export function JSONString(string: string) {
 
 export function objectKeyAndValueType(
   data: { [key: string]: any },
-  validation: { [key: string]: any }
+  validation: { [key: string]: any },
 ) {
   const chainKey = '__validationChainKey';
   const message: string[] = [];
@@ -103,11 +103,11 @@ export function objectKeyAndValueType(
             const validationChild = validation[key];
             if (!(key in data)) {
               message.push(
-                `数据缺少<strong> ${currentChainKey} </strong>属性<br/>`
+                `数据缺少<strong> ${currentChainKey} </strong>属性<br/>`,
               );
             } else if (typeof dataChild !== typeof validationChild) {
               message.push(
-                `数据<strong> ${currentChainKey} </strong>属性值的类型不对<br/>`
+                `数据<strong> ${currentChainKey} </strong>属性值的类型不对<br/>`,
               );
             } else if (
               typeof data === 'object' &&

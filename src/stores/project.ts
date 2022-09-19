@@ -12,9 +12,9 @@ export const project = {
 
 export type ProjectType = typeof project;
 
-const projects = window.electronStore.get(
+const projects = window.electron.store.get(
   `store_${id}.projects`,
-  []
+  [],
 ) as ProjectType[];
 
 const initState = {
@@ -36,7 +36,7 @@ export const useProjectStore = defineStore(id, {
       }) => {
         const index = state.projects.findIndex(
           (project) =>
-            project.name === name || project.repositoryUrl === repositoryUrl
+            project.name === name || project.repositoryUrl === repositoryUrl,
         );
         if (index > -1) {
           return {
@@ -67,7 +67,7 @@ export const useProjectStore = defineStore(id, {
       } else {
         if (index < 0 || index >= this.$state.projects.length) {
           index = this.$state.projects.findIndex(
-            (existing) => existing.name === data.name
+            (existing) => existing.name === data.name,
           );
         }
         if (index > -1) {
@@ -78,7 +78,7 @@ export const useProjectStore = defineStore(id, {
           }
         }
       }
-      window.electronStore.set({
+      window.electron.store.set({
         [`store_${id}`]: { projects: toRaw(unref(this.$state.projects)) },
       });
     },

@@ -1,11 +1,4 @@
 import dayjsType, * as dayjsAllType from 'dayjs';
-// 如果不 import ide 点不出 对应的方法， 这里只是给 ts 用，编译时会被 webpack 去掉， 实际加载是后面 await import 懒加载
-/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-import updateLocaleType from 'dayjs/plugin/updateLocale';
-import weekdayType from 'dayjs/plugin/weekday';
-import relativeTimeType from 'dayjs/plugin/relativeTime';
-import durationType from 'dayjs/plugin/duration';
-import dayjsCalendarType from 'dayjs/plugin/calendar';
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
 export default async function () {

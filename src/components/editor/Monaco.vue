@@ -42,7 +42,7 @@ export default defineComponent({
       options: monaco.editor.IStandaloneEditorConstructionOptions;
       sync: boolean;
     },
-    context
+    context,
   ) {
     const router = useRouter();
     const route = useRoute();
@@ -92,7 +92,7 @@ export default defineComponent({
               if (editor && props.modelValue !== editor.getValue()) {
                 editor.setValue(props.modelValue);
               }
-            }
+            },
           );
         }
 

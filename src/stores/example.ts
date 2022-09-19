@@ -1,5 +1,5 @@
-import { defineStore } from 'pinia';
 import axios, { AxiosRequestConfig } from 'axios';
+import { defineStore } from 'pinia';
 
 const initState = {
   example: [] as any[],
