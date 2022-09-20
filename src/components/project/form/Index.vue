@@ -90,7 +90,7 @@ import {
   useProjectStore,
 } from '@/stores/project';
 
-import CryptoJS from 'crypto-js';
+import { AES, Utf8 } from 'jscrypto/es6';
 import { fileName as fileNameValidation } from '@/utils/validation';
 import { usePersonalizeStore } from '@/stores/personalize';
 
@@ -129,10 +129,10 @@ export default defineComponent({
       initData.password = personalizeStore.git.password;
     }
     if (initData.password) {
-      initData.password = CryptoJS.AES.decrypt(
+      initData.password = AES.decrypt(
         initData.password,
         'Secret Passphrase',
-      ).toString(CryptoJS.enc.Utf8);
+      ).toString(Utf8);
     }
 
     const project = reactive<ProjectType>(JSON.parse(JSON.stringify(initData)));
@@ -211,7 +211,7 @@ export default defineComponent({
       );
       project.branches = branchSummary.all;
       const data = JSON.parse(JSON.stringify(project)) as ProjectType;
-      data.password = CryptoJS.AES.encrypt(
+      data.password = AES.encrypt(
         data.password,
         'Secret Passphrase',
       ).toString();

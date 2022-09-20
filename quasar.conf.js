@@ -87,6 +87,24 @@ module.exports = configure(function (ctx) {
       chainWebpack(chain) {
         chain.resolve.alias.set('@', path.resolve(__dirname, 'src'));
 
+        // chain.resolve.set('fallback', {
+        //   os: false,
+        //   path: false,
+        //   zlib: false,
+        //   fs: false,
+        //   memcpy: false,
+        //   buffer: require.resolve('buffer/'),
+        //   process: require.resolve('process/'),
+        //   timers: require.resolve('timers-browserify'),
+        //   stream: require.resolve('stream-browserify'),
+        // });
+        //
+        // chain
+        //   .plugin('provide')
+        //   .use(require.resolve('webpack/lib/ProvidePlugin'), [
+        //     { process: 'process/browser.js', Buffer: ['buffer', 'Buffer'] },
+        //   ]);
+
         chain.plugin('circular-dependency').use(CircularDependencyPlugin, [
           {
             // exclude detection of files based on a RegExp

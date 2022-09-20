@@ -83,7 +83,7 @@ import { defineComponent, reactive, ref, toRaw, unref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useQuasar } from 'quasar';
 
-import CryptoJS from 'crypto-js';
+import { AES, Utf8 } from 'jscrypto/es6';
 import { usePersonalizeStore, StateType } from '@/stores/personalize';
 
 export default defineComponent({
@@ -102,16 +102,16 @@ export default defineComponent({
       JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))),
     );
 
-    data.git.password = CryptoJS.AES.decrypt(
+    data.git.password = AES.decrypt(
       data.git.password,
       'Secret Passphrase',
-    ).toString(CryptoJS.enc.Utf8);
+    ).toString(Utf8);
 
     const isPwd = ref(true);
 
     function onSubmit() {
       const newData = JSON.parse(JSON.stringify(toRaw(data))) as StateType;
-      newData.git.password = CryptoJS.AES.encrypt(
+      newData.git.password = AES.encrypt(
         newData.git.password,
         'Secret Passphrase',
       ).toString();
