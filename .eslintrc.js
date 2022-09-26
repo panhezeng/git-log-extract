@@ -79,9 +79,9 @@ module.exports = {
   rules: {
     'no-var': 'error',
 
-    'prefer-promise-reject-errors': 'off',
+    '@typescript-eslint/consistent-type-imports': 'error',
 
-    quotes: ['warn', 'single', { avoidEscape: true }],
+    quotes: ['warn', 'single', {avoidEscape: true}],
 
     // this rule, if on, would require explicit return type on the `render` function
     '@typescript-eslint/explicit-function-return-type': 'off',
@@ -96,6 +96,8 @@ module.exports = {
     // allow debugger during development only
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+
+    'prefer-promise-reject-errors': 'off',
 
     'vue/multi-word-component-names': 'off',
     '@typescript-eslint/no-explicit-any': 'off',

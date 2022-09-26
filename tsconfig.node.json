@@ -1,0 +1,24 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.node.json",
+  "include": [
+    "types/**/*.d.ts",
+    "packages/main/**/*.ts",
+    "packages/main/**/*.tsx",
+    "packages/preload/**/*.ts",
+    "packages/preload/**/*.tsx",
+    "packages/common/**/*.tsx",
+    "packages/common/**/*.ts",
+    "packages/common/**/*.json",
+  ],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/main/*": ["./packages/main/src/*"],
+      "@/preload/*": ["./packages/preload/src/*"],
+      "@/renderer/*": ["./packages/renderer/src/*"],
+      "@/common/*": ["./packages/common/src/*"]
+    },
+    "composite": true,
+    "types": ["node"]
+  }
+}
