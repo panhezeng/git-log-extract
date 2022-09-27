@@ -20,8 +20,4 @@ export default {
     getPath: 'getPath',
   },
   dialog: 'dialog',
-  crypto: {
-    encrypt: 'encrypt',
-    decrypt: 'decrypt',
-  },
 };
