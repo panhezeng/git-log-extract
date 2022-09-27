@@ -70,3 +70,50 @@ To do this, use [electron-builder]:
   ready for distribution, it is compiled only for the current platform and is used for debugging.
 - Using GitHub Actions: The application is compiled for any platform and ready-to-distribute files are automatically
   added as a draft to the GitHub releases page.
+
+## 环境
+
+[构建加速](https://help.aliyun.com/document_detail/202442.html)
+
+- 重置前端依赖环境，cd 到项目目录，删除前端依赖相关文件
+
+  ```shell
+  rm -rf node_modules .eslintcache package-lock.json yarn.lock pnpm-lock.yaml
+  ```
+
+- 初始化前端环境
+
+  安装 pnpm *Mac建议使用 `brew install pnpm`*
+  ```shell
+  curl -fsSL https://get.pnpm.io/install.sh | sh -
+  ```
+  安装 node
+  ```shell
+  pnpm env use --global lts && pnpm install -g pnpm npm yarn npm-check-updates pm2
+  ```
+
+  ```
+  /Users/panhezeng/Library/pnpm/nodejs/16.14.2/pnpm-global/5/node_modules/yarn
+  ```
+
+- 安装项目依赖包
+
+  `yarn install`
+
+- 升级项目依赖包
+
+  `ncu -u --target minor && yarn install`
+
+## Build Setup
+
+```shell
+# install dependencies
+yarn install
+
+# serve with hot reload
+yarn dev
+
+# build for production and launch server
+yarn compile
+
+```
