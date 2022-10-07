@@ -78,10 +78,7 @@ module.exports = {
   // add your custom rules here
   rules: {
     'no-var': 'error',
-
     '@typescript-eslint/consistent-type-imports': 'error',
-
-    quotes: ['warn', 'single', {avoidEscape: true}],
 
     // this rule, if on, would require explicit return type on the `render` function
     '@typescript-eslint/explicit-function-return-type': 'off',

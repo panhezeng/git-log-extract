@@ -48,7 +48,6 @@ declare module '*.vue' {
 }
 
 declare module '*.vue|ts|tsx' {
-  import type crypto from 'crypto';
   import type {app, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
   import type StoreType from 'electron-store';
   import type FSType from 'fs-extra';
@@ -68,10 +67,6 @@ declare module '*.vue|ts|tsx' {
     };
     app: {
       getPath: Parameters<typeof app['getPath']>;
-    };
-    crypto: {
-      createCipheriv: Parameters<typeof crypto['createCipheriv']>;
-      createDecipheriv: Parameters<typeof crypto['createDecipheriv']>;
     };
   };
 

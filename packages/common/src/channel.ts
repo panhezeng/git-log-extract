@@ -1,8 +1,8 @@
 export default {
-  store: {
-    get: 'get',
-    set: 'set',
+  app: {
+    getPath: 'getPath',
   },
+  dialog: 'dialog',
   path: {
     resolve: 'resolve',
   },
@@ -11,13 +11,13 @@ export default {
     removeSync: 'removeSync',
     emptyDirSync: 'emptyDirSync',
   },
+  store: {
+    get: 'get',
+    set: 'set',
+  },
   git: {
     repositoryAuthUrl: 'repositoryAuthUrl',
     branchSummary: 'branchSummary',
     logResult: 'logResult',
   },
-  app: {
-    getPath: 'getPath',
-  },
-  dialog: 'dialog',
 };
