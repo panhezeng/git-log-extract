@@ -1,15 +1,12 @@
 {
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": [
-    "types",
+    "**/*.d.ts",
     "./*.ts",
-    "./*.d.ts",
-    "./*.json",
     "packages/main/**/*.ts",
     "packages/preload/**/*.ts",
     "packages/common/**/*.tsx",
     "packages/common/**/*.ts",
-    "packages/common/**/*.json",
   ],
   "compilerOptions": {
     "baseUrl": ".",
