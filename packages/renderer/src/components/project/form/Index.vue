@@ -171,8 +171,11 @@ export default defineComponent({
       fileNameValidation,
       (val: string) => {
         if (val) {
-          const appDataPath = window.electron.app.getPath('appData') + '/' + appTitle;
-          const directoryPath = appDataPath + '/temp/git/' + val;
+          const appDataPath = window.electron.path.join(
+            window.electron.app.getPath('appData'),
+            appTitle,
+          );
+          const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', val);
           window.electron.fs.removeSync(directoryPath);
         }
         if (
@@ -202,8 +205,11 @@ export default defineComponent({
         project.username,
         project.password,
       );
-      const appDataPath = window.electron.app.getPath('appData') + '/' + appTitle;
-      const directoryPath = appDataPath + '/temp/git/' + project.name;
+      const appDataPath = window.electron.path.join(
+        window.electron.app.getPath('appData'),
+        appTitle,
+      );
+      const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', project.name);
       project.directoryPath = directoryPath;
       window.electron.fs.emptyDirSync(directoryPath);
       const branchSummary = await window.electron.git.branchSummary(

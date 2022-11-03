@@ -74,7 +74,7 @@ export default defineComponent({
         };
         Object.assign(options, props.options);
 
-        editor = monaco.editor.create(editorElement.value, options);
+        editor = monaco.editor.create(editorElement.value as HTMLElement, options);
 
         if (props.sync) {
           editor.onDidChangeModelContent(() => {

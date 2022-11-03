@@ -5,6 +5,8 @@ export default {
   dialog: 'dialog',
   path: {
     resolve: 'resolve',
+    join: 'join',
+    sep: 'sep',
   },
   fs: {
     existsSync: 'existsSync',

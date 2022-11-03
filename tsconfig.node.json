@@ -1,7 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": [
-    "**/*.d.ts",
+    "**/*.json", "**/*.d.ts",
     "./*.ts",
     "packages/main/**/*.ts",
     "packages/preload/**/*.ts",
@@ -17,6 +17,8 @@
       "@/common/*": ["./packages/common/src/*"]
     },
     "composite": true,
-    "types": ["node"]
+    "types": ["node"],
+    "noImplicitAny": false,
+    "allowJs": true
   }
 }

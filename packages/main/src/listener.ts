@@ -36,6 +36,14 @@ ipcMain.on(
   },
 );
 
+ipcMain.on(channel.path.join, async (event, ...args: WindowElectronParameters['path']['join']) => {
+  event.returnValue = path.join(...args);
+});
+
+ipcMain.on(channel.path.sep, async event => {
+  event.returnValue = path.sep;
+});
+
 ipcMain.on(
   channel.fs.existsSync,
   async (event, ...args: WindowElectronParameters['fs']['existsSync']) => {
@@ -61,7 +69,7 @@ ipcMain.on(
 
 const store = new Store({
   name: 'git-log-extract-main-config',
-  cwd: app.getPath('appData') + '/' + appTitle,
+  cwd: path.join(app.getPath('appData'), appTitle),
 });
 
 ipcMain.on(channel.store.set, async (event, ...args: WindowElectronParameters['store']['set']) => {

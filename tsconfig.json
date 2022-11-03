@@ -1,7 +1,7 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": [
-    "**/*.d.ts",
+    "**/*.json", "**/*.d.ts",
     "packages/renderer/**/*.ts",
     "packages/renderer/**/*.tsx",
     "packages/renderer/**/*.vue"
@@ -14,6 +14,9 @@
       "@/renderer/*": ["./packages/renderer/src/*"],
       "@/common/*": ["./packages/common/src/*"]
     },
+    "noEmit": true,
+    "noImplicitAny": false,
+    "allowJs": true
   },
   "references": [
     {

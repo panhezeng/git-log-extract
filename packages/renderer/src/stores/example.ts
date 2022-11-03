@@ -1,5 +1,4 @@
-import type {AxiosRequestConfig} from 'axios';
-import axios from 'axios';
+// import type {AxiosRequestConfig} from 'axios';
 import {defineStore} from 'pinia';
 
 const initState = {
@@ -19,16 +18,16 @@ export const useExampleStore = defineStore('example', {
     setExample(data: any[]) {
       this.example = data;
     },
-    async fetchExample(params?: AxiosRequestConfig['params']) {
-      try {
-        const response = await axios.get('http://icanhazip.com', {
-          params,
-        });
-        const data = response.data;
-        this.setExample([data]);
-      } catch (e) {
-        return e;
-      }
-    },
+    // async fetchExample(params?: AxiosRequestConfig['params']) {
+    //   try {
+    //     const response = await axios.get('http://icanhazip.com', {
+    //       params,
+    //     });
+    //     const data = response.data;
+    //     this.setExample([data]);
+    //   } catch (e) {
+    //     return e;
+    //   }
+    // },
   },
 });

@@ -17,7 +17,7 @@ const initState = {
 };
 export type StateType = typeof initState;
 
-export const usePersonalizeStore = defineStore('personalize', {
+export const usePersonalizeStore = defineStore(id, {
   state: () => JSON.parse(JSON.stringify(initState)) as StateType,
   actions: {
     setData(data: Partial<StateType>) {

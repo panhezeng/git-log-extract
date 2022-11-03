@@ -59,6 +59,8 @@ declare module '*.vue|ts|tsx' {
     };
     path: {
       resolve: Parameters<typeof PathType['resolve']>;
+      join: Parameters<typeof PathType['join']>;
+      sep: string;
     };
     fs: {
       existsSync: Parameters<typeof FSType['existsSync']>;
