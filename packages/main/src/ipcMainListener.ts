@@ -9,11 +9,13 @@ import path from 'path';
 import type {BranchSummary, LogResult, SimpleGitOptions} from 'simple-git';
 import simpleGit from 'simple-git';
 import {URL} from 'url';
+
 //
-// ipcMain.handle('electronExampleHandle', async (event, ...args) => {});
-// ipcMain.on('electronExampleOn', async (event, ...args) => {
+// ipcMain.handle(channel.example, async (event, ...args) => {});
+// ipcMain.on(channel.example, async (event, ...args) => {
 //   event.returnValue = '';
 // });
+// getWindow()!.webContents.send(channel.example, data);
 
 // electron start
 ipcMain.handle(channel.dialog, async (event, options: OpenDialogOptions) => {

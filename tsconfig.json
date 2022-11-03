@@ -1,7 +1,9 @@
 {
   "extends": "@vue/tsconfig/tsconfig.web.json",
   "include": [
-    "**/*.json", "**/*.d.ts",
+    "**/**.json",
+    "**/**.d.ts",
+    "./**.ts",
     "packages/renderer/**/*.ts",
     "packages/renderer/**/*.tsx",
     "packages/renderer/**/*.vue"

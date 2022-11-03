@@ -1,8 +1,9 @@
 {
   "extends": "@vue/tsconfig/tsconfig.node.json",
   "include": [
-    "**/*.json", "**/*.d.ts",
-    "./*.ts",
+    "**/**.json",
+    "**/**.d.ts",
+    "./**.ts",
     "packages/main/**/*.ts",
     "packages/preload/**/*.ts",
     "packages/common/**/*.tsx",

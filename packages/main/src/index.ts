@@ -1,6 +1,6 @@
 import {restoreOrCreateWindow} from '@/main/mainWindow';
 import {app} from 'electron';
-import './listener';
+import './ipcMainListener';
 /**
  * Prevent electron from running multiple instances.
  */

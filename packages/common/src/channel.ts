@@ -1,25 +1,25 @@
 export default {
   app: {
-    getPath: 'getPath',
+    getPath: 'app.getPath',
   },
   dialog: 'dialog',
   path: {
-    resolve: 'resolve',
-    join: 'join',
-    sep: 'sep',
+    resolve: 'path.resolve',
+    join: 'path.join',
+    sep: 'path.sep',
   },
   fs: {
-    existsSync: 'existsSync',
-    removeSync: 'removeSync',
-    emptyDirSync: 'emptyDirSync',
+    existsSync: 'fs.existsSync',
+    removeSync: 'fs.removeSync',
+    emptyDirSync: 'fs.emptyDirSync',
   },
   store: {
-    get: 'get',
-    set: 'set',
+    get: 'store.get',
+    set: 'store.set',
   },
   git: {
-    repositoryAuthUrl: 'repositoryAuthUrl',
-    branchSummary: 'branchSummary',
-    logResult: 'logResult',
+    repositoryAuthUrl: 'git.repositoryAuthUrl',
+    branchSummary: 'git.branchSummary',
+    logResult: 'git.logResult',
   },
 };
