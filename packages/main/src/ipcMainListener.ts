@@ -15,7 +15,7 @@ import {URL} from 'url';
 // ipcMain.on(channel.example, async (event, ...args) => {
 //   event.returnValue = '';
 // });
-// getWindow()!.webContents.send(channel.example, data);
+// getWindow()?.webContents.send(channel.example, data);
 
 // electron start
 ipcMain.handle(channel.dialog, async (event, options: OpenDialogOptions) => {
