@@ -16,6 +16,12 @@ module.exports = {
         ignoreProperties: ['box-flex', 'font-smoothing'], // 忽略某些未知属性的检测
       },
     ],
+    'selector-pseudo-class-no-unknown': [
+      true,
+      {
+        ignorePseudoClasses: ['deep'],
+      },
+    ],
   },
   ignoreFiles: ['*.md', '**/*.md'],
   overrides: [
