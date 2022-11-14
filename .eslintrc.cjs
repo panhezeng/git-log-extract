@@ -27,7 +27,7 @@ module.exports = {
     'no-var': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
     // allow debugger during development only
-    'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // 'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/no-v-html': 'off',
     'vue/multi-word-component-names': 'off',

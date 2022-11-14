@@ -39,9 +39,7 @@ contextBridge.exposeInMainWorld('electron', {
     join(...args: WindowElectronParameters['path']['join']) {
       return ipcRenderer.sendSync(channel.path.join, ...args);
     },
-    sep() {
-      return ipcRenderer.sendSync(channel.path.sep);
-    },
+    sep: ipcRenderer.sendSync(channel.path.sep),
   },
   fs: {
     existsSync(...args: WindowElectronParameters['fs']['existsSync']) {

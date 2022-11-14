@@ -109,7 +109,7 @@ import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
 
 import Personalize from '@/renderer/components/Personalize.vue';
-import ProjectForm from '@/renderer/components/project/form/Index.vue';
+import ProjectForm from '@/renderer/components/project/form/index.vue';
 import LogQueryForm from '@/renderer/components/project/form/LogQuery.vue';
 import type {LogQueryData} from '@/renderer/components/project/form/models';
 // import Editor from '@/renderer/components/editor/Ace.vue';

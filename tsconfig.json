@@ -9,6 +9,11 @@
     "packages/renderer/**/*.vue"
   ],
   "compilerOptions": {
+    "lib": [
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
     "baseUrl": ".",
     "paths": {
       "@/main/*": ["./packages/main/src/*"],

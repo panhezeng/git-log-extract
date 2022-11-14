@@ -7,7 +7,7 @@ const routes: RouteRecordRaw[] = [
     children: [
       {
         path: '',
-        component: () => import('@/renderer/pages/Index.vue'),
+        component: () => import('@/renderer/pages/index.vue'),
       },
     ],
   },
@@ -16,7 +16,7 @@ const routes: RouteRecordRaw[] = [
   // but you can also remove it
   {
     path: '/:catchAll(.*)*',
-    component: () => import('@/renderer/pages/error/Index.vue'),
+    component: () => import('@/renderer/pages/error/index.vue'),
   },
 ];
 
