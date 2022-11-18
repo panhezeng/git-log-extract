@@ -50,22 +50,23 @@ declare module '*.vue' {
 declare module '*.vue|ts|tsx' {
   import type {app, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
   import type StoreType from 'electron-store';
-  import type FSType from 'fs-extra';
-  import type PathType from 'path';
+  import type fs from 'fs-extra';
+  import type path from 'path';
   import type {BranchSummary, LogResult} from 'simple-git';
   type WindowElectronParameters = {
     store: {
       set: Parameters<StoreType['set']>;
     };
     path: {
-      resolve: Parameters<typeof PathType['resolve']>;
-      join: Parameters<typeof PathType['join']>;
+      resolve: Parameters<typeof path['resolve']>;
+      join: Parameters<typeof path['join']>;
       sep: string;
     };
     fs: {
-      existsSync: Parameters<typeof FSType['existsSync']>;
-      removeSync: Parameters<typeof FSType['removeSync']>;
-      emptyDirSync: Parameters<typeof FSType['emptyDirSync']>;
+      existsSync: Parameters<typeof fs['existsSync']>;
+      removeSync: Parameters<typeof fs['removeSync']>;
+      emptyDirSync: Parameters<typeof fs['emptyDirSync']>;
+      ensureDirSync: Parameters<typeof fs['ensureDirSync']>;
     };
     app: {
       getPath: Parameters<typeof app['getPath']>;
@@ -78,8 +79,8 @@ declare module '*.vue|ts|tsx' {
       electron: {
         dialog: (options: OpenDialogOptions) => Promise<OpenDialogReturnValue>;
         app: typeof app;
-        path: typeof PathType;
-        fs: typeof FSType;
+        path: typeof path;
+        fs: typeof fs;
         store: StoreType;
         git: {
           repositoryAuthUrl: (url: string, username: string, password: string) => Promise<string>;

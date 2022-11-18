@@ -51,6 +51,9 @@ contextBridge.exposeInMainWorld('electron', {
     emptyDirSync(...args: WindowElectronParameters['fs']['emptyDirSync']) {
       return ipcRenderer.sendSync(channel.fs.emptyDirSync, ...args);
     },
+    ensureDirSync(...args: WindowElectronParameters['fs']['ensureDirSync']) {
+      return ipcRenderer.sendSync(channel.fs.ensureDirSync, ...args);
+    },
   },
   store: {
     get(key: string, defaultValue?: unknown) {

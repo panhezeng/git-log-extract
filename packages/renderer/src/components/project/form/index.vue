@@ -211,6 +211,7 @@ export default defineComponent({
       );
       const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', project.name);
       project.directoryPath = directoryPath;
+      window.electron.fs.ensureDirSync(directoryPath);
       window.electron.fs.emptyDirSync(directoryPath);
       const branchSummary = await window.electron.git.branchSummary(
         directoryPath,

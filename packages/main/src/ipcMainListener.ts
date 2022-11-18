@@ -67,6 +67,13 @@ ipcMain.on(
   },
 );
 
+ipcMain.on(
+  channel.fs.ensureDirSync,
+  async (event, ...args: WindowElectronParameters['fs']['ensureDirSync']) => {
+    event.returnValue = fs.ensureDirSync(...args);
+  },
+);
+
 // node end
 
 const store = new Store({

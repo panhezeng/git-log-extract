@@ -12,6 +12,7 @@ export default {
     existsSync: 'fs.existsSync',
     removeSync: 'fs.removeSync',
     emptyDirSync: 'fs.emptyDirSync',
+    ensureDirSync: 'fs.ensureDirSync',
   },
   store: {
     get: 'store.get',
