@@ -50,7 +50,7 @@ export default defineComponent({
 
     // 格式化json
     function format() {
-      editor && editor.getAction('editor.action.formatDocument').run();
+      editor && editor.getAction('editor.action.formatDocument')?.run();
     }
     function save() {
       if (editor) {

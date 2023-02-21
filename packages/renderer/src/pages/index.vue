@@ -1,117 +1,228 @@
 <template>
-  <q-splitter
-    v-model="data.splitterModel"
-    class="index-page"
-    style="height: 100%"
-  >
-    <template #before>
-      <div style="min-width: 400px; height: 100%">
-        <q-toolbar>
-          <q-tabs v-model="data.tab">
-            <q-tab
-              name="settings"
-              icon="settings"
+  <q-layout>
+    <q-header elevated>
+      <q-toolbar>
+        <q-toolbar-title>Git 项目列表</q-toolbar-title>
+        <q-btn
+          flat
+          round
+          dense
+          icon="settings"
+          label="设置"
+          style="margin-right: 20px"
+          @click="data.dialog.settings.visible = true"
+        />
+        <q-btn
+          flat
+          round
+          dense
+          icon="add"
+          label="添加"
+          style="margin-right: 20px"
+          @click="addProject()"
+        />
+        <q-btn
+          flat
+          round
+          dense
+          icon="edit"
+          label="编辑"
+          style="margin-right: 20px"
+          :disable="data.ticked.length !== 1"
+          @click="editProject()"
+        />
+        <q-btn
+          flat
+          round
+          dense
+          icon="article"
+          label="日志"
+          style="margin-right: 20px"
+          :disable="!data.ticked.length"
+          @click="data.dialog.log.visible = true"
+        />
+        <q-btn
+          flat
+          round
+          dense
+          icon="delete"
+          label="删除"
+          :disable="!data.ticked.length"
+          @click="deleteProject()"
+        />
+      </q-toolbar>
+      <q-dialog
+        v-if="data.dialog.settings.visible"
+        v-model="data.dialog.settings.visible"
+        persistent
+        maximized
+        transition-show="slide-up"
+        transition-hide="slide-down"
+      >
+        <q-card>
+          <q-bar class="bg-primary text-white">
+            <q-space />
+            <q-btn
+              v-close-popup
+              dense
+              flat
+              icon="close"
+            >
+              <q-tooltip class="bg-white text-primary">关闭</q-tooltip>
+            </q-btn>
+          </q-bar>
+
+          <q-card-section>
+            <div class="text-h6">全局设置</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <personalize />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+      <q-dialog
+        v-if="data.dialog.add.visible"
+        v-model="data.dialog.add.visible"
+        persistent
+        maximized
+        transition-show="slide-up"
+        transition-hide="slide-down"
+      >
+        <q-card>
+          <q-bar class="bg-primary text-white">
+            <q-space />
+            <q-btn
+              v-close-popup
+              dense
+              flat
+              icon="close"
+            >
+              <q-tooltip class="bg-white text-primary">关闭</q-tooltip>
+            </q-btn>
+          </q-bar>
+
+          <q-card-section>
+            <div class="text-h6">添加项目</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <project-form />
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+      <q-dialog
+        v-if="data.dialog.edit.visible"
+        v-model="data.dialog.edit.visible"
+        persistent
+        maximized
+        transition-show="slide-up"
+        transition-hide="slide-down"
+      >
+        <q-card>
+          <q-bar class="bg-primary text-white">
+            <q-space />
+            <q-btn
+              v-close-popup
+              dense
+              flat
+              icon="close"
+            >
+              <q-tooltip class="bg-white text-primary">关闭</q-tooltip>
+            </q-btn>
+          </q-bar>
+
+          <q-card-section>
+            <div class="text-h6">编辑项目</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <project-form
+              v-if="data.dialog.edit.data"
+              :data="data.dialog.edit.data"
+              :index="data.dialog.edit.index"
             />
-            <q-tab
-              name="log"
-              label="log"
-              :disable="!data.ticked.length"
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+      <q-dialog
+        v-if="data.dialog.log.visible"
+        v-model="data.dialog.log.visible"
+        persistent
+        maximized
+        transition-show="slide-up"
+        transition-hide="slide-down"
+      >
+        <q-card>
+          <q-bar class="bg-primary text-white">
+            <q-space />
+            <q-btn
+              v-close-popup
+              dense
+              flat
+              icon="close"
+            >
+              <q-tooltip class="bg-white text-primary">关闭</q-tooltip>
+            </q-btn>
+          </q-bar>
+
+          <q-card-section>
+            <div class="text-h6">日志</div>
+          </q-card-section>
+
+          <q-card-section class="q-pt-none">
+            <log-query-form
+              :ticked="data.ticked"
+              @log-query="logQuery"
             />
-            <q-tab
-              name="add"
-              icon="add"
-            />
-            <q-tab
-              name="edit"
-              icon="edit"
-              :disable="data.ticked.length !== 1"
-            />
-          </q-tabs>
-          <q-separator
-            vertical
-            inset
-            color="white"
-          />
-          <q-btn
-            flat
-            icon="delete"
-            :disable="!data.ticked.length"
-            @click="deleteProject()"
-          />
-        </q-toolbar>
+            <div>
+              <div>命令内容：</div>
+              <q-input
+                v-model="data.dialog.log.cmd"
+                input-class="bg-dark text-grey-1"
+                input-style="min-height: 20px"
+                type="textarea"
+              />
+            </div>
+            <div>
+              <div>日志内容：</div>
+              <q-input
+                v-model="data.dialog.log.content"
+                input-class="bg-dark text-grey-1"
+                input-style="min-height: 300px;"
+                type="textarea"
+              />
+              <!--            <editor v-model="data.dialog.log.content" style="height: 300px" />-->
+            </div>
+          </q-card-section>
+        </q-card>
+      </q-dialog>
+    </q-header>
+
+    <q-page-container>
+      <q-page padding>
         <q-tree
           v-if="projects.length"
           v-model:ticked="data.ticked"
           :nodes="projects"
           node-key="repositoryUrl"
           label-key="name"
-          control-color="primary"
-          text-color="white"
           tick-strategy="strict"
-          class="bg-dark"
-          style="width: 100%; height: calc(100% - 54px)"
         ></q-tree>
-      </div>
-    </template>
-    <template #after>
-      <q-tab-panels v-model="data.tab">
-        <q-tab-panel name="settings">
-          <div class="text-h6">设置</div>
-          <personalize />
-        </q-tab-panel>
-        <q-tab-panel name="log">
-          <div class="text-h6">Git Log</div>
-          <log-query-form
-            :ticked="data.ticked"
-            @log-query="logQuery"
-          />
-          <div>
-            <div>cmd：</div>
-            <q-input
-              v-model="data.cmd"
-              input-class="bg-dark text-grey-1"
-              input-style="min-height: 20px"
-              type="textarea"
-            />
-          </div>
-          <div>
-            <div>log：</div>
-            <q-input
-              v-model="data.log"
-              input-class="bg-dark text-grey-1"
-              input-style="min-height: 300px;"
-              type="textarea"
-            />
-            <!--            <editor v-model="data.log" style="height: 300px" />-->
-          </div>
-        </q-tab-panel>
-        <q-tab-panel name="add">
-          <div class="text-h6">添加项目</div>
-          <project-form />
-        </q-tab-panel>
-        <q-tab-panel name="edit">
-          <div class="text-h6">编辑项目</div>
-          <project-form
-            v-if="data.editProject.data"
-            :data="data.editProject.data"
-            :index="data.editProject.index"
-          />
-        </q-tab-panel>
-      </q-tab-panels>
-    </template>
-  </q-splitter>
+      </q-page>
+    </q-page-container>
+  </q-layout>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, reactive, watch} from 'vue';
-
-import {useQuasar} from 'quasar';
-import {useRoute, useRouter} from 'vue-router';
+<script lang="ts" setup>
+import {computed, reactive} from 'vue';
 
 import Personalize from '@/renderer/components/Personalize.vue';
 import ProjectForm from '@/renderer/components/project/form/index.vue';
 import LogQueryForm from '@/renderer/components/project/form/LogQuery.vue';
 import type {LogQueryData} from '@/renderer/components/project/form/models';
+import {useQuasar} from 'quasar';
+import {useRoute, useRouter} from 'vue-router';
 // import Editor from '@/renderer/components/editor/Ace.vue';
 // import Editor from '@/renderer/components/editor/Monaco.vue';
 
@@ -120,189 +231,185 @@ import type {DefaultLogFields, ListLogLine} from 'simple-git';
 import type {ProjectType} from '@/renderer/stores/project';
 import {useProjectStore} from '@/renderer/stores/project';
 
-export default defineComponent({
-  // components: { Personalize, ProjectForm, LogQueryForm, Editor },
-  components: {Personalize, ProjectForm, LogQueryForm},
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props, context) {
-    const router = useRouter();
-    const route = useRoute();
-    const $q = useQuasar();
+const router = useRouter();
+const route = useRoute();
+const $q = useQuasar();
 
-    /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const projectStore = useProjectStore();
-    const projects = computed(() => projectStore.projects);
-    const ticked = [] as string[];
+const projectStore = useProjectStore();
+const projects = computed(() => projectStore.projects);
+const ticked = [] as string[];
 
-    projects.value.forEach(value => {
-      ticked.push(value.repositoryUrl);
-    });
+projects.value.forEach(value => {
+  ticked.push(value.repositoryUrl);
+});
 
-    const data = reactive({
-      tab: ticked.length ? 'log' : 'add',
-      editProject: {
-        data: null as ProjectType | null,
-        index: -1,
-      },
-      ticked,
-      log: '',
+const data = reactive({
+  ticked,
+  dialog: {
+    settings: {
+      visible: false,
+    },
+    add: {
+      visible: false,
+    },
+    edit: {
+      visible: false,
+      data: null as ProjectType | null,
+      index: -1,
+    },
+    log: {
+      visible: false,
+      content: '',
       cmd: '',
-      splitterModel: 50,
-    });
+    },
+  },
+});
 
-    function deleteProject() {
-      $q.dialog({
-        title: '删除确认',
-        message: '确认要删除勾选的项目吗? ',
-        ok: true,
-        cancel: true,
-      }).onOk(() => {
-        for (let i = data.ticked.length - 1; i >= 0; i--) {
-          const repositoryUrl = data.ticked[i];
-          const project = projectStore.getProject({
-            repositoryUrl,
-          });
-          if (project.data) {
-            projectStore.setProject({
-              data: project.data,
-              index: project.index,
-              action: 'delete',
-            });
-          }
-          data.ticked.splice(i, 1);
-          data.tab = ticked.length ? 'log' : 'add';
-        }
+function deleteProject() {
+  $q.dialog({
+    title: '删除确认',
+    message: '确认要删除勾选的项目吗? ',
+    ok: true,
+    cancel: true,
+  }).onOk(() => {
+    for (let i = data.ticked.length - 1; i >= 0; i--) {
+      const repositoryUrl = data.ticked[i];
+      const project = projectStore.getProject({
+        repositoryUrl,
       });
-    }
-
-    watch(
-      computed(() => data.tab),
-      val => {
-        if (val === 'edit') {
-          const project = projectStore.getProject({
-            repositoryUrl: data.ticked[0],
-          });
-          data.editProject.data = project.data;
-          data.editProject.index = project.index;
-        } else if (val === 'add') {
-          data.editProject.data = null;
-          data.editProject.index = -1;
-        }
-      },
-    );
-
-    async function logQuery(logQueryData: LogQueryData) {
-      data.log = '';
-      data.cmd = '';
-      for (let i = 0, end = data.ticked.length; i < end; i++) {
-        const repositoryUrl = data.ticked[i];
-        const project = projectStore.getProject({
-          repositoryUrl,
+      if (project.data) {
+        projectStore.setProject({
+          data: project.data,
+          index: project.index,
+          action: 'delete',
         });
-        const projectData = project.data as ProjectType;
+      }
+      data.ticked.splice(i, 1);
+    }
+  });
+}
 
-        if (i) {
-          data.log += `
+function addProject() {
+  data.dialog.edit.data = null;
+  data.dialog.edit.index = -1;
+  data.dialog.add.visible = true;
+}
+
+function editProject() {
+  const project = projectStore.getProject({
+    repositoryUrl: data.ticked[0],
+  });
+  data.dialog.edit.data = project.data;
+  data.dialog.edit.index = project.index;
+  data.dialog.edit.visible = true;
+}
+
+async function logQuery(logQueryData: LogQueryData) {
+  data.dialog.log.content = '';
+  data.dialog.log.cmd = '';
+  for (let i = 0, end = data.ticked.length; i < end; i++) {
+    const repositoryUrl = data.ticked[i];
+    const project = projectStore.getProject({
+      repositoryUrl,
+    });
+    const projectData = project.data as ProjectType;
+
+    if (i) {
+      data.dialog.log.content += `
 
 ${projectData.name}
 
 `;
-        } else {
-          data.log += `${projectData.name}
+    } else {
+      data.dialog.log.content += `${projectData.name}
 
 `;
-        }
-
-        const logOptions: string[] = [];
-
-        logQueryData.branches.forEach(branch => {
-          if (projectData.branches.includes(branch)) {
-            logOptions.push(branch);
-          }
-        });
-
-        if (logQueryData.author) {
-          logOptions.push(`--author=${logQueryData.author}`);
-        }
-        if (logQueryData.dateRange.from) {
-          logOptions.push(`--since="${logQueryData.dateRange.from} 00:00:00"`);
-          logOptions.push(`--until="${logQueryData.dateRange.to} 23:59:59"`);
-        }
-        if (logQueryData.noMerges) {
-          logOptions.push('--no-merges');
-        }
-
-        data.cmd += `git log ${logOptions.join(' ')}
-`;
-        // console.log(data.cmd);
-        try {
-          const logResult = await window.electron.git.logResult(
-            projectData.directoryPath,
-            logOptions,
-          );
-          logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
-            if (logQueryData.onlyMessage) {
-              if (logQueryData.dedup) {
-                if (!data.log.includes(log.message)) {
-                  data.log += `${log.message}
-`;
-                }
-              } else {
-                data.log += `${log.message}
-`;
-              }
-            } else {
-              for (const logKey in log) {
-                if (logKey in log) {
-                  data.log += `${logKey}:${String(log[logKey as keyof typeof log])}
-`;
-                }
-              }
-            }
-          });
-          // eslint-disable-next-line no-empty
-        } catch (e) {}
-
-        // for (let j = 0, jEnd = logQueryData.branches.length; j < jEnd; j++) {
-        //   const branch = logQueryData.branches[j];
-        //   if (j) {
-        //     logOptions.shift();
-        //   }
-        //   logOptions.unshift(branch);
-        //   data.cmd = `git log ${logOptions.join(" ")}`;
-        //   // console.log(data.cmd);
-        //   const logResult = await git.logResult(
-        //     projectData.directoryPath,
-        //     logOptions
-        //   );
-        //   logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
-        //     if (logQueryData.onlyMessage) {
-        //       if (logQueryData.dedup) {
-        //         if (!data.log.includes(log.message)) {
-        //           data.log += `\r\n${log.message}`;
-        //         }
-        //       } else {
-        //         data.log += `\r\n${log.message}`;
-        //       }
-        //     } else {
-        //       for (const logKey in log) {
-        //         if (logKey in log) {
-        //           data.log += `\r\n${logKey}:${
-        //             String(log[logKey as keyof typeof log])
-        //           }`;
-        //         }
-        //       }
-        //     }
-        //   });
-        // }
-      }
-      logQueryData.loading = false;
     }
 
-    return {projects, data, deleteProject, logQuery};
-  },
-});
+    const logOptions: string[] = [];
+
+    logQueryData.branches.forEach(branch => {
+      if (projectData.branches.includes(branch)) {
+        logOptions.push(branch);
+      }
+    });
+
+    if (logQueryData.author) {
+      logOptions.push(`--author=${logQueryData.author}`);
+    }
+    if (logQueryData.dateRange.from) {
+      logOptions.push(`--since="${logQueryData.dateRange.from} 00:00:00"`);
+      logOptions.push(`--until="${logQueryData.dateRange.to} 23:59:59"`);
+    }
+    if (logQueryData.noMerges) {
+      logOptions.push('--no-merges');
+    }
+
+    data.dialog.log.cmd += `git log ${logOptions.join(' ')}
+`;
+    // console.log(data.dialog.log.cmd);
+    try {
+      const logResult = await window.electron.git.logResult(projectData.directoryPath, logOptions);
+      logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
+        if (logQueryData.onlyMessage) {
+          if (logQueryData.dedup) {
+            if (!data.dialog.log.content.includes(log.message)) {
+              data.dialog.log.content += `${log.message}
+`;
+            }
+          } else {
+            data.dialog.log.content += `${log.message}
+`;
+          }
+        } else {
+          for (const logKey in log) {
+            if (logKey in log) {
+              data.dialog.log.content += `${logKey}:${String(log[logKey as keyof typeof log])}
+`;
+            }
+          }
+        }
+      });
+      // eslint-disable-next-line no-empty
+    } catch (e) {}
+
+    // for (let j = 0, jEnd = logQueryData.branches.length; j < jEnd; j++) {
+    //   const branch = logQueryData.branches[j];
+    //   if (j) {
+    //     logOptions.shift();
+    //   }
+    //   logOptions.unshift(branch);
+    //   data.dialog.log.cmd = `git log ${logOptions.join(" ")}`;
+    //   // console.log(data.dialog.log.cmd);
+    //   const logResult = await git.logResult(
+    //     projectData.directoryPath,
+    //     logOptions
+    //   );
+    //   logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
+    //     if (logQueryData.onlyMessage) {
+    //       if (logQueryData.dedup) {
+    //         if (!data.dialog.log.content.includes(log.message)) {
+    //           data.dialog.log.content += `\r\n${log.message}`;
+    //         }
+    //       } else {
+    //         data.dialog.log.content += `\r\n${log.message}`;
+    //       }
+    //     } else {
+    //       for (const logKey in log) {
+    //         if (logKey in log) {
+    //           data.dialog.log.content += `\r\n${logKey}:${
+    //             String(log[logKey as keyof typeof log])
+    //           }`;
+    //         }
+    //       }
+    //     }
+    //   });
+    // }
+  }
+  logQueryData.loading = false;
+}
 </script>
 <style lang="less">
 .index-page {

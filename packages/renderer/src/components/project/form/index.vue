@@ -68,12 +68,6 @@
       style="margin: 20px 0"
     >
       <q-btn
-        label="提交"
-        type="submit"
-        color="purple"
-        :loading="submitLoading"
-      />
-      <q-btn
         label="重置"
         type="reset"
         color="purple"
@@ -81,12 +75,18 @@
         class="q-ml-sm"
         :loading="submitLoading"
       />
+      <q-btn
+        label="提交"
+        type="submit"
+        color="purple"
+        :loading="submitLoading"
+      />
     </div>
   </q-form>
 </template>
 
-<script lang="ts">
-import {computed, defineComponent, reactive, ref} from 'vue';
+<script lang="ts" setup>
+import {computed, reactive, ref} from 'vue';
 
 import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
@@ -98,155 +98,134 @@ import {appTitle} from '@/common/index.json';
 import {usePersonalizeStore} from '@/renderer/stores/personalize';
 import {fileName as fileNameValidation} from '@/renderer/utils/validation';
 import {AES, Utf8} from 'jscrypto/es6';
-export default defineComponent({
-  components: {},
-  props: {
-    data: {
-      type: null,
-      default: undefined,
-    },
-    index: {
-      type: Number,
-      default: -1,
-    },
+const props = defineProps({
+  data: {
+    type: null,
+    default: undefined,
   },
-  emits: ['submit-success'],
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props, context) {
-    const router = useRouter();
-    const route = useRoute();
-    const $q = useQuasar();
+  index: {
+    type: Number,
+    default: -1,
+  },
+});
+const emit = defineEmits(['submit-success']);
+const router = useRouter();
+const route = useRoute();
+const $q = useQuasar();
 
-    /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const isEdit = computed(() => props.index > -1);
+const isEdit = computed(() => props.index > -1);
 
-    const personalizeStore = usePersonalizeStore();
-    const projectStore = useProjectStore();
+const personalizeStore = usePersonalizeStore();
+const projectStore = useProjectStore();
 
-    let initData = JSON.parse(JSON.stringify(initProjectData)) as ProjectType;
+let initData = JSON.parse(JSON.stringify(initProjectData)) as ProjectType;
 
-    if (isEdit.value && props.data) {
-      initData = JSON.parse(JSON.stringify(props.data)) as ProjectType;
+if (isEdit.value && props.data) {
+  initData = JSON.parse(JSON.stringify(props.data)) as ProjectType;
+} else {
+  initData.username = personalizeStore.git.username;
+  initData.password = personalizeStore.git.password;
+}
+if (initData.password) {
+  initData.password = AES.decrypt(initData.password, 'Secret Passphrase').toString(Utf8);
+}
+
+const project = reactive<ProjectType>(JSON.parse(JSON.stringify(initData)));
+
+const repositoryUrlValidation = [
+  (val: string) => {
+    if (/^https?:\/\/.*\.git$/.test(val)) {
+      return true;
     } else {
-      initData.username = personalizeStore.git.username;
-      initData.password = personalizeStore.git.password;
+      return '请输入有效的git仓库地址，http开始，.git结尾';
     }
-    if (initData.password) {
-      initData.password = AES.decrypt(initData.password, 'Secret Passphrase').toString(Utf8);
+  },
+  (val: string) => {
+    if (
+      !props.data &&
+      projectStore.getProject({
+        repositoryUrl: val,
+      }).data
+    ) {
+      return '已存在相同仓库地址项目，请修改仓库地址';
+    } else {
+      return true;
     }
+  },
+];
 
-    const project = reactive<ProjectType>(JSON.parse(JSON.stringify(initData)));
+function repositoryUrlInput() {
+  const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryUrl);
+  if (Array.isArray(found)) {
+    project.name = found[1];
+  }
+}
 
-    const repositoryUrlValidation = [
-      (val: string) => {
-        if (/^https?:\/\/.*\.git$/.test(val)) {
-          return true;
-        } else {
-          return '请输入有效的git仓库地址，http开始，.git结尾';
-        }
-      },
-      (val: string) => {
-        if (
-          !props.data &&
-          projectStore.getProject({
-            repositoryUrl: val,
-          }).data
-        ) {
-          return '已存在相同仓库地址项目，请修改仓库地址';
-        } else {
-          return true;
-        }
-      },
-    ];
-
-    function repositoryUrlInput() {
-      const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryUrl);
-      if (Array.isArray(found)) {
-        project.name = found[1];
-      }
-    }
-
-    const projectNameValidation = [
-      fileNameValidation,
-      (val: string) => {
-        if (val) {
-          const appDataPath = window.electron.path.join(
-            window.electron.app.getPath('appData'),
-            appTitle,
-          );
-          const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', val);
-          window.electron.fs.removeSync(directoryPath);
-        }
-        if (
-          !props.data &&
-          projectStore.getProject({
-            name: val,
-          }).data
-        ) {
-          return '已存在同名项目，请修改项目名称';
-        } else {
-          return true;
-        }
-      },
-    ] as any[];
-
-    const isPwd = ref(true);
-    const submitLoading = ref(false);
-
-    function onReset() {
-      Object.assign(project, initData);
-    }
-
-    async function onSubmit() {
-      submitLoading.value = true;
-      const repositoryAuthUrl = await window.electron.git.repositoryAuthUrl(
-        project.repositoryUrl,
-        project.username,
-        project.password,
-      );
+const projectNameValidation = [
+  fileNameValidation,
+  (val: string) => {
+    if (val) {
       const appDataPath = window.electron.path.join(
         window.electron.app.getPath('appData'),
         appTitle,
       );
-      const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', project.name);
-      project.directoryPath = directoryPath;
-      window.electron.fs.ensureDirSync(directoryPath);
-      window.electron.fs.emptyDirSync(directoryPath);
-      const branchSummary = await window.electron.git.branchSummary(
-        directoryPath,
-        repositoryAuthUrl,
-      );
-      project.branches = branchSummary.all;
-      const data = JSON.parse(JSON.stringify(project)) as ProjectType;
-      data.password = AES.encrypt(data.password, 'Secret Passphrase').toString();
-      projectStore.setProject({
-        data,
-        action: isEdit.value ? 'edit' : 'add',
-        index: props.index,
-      });
-      context.emit('submit-success', data);
-      $q.notify({
-        message: '保存成功',
-        type: 'positive',
-        position: 'bottom-right',
-      });
-      submitLoading.value = false;
+      const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', val);
+      window.electron.fs.removeSync(directoryPath);
     }
-
-    return {
-      isEdit,
-      project,
-      repositoryUrlValidation,
-      repositoryUrlInput,
-      projectNameValidation,
-      isPwd,
-      submitLoading,
-      onSubmit,
-      onReset,
-    };
+    if (
+      !props.data &&
+      projectStore.getProject({
+        name: val,
+      }).data
+    ) {
+      return '已存在同名项目，请修改项目名称';
+    } else {
+      return true;
+    }
   },
-});
+] as any[];
+
+const isPwd = ref(true);
+const submitLoading = ref(false);
+
+function onReset() {
+  submitLoading.value = true;
+  Object.assign(project, initData);
+  submitLoading.value = false;
+}
+
+async function onSubmit() {
+  submitLoading.value = true;
+  const repositoryAuthUrl = await window.electron.git.repositoryAuthUrl(
+    project.repositoryUrl,
+    project.username,
+    project.password,
+  );
+  const appDataPath = window.electron.path.join(window.electron.app.getPath('appData'), appTitle);
+  const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', project.name);
+  project.directoryPath = directoryPath;
+  window.electron.fs.ensureDirSync(directoryPath);
+  console.log(directoryPath, 'https://codeup.aliyun.com/xuetangx/saas/saas_cms.git');
+  window.electron.fs.emptyDirSync(directoryPath);
+  const branchSummary = await window.electron.git.branchSummary(directoryPath, repositoryAuthUrl);
+  project.branches = branchSummary.all;
+  const data = JSON.parse(JSON.stringify(project)) as ProjectType;
+  data.password = AES.encrypt(data.password, 'Secret Passphrase').toString();
+  projectStore.setProject({
+    data,
+    action: isEdit.value ? 'edit' : 'add',
+    index: props.index,
+  });
+  emit('submit-success', data);
+  $q.notify({
+    message: '保存成功',
+    type: 'positive',
+    position: 'bottom-right',
+  });
+  submitLoading.value = false;
+}
 </script>
 <style lang="less">
 .project-form-comp {

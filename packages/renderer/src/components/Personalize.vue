@@ -87,23 +87,22 @@
       style="margin: 30px 10px"
     >
       <q-btn
-        label="提交"
-        type="submit"
-        color="black"
-      />
-      <q-btn
         label="重置"
         type="reset"
-        color="red"
         flat
         class="q-ml-sm"
+      />
+      <q-btn
+        label="提交"
+        type="submit"
+        color="primary"
       />
     </div>
   </q-form>
 </template>
 
-<script lang="ts">
-import {defineComponent, reactive, ref, toRaw, unref} from 'vue';
+<script lang="ts" setup>
+import {reactive, ref, toRaw, unref} from 'vue';
 
 import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
@@ -111,50 +110,44 @@ import {useRoute, useRouter} from 'vue-router';
 import type {StateType} from '@/renderer/stores/personalize';
 import {usePersonalizeStore} from '@/renderer/stores/personalize';
 import {AES, Utf8} from 'jscrypto/es6';
-export default defineComponent({
-  emits: ['submit-success'],
-  /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
-  setup(props, context) {
-    const router = useRouter();
-    const route = useRoute();
-    const $q = useQuasar();
 
-    /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
+const emit = defineEmits(['submit-success']);
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    const personalizeStore = usePersonalizeStore();
+const router = useRouter();
+const route = useRoute();
+const $q = useQuasar();
 
-    const data = reactive<StateType>(
-      JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))),
-    );
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
-    data.git.password = AES.decrypt(data.git.password, 'Secret Passphrase').toString(Utf8);
+const personalizeStore = usePersonalizeStore();
 
-    const isPwd = ref(true);
+const data = reactive<StateType>(JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))));
 
-    async function onSubmit() {
-      const newData = JSON.parse(JSON.stringify(toRaw(data))) as StateType;
-      newData.git.password = AES.encrypt(newData.git.password, 'Secret Passphrase').toString();
-      personalizeStore.setData(newData);
-      $q.notify({
-        type: 'positive',
-        position: 'top',
-        message: '保存成功',
-      });
-      context.emit('submit-success', data);
-    }
+data.git.password = AES.decrypt(data.git.password, 'Secret Passphrase').toString(Utf8);
 
-    function onReset() {
-      Object.assign(data, JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))));
-    }
+const isPwd = ref(true);
+const submitLoading = ref(false);
 
-    return {
-      data,
-      isPwd,
-      onSubmit,
-      onReset,
-    };
-  },
-});
+async function onSubmit() {
+  submitLoading.value = true;
+  const newData = JSON.parse(JSON.stringify(toRaw(data))) as StateType;
+  newData.git.password = AES.encrypt(newData.git.password, 'Secret Passphrase').toString();
+  personalizeStore.setData(newData);
+  $q.notify({
+    type: 'positive',
+    position: 'top',
+    message: '保存成功',
+  });
+  emit('submit-success', data);
+  submitLoading.value = false;
+}
+
+function onReset() {
+  submitLoading.value = true;
+  Object.assign(data, JSON.parse(JSON.stringify(toRaw(unref(personalizeStore.$state)))));
+  submitLoading.value = false;
+}
 </script>
 <style lang="less">
 .personalize-comp {
