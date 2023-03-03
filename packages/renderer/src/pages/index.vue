@@ -107,7 +107,7 @@
           </q-card-section>
 
           <q-card-section class="q-pt-none">
-            <project-form />
+            <project-form @submit-success="data.dialog.add.visible = false" />
           </q-card-section>
         </q-card>
       </q-dialog>
@@ -231,10 +231,10 @@ import type {DefaultLogFields, ListLogLine} from 'simple-git';
 import type {ProjectType} from '@/renderer/stores/project';
 import {useProjectStore} from '@/renderer/stores/project';
 
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 const router = useRouter();
 const route = useRoute();
 const $q = useQuasar();
-
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
 const projectStore = useProjectStore();

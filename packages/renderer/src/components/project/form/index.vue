@@ -109,10 +109,11 @@ const props = defineProps({
   },
 });
 const emit = defineEmits(['submit-success']);
+
+/* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 const router = useRouter();
 const route = useRoute();
 const $q = useQuasar();
-
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
 const isEdit = computed(() => props.index > -1);
@@ -222,7 +223,7 @@ async function onSubmit() {
   $q.notify({
     message: '保存成功',
     type: 'positive',
-    position: 'bottom-right',
+    position: 'center',
   });
   submitLoading.value = false;
 }
