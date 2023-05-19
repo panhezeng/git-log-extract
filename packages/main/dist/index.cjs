@@ -19,7 +19,7 @@ async function createWindow() {
       browserWindow?.webContents.openDevTools();
     }
   });
-  const pageUrl = "http://localhost:5173/";
+  const pageUrl = "http://127.0.0.1:5173/";
   await browserWindow.loadURL(pageUrl);
   return browserWindow;
 }
