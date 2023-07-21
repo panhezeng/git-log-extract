@@ -156,9 +156,9 @@ export default defineComponent({
         other.branchesOptions = [];
         initData.branches = [];
         for (let i = 0, end = props.ticked.length; i < end; i++) {
-          const repositoryUrl = props.ticked[i];
+          const repositoryAddress = props.ticked[i];
           const project = projectStore.getProject({
-            repositoryUrl,
+            repositoryAddress,
           });
           const projectData = project.data as ProjectType;
           projectData.branches.forEach((branch, index) => {

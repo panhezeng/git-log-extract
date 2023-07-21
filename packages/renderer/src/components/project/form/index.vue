@@ -4,18 +4,31 @@
     @submit="onSubmit"
     @reset="onReset"
   >
+    <q-tabs
+      v-model="project.protocolType"
+      class="text-primary"
+    >
+      <q-tab
+        name="ssh"
+        label="ssh"
+      />
+      <q-tab
+        name="https"
+        label="https"
+      />
+    </q-tabs>
     <q-list>
       <q-item>
         <q-item-section>
           <q-input
-            v-model="project.repositoryUrl"
+            v-model="project.repositoryAddress"
             label="Git仓库地址"
             hint="项目Git远程仓库地址"
             lazy-rules
-            :rules="repositoryUrlValidation"
+            :rules="repositoryAddressValidation"
             :disable="isEdit"
             clearable
-            @update:model-value="repositoryUrlInput"
+            @update:model-value="repositoryAddressInput"
           />
         </q-item-section>
       </q-item>
@@ -31,37 +44,52 @@
           />
         </q-item-section>
       </q-item>
-      <q-item>
-        <q-item-section>
-          <q-input
-            v-model="project.username"
-            label="Git用户名"
-            lazy-rules
-            :rules="[val => !!val || '输入项目Git账户用户名']"
-            clearable
-          />
-        </q-item-section>
-      </q-item>
-      <q-item>
-        <q-item-section>
-          <q-input
-            v-model="project.password"
-            label="Git密码"
-            :type="isPwd ? 'password' : 'text'"
-            lazy-rules
-            :rules="[val => !!val || '输入项目Git账户密码']"
-            clearable
-          >
-            <template #append>
-              <q-icon
-                :name="isPwd ? 'visibility_off' : 'visibility'"
-                class="cursor-pointer"
-                @click="isPwd = !isPwd"
-              />
-            </template>
-          </q-input>
-        </q-item-section>
-      </q-item>
+      <template v-if="project.protocolType === 'ssh'">
+        <q-item>
+          <q-item-section>
+            <q-input
+              v-model="project.sshKey"
+              label="Git用户名"
+              lazy-rules
+              :rules="[val => !!val || '输入ssh秘钥']"
+              clearable
+            />
+          </q-item-section>
+        </q-item>
+      </template>
+      <template v-else>
+        <q-item>
+          <q-item-section>
+            <q-input
+              v-model="project.username"
+              label="Git用户名"
+              lazy-rules
+              :rules="[val => !!val || '输入项目Git账户用户名']"
+              clearable
+            />
+          </q-item-section>
+        </q-item>
+        <q-item>
+          <q-item-section>
+            <q-input
+              v-model="project.password"
+              label="Git密码"
+              :type="isPwd ? 'password' : 'text'"
+              lazy-rules
+              :rules="[val => !!val || '输入项目Git账户密码']"
+              clearable
+            >
+              <template #append>
+                <q-icon
+                  :name="isPwd ? 'visibility_off' : 'visibility'"
+                  class="cursor-pointer"
+                  @click="isPwd = !isPwd"
+                />
+              </template>
+            </q-input>
+          </q-item-section>
+        </q-item>
+      </template>
     </q-list>
     <div
       class="row justify-center"
@@ -98,6 +126,7 @@ import {appTitle} from '@/common/index.json';
 import {usePersonalizeStore} from '@/renderer/stores/personalize';
 import {fileName as fileNameValidation} from '@/renderer/utils/validation';
 import {AES, Utf8} from 'jscrypto/es6';
+
 const props = defineProps({
   data: {
     type: null,
@@ -135,19 +164,27 @@ if (initData.password) {
 
 const project = reactive<ProjectType>(JSON.parse(JSON.stringify(initData)));
 
-const repositoryUrlValidation = [
+const repositoryAddressValidation = [
   (val: string) => {
-    if (/^https?:\/\/.*\.git$/.test(val)) {
-      return true;
+    if (project.protocolType === 'ssh') {
+      if (/^git@.*\.git$/.test(val)) {
+        return true;
+      } else {
+        return '请输入有效的git仓库地址，git@开始，.git结尾';
+      }
     } else {
-      return '请输入有效的git仓库地址，http开始，.git结尾';
+      if (/^https?:\/\/.*\.git$/.test(val)) {
+        return true;
+      } else {
+        return '请输入有效的git仓库地址，http开始，.git结尾';
+      }
     }
   },
   (val: string) => {
     if (
       !props.data &&
       projectStore.getProject({
-        repositoryUrl: val,
+        repositoryAddress: val,
       }).data
     ) {
       return '已存在相同仓库地址项目，请修改仓库地址';
@@ -157,10 +194,17 @@ const repositoryUrlValidation = [
   },
 ];
 
-function repositoryUrlInput() {
-  const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryUrl);
-  if (Array.isArray(found)) {
-    project.name = found[1];
+function repositoryAddressInput() {
+  if (project.protocolType === 'ssh') {
+    const found = /^git@.*\/(.*)\.git$/.exec(project.repositoryAddress);
+    if (Array.isArray(found)) {
+      project.name = found[1];
+    }
+  } else {
+    const found = /^https?:\/\/.*\/(.*)\.git$/.exec(project.repositoryAddress);
+    if (Array.isArray(found)) {
+      project.name = found[1];
+    }
   }
 }
 
@@ -199,18 +243,13 @@ function onReset() {
 
 async function onSubmit() {
   submitLoading.value = true;
-  const repositoryAuthUrl = await window.electron.git.repositoryAuthUrl(
-    project.repositoryUrl,
-    project.username,
-    project.password,
-  );
   const appDataPath = window.electron.path.join(window.electron.app.getPath('appData'), appTitle);
   const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', project.name);
   project.directoryPath = directoryPath;
   window.electron.fs.ensureDirSync(directoryPath);
-  console.log(directoryPath, 'https://codeup.aliyun.com/xuetangx/saas/saas_cms.git');
+  console.log(directoryPath);
   window.electron.fs.emptyDirSync(directoryPath);
-  const branchSummary = await window.electron.git.branchSummary(directoryPath, repositoryAuthUrl);
+  const branchSummary = await window.electron.git.branchSummary(JSON.stringify(project));
   project.branches = branchSummary.all;
   const data = JSON.parse(JSON.stringify(project)) as ProjectType;
   data.password = AES.encrypt(data.password, 'Secret Passphrase').toString();

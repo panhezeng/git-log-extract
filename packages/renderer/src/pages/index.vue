@@ -242,7 +242,7 @@ const projects = computed(() => projectStore.projects);
 const ticked = [] as string[];
 
 projects.value.forEach(value => {
-  ticked.push(value.repositoryUrl);
+  ticked.push(value.repositoryAddress);
 });
 
 const data = reactive({
@@ -275,9 +275,9 @@ function deleteProject() {
     cancel: true,
   }).onOk(() => {
     for (let i = data.ticked.length - 1; i >= 0; i--) {
-      const repositoryUrl = data.ticked[i];
+      const repositoryAddress = data.ticked[i];
       const project = projectStore.getProject({
-        repositoryUrl,
+        repositoryAddress,
       });
       if (project.data) {
         projectStore.setProject({
@@ -299,7 +299,7 @@ function addProject() {
 
 function editProject() {
   const project = projectStore.getProject({
-    repositoryUrl: data.ticked[0],
+    repositoryAddress: data.ticked[0],
   });
   data.dialog.edit.data = project.data;
   data.dialog.edit.index = project.index;
@@ -310,9 +310,9 @@ async function logQuery(logQueryData: LogQueryData) {
   data.dialog.log.content = '';
   data.dialog.log.cmd = '';
   for (let i = 0, end = data.ticked.length; i < end; i++) {
-    const repositoryUrl = data.ticked[i];
+    const repositoryAddress = data.ticked[i];
     const project = projectStore.getProject({
-      repositoryUrl,
+      repositoryAddress,
     });
     const projectData = project.data as ProjectType;
 
@@ -351,7 +351,7 @@ ${projectData.name}
 `;
     // console.log(data.dialog.log.cmd);
     try {
-      const logResult = await window.electron.git.logResult(projectData.directoryPath, logOptions);
+      const logResult = await window.electron.git.logResult(JSON.stringify(project), logOptions);
       logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
         if (logQueryData.onlyMessage) {
           if (logQueryData.dedup) {

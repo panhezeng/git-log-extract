@@ -73,16 +73,15 @@ contextBridge.exposeInMainWorld('electron', {
       );
       return result;
     },
-    async branchSummary(directoryPath: string, repositoryAuthUrl: string) {
+    async branchSummary(projectString: string) {
       const result = await ipcRenderer.invoke(
         channel.git.branchSummary,
-        directoryPath,
-        repositoryAuthUrl,
+        projectString
       );
       return result;
     },
-    async logResult(directoryPath: string, logOptions: string[]) {
-      const result = await ipcRenderer.invoke(channel.git.logResult, directoryPath, logOptions);
+    async logResult(projectString: string, logOptions: string[]) {
+      const result = await ipcRenderer.invoke(channel.git.logResult, projectString, logOptions);
       return result;
     },
   },

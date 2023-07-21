@@ -4,10 +4,12 @@ export const id = 'project';
 export const project = {
   name: '',
   directoryPath: '',
-  repositoryUrl: '',
+  repositoryAddress: '',
   username: '',
   password: '',
   branches: [] as string[],
+  sshKey: '/Users/phz/.ssh/id_rsa',
+  protocolType: 'ssh' as 'https' | 'ssh',
 };
 
 export type ProjectType = typeof project;
@@ -24,10 +26,13 @@ export const useProjectStore = defineStore(id, {
   state: () => JSON.parse(JSON.stringify(initState)) as StateType,
   getters: {
     getProject: state => {
-      return ({name, repositoryUrl}: {name?: string; repositoryUrl?: string}) => {
-        const index = state.projects.findIndex(
-          project => project.name === name || project.repositoryUrl === repositoryUrl,
-        );
+      return ({name, repositoryAddress}: {name?: string; repositoryAddress?: string}) => {
+        const index = state.projects.findIndex(project => {
+          return (
+            (project.name && project.name === name) ||
+            (project.repositoryAddress && project.repositoryAddress === repositoryAddress)
+          );
+        });
         if (index > -1) {
           return {
             data: state.projects[index],

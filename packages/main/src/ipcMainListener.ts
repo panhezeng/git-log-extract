@@ -1,4 +1,4 @@
-import type {WindowElectronParameters} from '*.vue|ts|tsx';
+import type {WindowElectronParameters, ProjectData} from '*.vue|ts|tsx';
 import channel from '@/common/channel';
 import {appTitle} from '@/common/index.json';
 import type {OpenDialogOptions} from 'electron';
@@ -89,13 +89,17 @@ ipcMain.on(channel.store.get, async (event, key: string, defaultValue?: unknown)
   event.returnValue = store.get(key, defaultValue);
 });
 
+function repositoryAuthUrl(url: string, username: string, password: string) {
+  const urlObj = new URL(url);
+  urlObj.username = username;
+  urlObj.password = password;
+  return urlObj.href;
+}
+
 ipcMain.handle(
   channel.git.repositoryAuthUrl,
   async (event, url: string, username: string, password: string) => {
-    const urlObj = new URL(url);
-    urlObj.username = username;
-    urlObj.password = password;
-    return urlObj.href;
+    return repositoryAuthUrl(url, username, password);
   },
 );
 
@@ -127,31 +131,39 @@ function createGit(options?: Partial<SimpleGitOptions>, onProgress?: (data: stri
   return git;
 }
 
-ipcMain.handle(
-  channel.git.branchSummary,
-  async (event, directoryPath: string, repositoryAuthUrl: string) => {
-    const git = createGit({
-      baseDir: directoryPath,
-    });
-    await git.init();
-    await git.addRemote('origin', repositoryAuthUrl);
-    await git.fetch(['--shallow-since="1 months ago"']);
-    // await git.remote(["update"]);
-    const branchSummary: BranchSummary = await git.branch(['-r']);
-    return branchSummary;
-  },
-);
+function createProjectGit(project: ProjectData) {
+  const git = createGit({
+    baseDir: project.directoryPath,
+  });
+  let address = project.repositoryAddress;
+  if (project.protocolType === 'ssh') {
+    const GIT_SSH_COMMAND = `ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${project.sshKey}`;
+    git.env('GIT_SSH_COMMAND', GIT_SSH_COMMAND);
+  } else {
+    address = repositoryAuthUrl(project.repositoryAddress, project.username, project.password);
+  }
+  return {git, address};
+}
 
-ipcMain.handle(
-  channel.git.logResult,
-  async (event, directoryPath: string, logOptions: string[]) => {
-    const git = createGit({baseDir: directoryPath});
-    await git.fetch(['--shallow-since="1 months ago"']);
-    // console.log('git 1');
-    // await git.remote(["update"]);
-    // // console.log('git 2');
-    const logResult: LogResult = await git.log(logOptions);
-    // console.log('git 3');
-    return logResult;
-  },
-);
+ipcMain.handle(channel.git.branchSummary, async (event, projectString: string) => {
+  const project = JSON.parse(projectString) as ProjectData;
+  const {git, address} = createProjectGit(project);
+  await git.init();
+  await git.addRemote('origin', address);
+  await git.fetch(['--shallow-since="1 months ago"']);
+  // await git.remote(["update"]);
+  const branchSummary: BranchSummary = await git.branch(['-r']);
+  return branchSummary;
+});
+
+ipcMain.handle(channel.git.logResult, async (event, projectString: string, logOptions: string[]) => {
+  const project = JSON.parse(projectString) as ProjectData;
+  const {git} = createProjectGit(project);
+  await git.fetch(['--shallow-since="1 months ago"']);
+  // console.log('git 1');
+  // await git.remote(["update"]);
+  // // console.log('git 2');
+  const logResult: LogResult = await git.log(logOptions);
+  // console.log('git 3');
+  return logResult;
+});

@@ -41,12 +41,6 @@ declare namespace NodeJS {
   }
 }
 
-declare module '*.vue' {
-  import type {DefineComponent} from 'vue';
-  const component: DefineComponent<Record<string, unknown>, Record<string, unknown>, unknown>;
-  export default component;
-}
-
 declare module '*.vue|ts|tsx' {
   import type {app, OpenDialogOptions, OpenDialogReturnValue} from 'electron';
   import type StoreType from 'electron-store';
@@ -73,7 +67,16 @@ declare module '*.vue|ts|tsx' {
     };
   };
 
-  export {WindowElectronParameters};
+  type ProjectData = {
+    directoryPath: string,
+    repositoryAddress: string,
+    username: string,
+    password: string,
+    sshKey: string,
+    protocolType: 'https' | 'ssh',
+  }
+
+  export {WindowElectronParameters, ProjectData};
   global {
     interface Window {
       electron: {
@@ -85,10 +88,9 @@ declare module '*.vue|ts|tsx' {
         git: {
           repositoryAuthUrl: (url: string, username: string, password: string) => Promise<string>;
           branchSummary: (
-            directoryPath: string,
-            repositoryAuthUrl: string,
+            projectString: string
           ) => Promise<BranchSummary>;
-          logResult: (directoryPath: string, logOptions: string[]) => Promise<LogResult>;
+          logResult: (projectString: string, logOptions: string[]) => Promise<LogResult>;
         };
       };
       [key: string | number | symbol]: any;

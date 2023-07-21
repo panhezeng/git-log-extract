@@ -2,7 +2,7 @@
   "extends": "@tsconfig/node18/tsconfig.json",
   "include": [
     "types/**/*.d.ts",
-    "**/**.json",
+    "**/*.json",
     "version/**/*.mjs",
     "packages/**/*.config.ts",
     "packages/main/**/*.ts",
