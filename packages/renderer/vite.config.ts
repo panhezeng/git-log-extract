@@ -1,22 +1,23 @@
 /* eslint-env node */
 
-import {quasar, transformAssetUrls} from '@quasar/vite-plugin';
-import vue from '@vitejs/plugin-vue';
-import vueJsx from '@vitejs/plugin-vue-jsx';
-import {join} from 'path';
-import {defineConfig} from 'vite';
-import {createHtmlPlugin} from 'vite-plugin-html';
 import {chrome} from '../../.electron-vendors.cache.json';
-import {appTitle} from '../common/src/index.json';
+import vue from '@vitejs/plugin-vue';
+import {renderer} from 'unplugin-auto-expose';
+import {join} from 'node:path';
+import {injectAppVersion} from '../../version/inject-app-version-plugin.mjs';
+import {defineConfig} from 'vite';
 const PACKAGE_ROOT = __dirname;
+const PROJECT_ROOT = join(PACKAGE_ROOT, '../..');
 
 /**
  * @type {import('vite').UserConfig}
  * @see https://vitejs.dev/config/
  */
+
 export default defineConfig({
   mode: process.env.MODE,
   root: PACKAGE_ROOT,
+  envDir: PROJECT_ROOT,
   resolve: {
     alias: {
       '@/renderer/': join(PACKAGE_ROOT, 'src') + '/',
@@ -41,18 +42,10 @@ export default defineConfig({
     reportCompressedSize: false,
   },
   plugins: [
-    vue({
-      template: {transformAssetUrls},
+    vue(),
+    renderer.vite({
+      preloadEntry: join(PACKAGE_ROOT, '../preload/src/index.ts'),
     }),
-    vueJsx(),
-    createHtmlPlugin({
-      minify: true,
-      inject: {
-        data: {
-          title: appTitle,
-        },
-      },
-    }),
-    quasar(),
+    injectAppVersion(),
   ],
 });

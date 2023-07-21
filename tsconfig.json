@@ -1,33 +1,11 @@
 {
-  "extends": "@vue/tsconfig/tsconfig.web.json",
-  "include": [
-    "**/**.json",
-    "**/**.d.ts",
-    "./**.ts",
-    "packages/renderer/**/*.ts",
-    "packages/renderer/**/*.tsx",
-    "packages/renderer/**/*.vue"
-  ],
-  "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "DOM",
-      "DOM.Iterable"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "@/main/*": ["./packages/main/src/*"],
-      "@/preload/*": ["./packages/preload/src/*"],
-      "@/renderer/*": ["./packages/renderer/src/*"],
-      "@/common/*": ["./packages/common/src/*"]
-    },
-    "noEmit": true,
-    "noImplicitAny": false,
-    "allowJs": true
-  },
+  "files": [],
   "references": [
     {
       "path": "./tsconfig.node.json"
+    },
+    {
+      "path": "./tsconfig.app.json"
     }
   ]
 }

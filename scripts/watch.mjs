@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import {spawn} from 'child_process';
-import electronPath from 'electron';
 import {build, createServer} from 'vite';
+import electronPath from 'electron';
+import {spawn} from 'child_process';
 
 /** @type 'production' | 'development'' */
 const mode = (process.env.MODE = process.env.MODE || 'development');
@@ -45,7 +45,7 @@ function setupMainPackageWatcher({resolvedUrls}) {
           }
 
           /** Spawn new electron process */
-          electronApp = spawn(String(electronPath), ['.'], {
+          electronApp = spawn(String(electronPath), ['--inspect', '.'], {
             stdio: 'inherit',
           });
 

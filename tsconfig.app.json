@@ -1,0 +1,31 @@
+{
+  "extends": "@vue/tsconfig/tsconfig.dom.json",
+  "include": [
+    "types/**/*.d.ts",
+    "packages/renderer/**/*.ts",
+    "packages/renderer/**/*.tsx",
+    "packages/renderer/**/*.vue"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/main/*": ["./packages/main/src/*"],
+      "@/preload/*": ["./packages/preload/src/*"],
+      "@/renderer/*": ["./packages/renderer/src/*"],
+      "@/common/*": ["./packages/common/src/*"]
+    },
+    "noEmit": true,
+    "noImplicitAny": false,
+    "allowJs": true,
+    "module": "ESNext",
+    "target": "ESNext",
+    "sourceMap": false,
+    "moduleResolution": "Node",
+    "skipLibCheck": true,
+    "strict": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "resolveJsonModule": true
+  }
+}

@@ -1,17 +1,21 @@
-import {join} from 'path';
-import {defineConfig} from 'vite';
 import {chrome} from '../../.electron-vendors.cache.json';
+import {preload} from 'unplugin-auto-expose';
+import {join} from 'node:path';
+import {injectAppVersion} from '../../version/inject-app-version-plugin.mjs';
+import {defineConfig} from 'vite';
 
 const PACKAGE_ROOT = __dirname;
+const PROJECT_ROOT = join(PACKAGE_ROOT, '../..');
 
 /**
  * @type {import('vite').UserConfig}
  * @see https://vitejs.dev/config/
  */
+
 export default defineConfig({
   mode: process.env.MODE,
   root: PACKAGE_ROOT,
-  envDir: process.cwd(),
+  envDir: PROJECT_ROOT,
   resolve: {
     alias: {
       '@/preload/': join(PACKAGE_ROOT, 'src') + '/',
@@ -37,5 +41,5 @@ export default defineConfig({
     emptyOutDir: true,
     reportCompressedSize: false,
   },
-  plugins: [],
+  plugins: [preload.vite(), injectAppVersion()],
 });
