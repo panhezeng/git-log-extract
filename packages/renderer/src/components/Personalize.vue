@@ -36,6 +36,15 @@
         </q-item-section>
       </q-item>
       <q-item>
+        <q-item-section>
+          <q-input
+            v-model="data.git.sshKey"
+            clearable
+            label="sshKey"
+          />
+        </q-item-section>
+      </q-item>
+      <q-item>
         <q-item-section>Log查询</q-item-section>
       </q-item>
       <q-item>

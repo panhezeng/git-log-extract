@@ -205,7 +205,7 @@
           v-if="projects.length"
           v-model:ticked="data.ticked"
           :nodes="projects"
-          node-key="repositoryUrl"
+          node-key="repositoryAddress"
           label-key="name"
           tick-strategy="strict"
         ></q-tree>
@@ -351,7 +351,7 @@ ${projectData.name}
 `;
     // console.log(data.dialog.log.cmd);
     try {
-      const logResult = await window.electron.git.logResult(JSON.stringify(project), logOptions);
+      const logResult = await window.electron.git.logResult(JSON.stringify(projectData), logOptions);
       logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
         if (logQueryData.onlyMessage) {
           if (logQueryData.dedup) {

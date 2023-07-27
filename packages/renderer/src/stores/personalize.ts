@@ -5,6 +5,7 @@ const initState = {
   git: {
     username: '',
     password: '',
+    sshKey: '/Users/phz/.ssh/id_rsa',
   },
   logQuery: {
     author: '',

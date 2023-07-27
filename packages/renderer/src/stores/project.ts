@@ -8,9 +8,13 @@ export const project = {
   username: '',
   password: '',
   branches: [] as string[],
-  sshKey: '/Users/phz/.ssh/id_rsa',
+  sshKey: '',
   protocolType: 'ssh' as 'https' | 'ssh',
 };
+
+// window.electron.store.set({
+//   [`store_${id}`]: {projects: []},
+// });
 
 export type ProjectType = typeof project;
 
@@ -35,7 +39,7 @@ export const useProjectStore = defineStore(id, {
         });
         if (index > -1) {
           return {
-            data: state.projects[index],
+            data: state.projects[index] as ProjectType,
             index: index,
           };
         } else {

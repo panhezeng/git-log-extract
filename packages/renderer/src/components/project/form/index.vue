@@ -157,6 +157,7 @@ if (isEdit.value && props.data) {
 } else {
   initData.username = personalizeStore.git.username;
   initData.password = personalizeStore.git.password;
+  initData.sshKey = personalizeStore.git.sshKey;
 }
 if (initData.password) {
   initData.password = AES.decrypt(initData.password, 'Secret Passphrase').toString(Utf8);
