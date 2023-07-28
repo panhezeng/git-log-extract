@@ -65,7 +65,7 @@ export const useProjectStore = defineStore(id, {
         this.$state.projects.push(data);
       } else {
         if (index < 0 || index >= this.$state.projects.length) {
-          index = this.$state.projects.findIndex(existing => existing.name === data.name);
+          index = this.$state.projects.findIndex(existing => existing.repositoryAddress === data.repositoryAddress);
         }
         if (index > -1) {
           if (action === 'delete') {

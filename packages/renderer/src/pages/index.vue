@@ -16,6 +16,16 @@
           flat
           round
           dense
+          icon="cloud_download"
+          label="拉取"
+          style="margin-right: 20px"
+          :disable="!data.ticked.length"
+          @click="syncProjects()"
+        />
+        <q-btn
+          flat
+          round
+          dense
           icon="add"
           label="添加"
           style="margin-right: 20px"
@@ -229,7 +239,8 @@ import {useRoute, useRouter} from 'vue-router';
 import type {DefaultLogFields, ListLogLine} from 'simple-git';
 
 import type {ProjectType} from '@/renderer/stores/project';
-import {useProjectStore} from '@/renderer/stores/project';
+import { id, useProjectStore } from "@/renderer/stores/project";
+import { toRaw, unref } from "vue";
 
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 const router = useRouter();
@@ -266,6 +277,34 @@ const data = reactive({
     },
   },
 });
+
+async function syncProjects() {
+  const dialog = $q.dialog({
+    message: '拉取中...',
+    progress: true, // we enable default settings
+    persistent: true, // we want the user to not be able to close it
+    ok: false, // we want the user to not be able to close it
+  });
+  try {
+    for (let i = data.ticked.length - 1; i >= 0; i--) {
+      const repositoryAddress = data.ticked[i];
+      const project = projectStore.getProject({
+        repositoryAddress,
+      });
+      const projectData = project.data as ProjectType;
+      const directoryPath = projectData.directoryPath;
+      window.electron.fs.ensureDirSync(directoryPath);
+      window.electron.fs.emptyDirSync(directoryPath);
+      const branchSummary = await window.electron.git.branchSummary(JSON.stringify(toRaw(unref(projectData))));
+      projectData.branches = branchSummary.all;
+    }
+    window.electron.store.set({
+      [`store_${id}`]: {projects: toRaw(unref(projects))},
+    });
+  } finally {
+    dialog.hide();
+  }
+}
 
 function deleteProject() {
   $q.dialog({
@@ -351,7 +390,10 @@ ${projectData.name}
 `;
     // console.log(data.dialog.log.cmd);
     try {
-      const logResult = await window.electron.git.logResult(JSON.stringify(projectData), logOptions);
+      const logResult = await window.electron.git.logResult(
+        JSON.stringify(projectData),
+        logOptions,
+      );
       logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
         if (logQueryData.onlyMessage) {
           if (logQueryData.dedup) {
