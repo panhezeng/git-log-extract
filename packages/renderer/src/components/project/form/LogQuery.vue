@@ -164,7 +164,7 @@ export default defineComponent({
           projectData.branches.forEach((branch, index) => {
             if (!other.branchesOptions.includes(branch)) {
               other.branchesOptions.push(branch);
-              if (/(^|\/)(master|develop|main|phz|panhezeng)$/.test(branch)) {
+              if (/(^|\/)(main|master|develop|dev|phz|panhezeng)$/.test(branch)) {
                 initData.branches.push(branch);
               }
             }
