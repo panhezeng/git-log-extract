@@ -26,7 +26,7 @@
           padding="xs"
           label="选择时间"
           @click="other.dateRange.visible = true"
-        /><template v-if="data.dateRange.from"
+        /><template v-if="data.dateRange && data.dateRange.from"
           ><span>{{ data.dateRange.from + ' ' + data.dateRange.to }}</span
           ><q-btn
             padding="xs"
