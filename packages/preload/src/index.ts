@@ -54,18 +54,24 @@ const electron = {
       );
       return result;
     },
-    async branchSummary(projectString: string) {
+    async branchSummary(projectString: string, shallowSince: string) {
       const result = await ipcRenderer.invoke(
         channel.git.branchSummary,
-        projectString
+        projectString,
+        shallowSince,
       );
       return result;
     },
-    async logResult(projectString: string, logOptions: string[]) {
-      const result = await ipcRenderer.invoke(channel.git.logResult, projectString, logOptions);
+    async logResult(projectString: string, logOptions: string[], shallowSince: string) {
+      const result = await ipcRenderer.invoke(
+        channel.git.logResult,
+        projectString,
+        logOptions,
+        shallowSince,
+      );
       return result;
     },
   },
-}
+};
 
 export {electron};

@@ -171,7 +171,7 @@ export default defineComponent({
           });
         }
         data.branches = initData.branches.slice();
-        data.author = `${personalizeStore.logQuery.author}\\|潘何增`;
+        data.author = `${personalizeStore.logQuery.author}`;
         data.dedup = personalizeStore.logQuery.dedup;
         data.noMerges = personalizeStore.logQuery.noMerges;
         data.onlyMessage = personalizeStore.logQuery.onlyMessage;

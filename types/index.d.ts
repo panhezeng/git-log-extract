@@ -88,9 +88,10 @@ declare module '*.vue|ts|tsx' {
         git: {
           repositoryAuthUrl: (url: string, username: string, password: string) => Promise<string>;
           branchSummary: (
-            projectString: string
+            projectString: string,
+            shallowSince: string,
           ) => Promise<BranchSummary>;
-          logResult: (projectString: string, logOptions: string[]) => Promise<LogResult>;
+          logResult: (projectString: string, logOptions: string[], shallowSince: string,) => Promise<LogResult>;
         };
       };
       [key: string | number | symbol]: any;

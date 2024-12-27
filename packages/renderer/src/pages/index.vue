@@ -239,8 +239,9 @@ import {useRoute, useRouter} from 'vue-router';
 import type {DefaultLogFields, ListLogLine} from 'simple-git';
 
 import type {ProjectType} from '../stores/project';
-import { id, useProjectStore } from "../stores/project";
-import { toRaw, unref } from "vue";
+import {id, useProjectStore} from '../stores/project';
+import {toRaw, unref} from 'vue';
+import {usePersonalizeStore} from '../stores/personalize.ts';
 
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 const router = useRouter();
@@ -248,6 +249,7 @@ const route = useRoute();
 const $q = useQuasar();
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
 
+const personalizeStore = usePersonalizeStore();
 const projectStore = useProjectStore();
 const projects = computed(() => projectStore.projects);
 const ticked = [] as string[];
@@ -295,7 +297,10 @@ async function syncProjects() {
       const directoryPath = projectData.directoryPath;
       window[btoa('electron')].fs.ensureDirSync(directoryPath);
       window[btoa('electron')].fs.emptyDirSync(directoryPath);
-      const branchSummary = await window[btoa('electron')].git.branchSummary(JSON.stringify(toRaw(unref(projectData))));
+      const branchSummary = await window[btoa('electron')].git.branchSummary(
+        JSON.stringify(toRaw(unref(projectData))),
+        personalizeStore.logQuery.shallowSince,
+      );
       projectData.branches = branchSummary.all;
     }
     window[btoa('electron')].store.set({
@@ -393,6 +398,7 @@ ${projectData.name}
       const logResult = await window[btoa('electron')].git.logResult(
         JSON.stringify(projectData),
         logOptions,
+        personalizeStore.logQuery.shallowSince,
       );
       logResult.all.forEach((log: DefaultLogFields & ListLogLine) => {
         if (logQueryData.onlyMessage) {

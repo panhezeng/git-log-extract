@@ -13,6 +13,7 @@ const initState = {
     noMerges: true,
     dedup: true,
     thisWeek: true,
+    shallowSince: '',
   },
   ...(window[btoa('electron')].store.get(`store_${id}`, {}) as Record<any, any>),
 };

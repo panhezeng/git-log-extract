@@ -244,13 +244,24 @@ function onReset() {
 
 async function onSubmit() {
   submitLoading.value = true;
-  const appDataPath = window[btoa('electron')].path.join(window[btoa('electron')].app.getPath('appData'), config.appTitle);
-  const directoryPath = window[btoa('electron')].path.join(appDataPath, 'temp', 'git', project.name);
+  const appDataPath = window[btoa('electron')].path.join(
+    window[btoa('electron')].app.getPath('appData'),
+    config.appTitle,
+  );
+  const directoryPath = window[btoa('electron')].path.join(
+    appDataPath,
+    'temp',
+    'git',
+    project.name,
+  );
   project.directoryPath = directoryPath;
   window[btoa('electron')].fs.ensureDirSync(directoryPath);
   console.log(directoryPath);
   window[btoa('electron')].fs.emptyDirSync(directoryPath);
-  const branchSummary = await window[btoa('electron')].git.branchSummary(JSON.stringify(project));
+  const branchSummary = await window[btoa('electron')].git.branchSummary(
+    JSON.stringify(project),
+    personalizeStore.logQuery.shallowSince,
+  );
   project.branches = branchSummary.all;
   const data = JSON.parse(JSON.stringify(project)) as ProjectType;
   data.password = AES.encrypt(data.password, 'Secret Passphrase').toString();
