@@ -119,12 +119,12 @@ import {computed, reactive, ref} from 'vue';
 import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
 
-import type {ProjectType} from '@/renderer/stores/project';
-import {project as initProjectData, useProjectStore} from '@/renderer/stores/project';
+import type {ProjectType} from '../../../stores/project';
+import {project as initProjectData, useProjectStore} from '../../../stores/project';
 
-import {appTitle} from '@/common/index.json';
-import {usePersonalizeStore} from '@/renderer/stores/personalize';
-import {fileName as fileNameValidation} from '@/renderer/utils/validation';
+import {config} from '@vite-electron-builder/common';
+import {usePersonalizeStore} from '../../../stores/personalize';
+import {fileName as fileNameValidation} from '../../../utils/validation';
 import {AES, Utf8} from 'jscrypto/es6';
 
 const props = defineProps({
@@ -213,12 +213,12 @@ const projectNameValidation = [
   fileNameValidation,
   (val: string) => {
     if (val) {
-      const appDataPath = window.electron.path.join(
-        window.electron.app.getPath('appData'),
-        appTitle,
+      const appDataPath = window[btoa('electron')].path.join(
+        window[btoa('electron')].app.getPath('appData'),
+        config.appTitle,
       );
-      const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', val);
-      window.electron.fs.removeSync(directoryPath);
+      const directoryPath = window[btoa('electron')].path.join(appDataPath, 'temp', 'git', val);
+      window[btoa('electron')].fs.removeSync(directoryPath);
     }
     if (
       !props.data &&
@@ -244,13 +244,13 @@ function onReset() {
 
 async function onSubmit() {
   submitLoading.value = true;
-  const appDataPath = window.electron.path.join(window.electron.app.getPath('appData'), appTitle);
-  const directoryPath = window.electron.path.join(appDataPath, 'temp', 'git', project.name);
+  const appDataPath = window[btoa('electron')].path.join(window[btoa('electron')].app.getPath('appData'), config.appTitle);
+  const directoryPath = window[btoa('electron')].path.join(appDataPath, 'temp', 'git', project.name);
   project.directoryPath = directoryPath;
-  window.electron.fs.ensureDirSync(directoryPath);
+  window[btoa('electron')].fs.ensureDirSync(directoryPath);
   console.log(directoryPath);
-  window.electron.fs.emptyDirSync(directoryPath);
-  const branchSummary = await window.electron.git.branchSummary(JSON.stringify(project));
+  window[btoa('electron')].fs.emptyDirSync(directoryPath);
+  const branchSummary = await window[btoa('electron')].git.branchSummary(JSON.stringify(project));
   project.branches = branchSummary.all;
   const data = JSON.parse(JSON.stringify(project)) as ProjectType;
   data.password = AES.encrypt(data.password, 'Secret Passphrase').toString();

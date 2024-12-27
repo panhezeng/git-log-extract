@@ -227,19 +227,19 @@
 <script lang="ts" setup>
 import {computed, reactive} from 'vue';
 
-import Personalize from '@/renderer/components/Personalize.vue';
-import ProjectForm from '@/renderer/components/project/form/index.vue';
-import LogQueryForm from '@/renderer/components/project/form/LogQuery.vue';
-import type {LogQueryData} from '@/renderer/components/project/form/models';
+import Personalize from '../components/Personalize.vue';
+import ProjectForm from '../components/project/form/index.vue';
+import LogQueryForm from '../components/project/form/LogQuery.vue';
+import type {LogQueryData} from '../components/project/form/models';
 import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
-// import Editor from '@/renderer/components/editor/Ace.vue';
-// import Editor from '@/renderer/components/editor/Monaco.vue';
+// import Editor from '../components/editor/Ace.vue';
+// import Editor from '../components/editor/Monaco.vue';
 
 import type {DefaultLogFields, ListLogLine} from 'simple-git';
 
-import type {ProjectType} from '@/renderer/stores/project';
-import { id, useProjectStore } from "@/renderer/stores/project";
+import type {ProjectType} from '../stores/project';
+import { id, useProjectStore } from "../stores/project";
 import { toRaw, unref } from "vue";
 
 /* eslint-disable @typescript-eslint/no-unused-vars,no-unused-vars */
@@ -293,12 +293,12 @@ async function syncProjects() {
       });
       const projectData = project.data as ProjectType;
       const directoryPath = projectData.directoryPath;
-      window.electron.fs.ensureDirSync(directoryPath);
-      window.electron.fs.emptyDirSync(directoryPath);
-      const branchSummary = await window.electron.git.branchSummary(JSON.stringify(toRaw(unref(projectData))));
+      window[btoa('electron')].fs.ensureDirSync(directoryPath);
+      window[btoa('electron')].fs.emptyDirSync(directoryPath);
+      const branchSummary = await window[btoa('electron')].git.branchSummary(JSON.stringify(toRaw(unref(projectData))));
       projectData.branches = branchSummary.all;
     }
-    window.electron.store.set({
+    window[btoa('electron')].store.set({
       [`store_${id}`]: {projects: toRaw(unref(projects))},
     });
   } finally {
@@ -390,7 +390,7 @@ ${projectData.name}
 `;
     // console.log(data.dialog.log.cmd);
     try {
-      const logResult = await window.electron.git.logResult(
+      const logResult = await window[btoa('electron')].git.logResult(
         JSON.stringify(projectData),
         logOptions,
       );

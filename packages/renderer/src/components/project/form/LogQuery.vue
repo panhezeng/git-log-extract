@@ -112,13 +112,13 @@ import {computed, defineComponent, reactive, watch} from 'vue';
 import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
 
-import type {LogQueryData} from '@/renderer/components/project/form/models';
-import {logQueryInitData} from '@/renderer/components/project/form/models';
+import type {LogQueryData} from './models';
+import {logQueryInitData} from './models';
 
-import {usePersonalizeStore} from '@/renderer/stores/personalize';
-import type {ProjectType} from '@/renderer/stores/project';
-import {useProjectStore} from '@/renderer/stores/project';
-import dayjs from '@/renderer/utils/dayjs';
+import {usePersonalizeStore} from '../../../stores/personalize';
+import type {ProjectType} from '../../../stores/project';
+import {useProjectStore} from '../../../stores/project';
+import dayjs from '../../../utils/dayjs';
 
 export default defineComponent({
   components: {},

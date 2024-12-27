@@ -12,13 +12,13 @@ export const project = {
   protocolType: 'ssh' as 'https' | 'ssh',
 };
 
-// window.electron.store.set({
+// window[btoa('electron')].store.set({
 //   [`store_${id}`]: {projects: []},
 // });
 
 export type ProjectType = typeof project;
 
-const projects = window.electron.store.get(`store_${id}.projects`, []) as ProjectType[];
+const projects = window[btoa('electron')].store.get(`store_${id}.projects`, []) as ProjectType[];
 
 const initState = {
   projects,
@@ -75,7 +75,7 @@ export const useProjectStore = defineStore(id, {
           }
         }
       }
-      window.electron.store.set({
+      window[btoa('electron')].store.set({
         [`store_${id}`]: {projects: toRaw(unref(this.$state.projects))},
       });
     },

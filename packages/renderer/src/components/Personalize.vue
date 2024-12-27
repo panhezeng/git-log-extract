@@ -116,8 +116,8 @@ import {reactive, ref, toRaw, unref} from 'vue';
 import {useQuasar} from 'quasar';
 import {useRoute, useRouter} from 'vue-router';
 
-import type {StateType} from '@/renderer/stores/personalize';
-import {usePersonalizeStore} from '@/renderer/stores/personalize';
+import type {StateType} from '../stores/personalize';
+import {usePersonalizeStore} from '../stores/personalize';
 import {AES, Utf8} from 'jscrypto/es6';
 
 const emit = defineEmits(['submit-success']);

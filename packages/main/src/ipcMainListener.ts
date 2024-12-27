@@ -1,13 +1,12 @@
 import type {WindowElectronParameters, ProjectData} from '*.vue|ts|tsx';
-import channel from '@/common/channel';
-import {appTitle} from '@/common/index.json';
+import {channel, config} from '@vite-electron-builder/common';
 import type {OpenDialogOptions} from 'electron';
 import {app, dialog, ipcMain} from 'electron';
 import Store from 'electron-store';
 import fs from 'fs-extra';
 import path from 'path';
 import type {BranchSummary, LogResult, SimpleGitOptions} from 'simple-git';
-import simpleGit from 'simple-git';
+import {simpleGit} from 'simple-git';
 import {URL} from 'url';
 
 //
@@ -78,7 +77,7 @@ ipcMain.on(
 
 const store = new Store({
   name: 'git-log-extract-main-config',
-  cwd: path.join(app.getPath('appData'), appTitle),
+  cwd: path.join(app.getPath('appData'), config.appTitle),
 });
 
 ipcMain.on(channel.store.set, async (event, ...args: WindowElectronParameters['store']['set']) => {
@@ -150,20 +149,26 @@ ipcMain.handle(channel.git.branchSummary, async (event, projectString: string) =
   const {git, address} = createProjectGit(project);
   await git.init();
   await git.addRemote('origin', address);
-  await git.fetch(['--shallow-since="1 months ago"']);
-  // await git.remote(["update"]);
+  try {
+    await git.fetch(['--shallow-since="1 months ago"']);
+  } catch (e) {
+    await git.remote(['update']);
+  }
   const branchSummary: BranchSummary = await git.branch(['-r']);
   return branchSummary;
 });
 
-ipcMain.handle(channel.git.logResult, async (event, projectString: string, logOptions: string[]) => {
-  const project = JSON.parse(projectString) as ProjectData;
-  const {git} = createProjectGit(project);
-  await git.fetch(['--shallow-since="1 months ago"']);
-  // console.log('git 1');
-  // await git.remote(["update"]);
-  // // console.log('git 2');
-  const logResult: LogResult = await git.log(logOptions);
-  // console.log('git 3');
-  return logResult;
-});
+ipcMain.handle(
+  channel.git.logResult,
+  async (event, projectString: string, logOptions: string[]) => {
+    const project = JSON.parse(projectString) as ProjectData;
+    const {git} = createProjectGit(project);
+    try {
+      await git.fetch(['--shallow-since="1 months ago"']);
+    } catch (e) {
+      await git.remote(['update']);
+    }
+    const logResult: LogResult = await git.log(logOptions);
+    return logResult;
+  },
+);

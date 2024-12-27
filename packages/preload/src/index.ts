@@ -1,28 +1,9 @@
-/* eslint-env node */
-/**
- * This file is used specifically for security reasons.
- * Here you can access Nodejs stuff and inject functionality into
- * the renderer thread (accessible there through the "window" object)
- *
- * WARNING!
- * If you import anything from node_modules, then make sure that the package is specified
- * in package.json > dependencies and NOT in devDependencies
- *
- * Example (injects window.myAPI.doAThing() into renderer thread):
- *
- *   import { contextBridge } from 'electron'
- *
- *   contextBridge.exposeInMainWorld('myAPI', {
- *     doAThing: () => {}
- *   })
- */
-
 import type {WindowElectronParameters} from '*.vue|ts|tsx';
-import channel from '@/common/channel';
+import {channel} from '@vite-electron-builder/common';
 import type {OpenDialogOptions, OpenDialogReturnValue} from 'electron';
-import {contextBridge, ipcRenderer} from 'electron';
+import {ipcRenderer} from 'electron';
 
-contextBridge.exposeInMainWorld('electron', {
+const electron = {
   app: {
     getPath(...args: WindowElectronParameters['app']['getPath']) {
       return ipcRenderer.sendSync(channel.app.getPath, ...args);
@@ -85,4 +66,6 @@ contextBridge.exposeInMainWorld('electron', {
       return result;
     },
   },
-});
+}
+
+export {electron};

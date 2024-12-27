@@ -1,0 +1,11 @@
+{
+  "name": "@vite-electron-builder/common",
+  "type": "module",
+  "files": [],
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./index.js"
+    }
+  }
+}

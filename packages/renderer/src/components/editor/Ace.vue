@@ -60,7 +60,7 @@ export default defineComponent({
           mode: 'ace/mode/markdown',
         };
 
-        editor = ace.edit(editorElement.value as Element, options);
+        editor = ace.edit(editorElement.value as HTMLElement, options);
 
         if (props.sync) {
           const emitValue = () => {

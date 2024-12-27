@@ -14,7 +14,7 @@ const initState = {
     dedup: true,
     thisWeek: true,
   },
-  ...(window.electron.store.get(`store_${id}`, {}) as Record<any, any>),
+  ...(window[btoa('electron')].store.get(`store_${id}`, {}) as Record<any, any>),
 };
 export type StateType = typeof initState;
 
@@ -23,7 +23,7 @@ export const usePersonalizeStore = defineStore(id, {
   actions: {
     setData(data: Partial<StateType>) {
       this.$patch(data);
-      window.electron.store.set({[`store_${id}`]: toRaw(unref(this.$state))});
+      window[btoa('electron')].store.set({[`store_${id}`]: toRaw(unref(this.$state))});
     },
   },
 });

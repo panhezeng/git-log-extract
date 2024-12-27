@@ -1,7 +1,7 @@
 import {Notify} from 'quasar';
 
 export function localDirectoryPath(val: string, fail?: string) {
-  if (window.electron.fs.existsSync(val)) {
+  if (window[btoa('electron')].fs.existsSync(val)) {
     return true;
   } else {
     if (typeof fail === 'undefined') {
