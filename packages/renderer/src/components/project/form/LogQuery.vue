@@ -31,7 +31,7 @@
           ><q-btn
             padding="xs"
             label="删除选择"
-            @click="(data.dateRange.from = ''), (data.dateRange.to = '')"
+            @click="((data.dateRange.from = ''), (data.dateRange.to = ''))"
         /></template>
         <q-dialog
           v-model="other.dateRange.visible"

@@ -55,9 +55,9 @@
             label="Author"
           />
           <q-input
-              v-model="data.logQuery.shallowSince"
-              clearable
-              label="ShallowSince"
+            v-model="data.logQuery.shallowSince"
+            clearable
+            label="ShallowSince"
           />
         </q-item-section>
       </q-item>
