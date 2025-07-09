@@ -44,6 +44,16 @@
           />
         </q-item-section>
       </q-item>
+      <q-item>
+        <q-item-section>
+          <q-input
+            v-model="project.directoryPath"
+            label="项目本地目录"
+            hint="默认使用软件目录下的temp目录"
+            clearable
+          />
+        </q-item-section>
+      </q-item>
       <template v-if="project.protocolType === 'ssh'">
         <q-item>
           <q-item-section>
@@ -213,6 +223,9 @@ const projectNameValidation = [
   fileNameValidation,
   (val: string) => {
     if (val) {
+      if (project.directoryPath) {
+        return true;
+      }
       const appDataPath = window[btoa('electron')].path.join(
         window[btoa('electron')].app.getPath('appData'),
         config.appTitle,
@@ -227,9 +240,8 @@ const projectNameValidation = [
       }).data
     ) {
       return '已存在同名项目，请修改项目名称';
-    } else {
-      return true;
     }
+    return true;
   },
 ] as any[];
 
@@ -248,16 +260,14 @@ async function onSubmit() {
     window[btoa('electron')].app.getPath('appData'),
     config.appTitle,
   );
-  const directoryPath = window[btoa('electron')].path.join(
-    appDataPath,
-    'temp',
-    'git',
-    project.name,
-  );
-  project.directoryPath = directoryPath;
-  window[btoa('electron')].fs.ensureDirSync(directoryPath);
-  console.log(directoryPath);
-  window[btoa('electron')].fs.emptyDirSync(directoryPath);
+  let directoryPath = project.directoryPath;
+  if (!directoryPath) {
+    directoryPath = window[btoa('electron')].path.join(appDataPath, 'temp', 'git', project.name);
+    project.directoryPath = directoryPath;
+    window[btoa('electron')].fs.ensureDirSync(directoryPath);
+    console.log(directoryPath);
+    window[btoa('electron')].fs.emptyDirSync(directoryPath);
+  }
   const branchSummary = await window[btoa('electron')].git.branchSummary(
     JSON.stringify(project),
     personalizeStore.logQuery.shallowSince,

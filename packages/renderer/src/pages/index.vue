@@ -295,8 +295,10 @@ async function syncProjects() {
       });
       const projectData = project.data as ProjectType;
       const directoryPath = projectData.directoryPath;
-      window[btoa('electron')].fs.ensureDirSync(directoryPath);
-      window[btoa('electron')].fs.emptyDirSync(directoryPath);
+      if (/temp[/\\]git/.test(directoryPath)) {
+        window[btoa('electron')].fs.ensureDirSync(directoryPath);
+        window[btoa('electron')].fs.emptyDirSync(directoryPath);
+      }
       const branchSummary = await window[btoa('electron')].git.branchSummary(
         JSON.stringify(toRaw(unref(projectData))),
         personalizeStore.logQuery.shallowSince,

@@ -5,10 +5,10 @@ const initState = {
   git: {
     username: '',
     password: '',
-    sshKey: '/Users/phz/.ssh/id_rsa',
+    sshKey: '/Users/panhezeng/.ssh/id_rsa',
   },
   logQuery: {
-    author: '',
+    author: '潘何增\\|panhezeng',
     onlyMessage: true,
     noMerges: true,
     dedup: true,

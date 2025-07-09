@@ -149,8 +149,10 @@ ipcMain.handle(
   async (event, projectString: string, shallowSince: string) => {
     const project = JSON.parse(projectString) as ProjectData;
     const {git, address} = createProjectGit(project);
-    await git.init();
-    await git.addRemote('origin', address);
+    if (/temp[/\\]git/.test(project.directoryPath)) {
+      await git.init();
+      await git.addRemote('origin', address);
+    }
     try {
       await git.fetch([`--shallow-since="${shallowSince || '1 months ago'}"`]);
     } catch (e) {
