@@ -11,7 +11,6 @@
         :options="other.branchesOptions"
         label="Branches"
         style="width: 150px; display: inline-block"
-        :rules="[val => val.length > 0 || '最少选择一个分支']"
         clearable
       />
       <q-input
@@ -154,24 +153,24 @@ export default defineComponent({
       computed(() => props.ticked),
       async () => {
         other.branchesOptions = [];
-        initData.branches = [];
+        // initData.branches = [];
         for (let i = 0, end = props.ticked.length; i < end; i++) {
           const repositoryAddress = props.ticked[i];
           const project = projectStore.getProject({
             repositoryAddress,
           });
           const projectData = project.data as ProjectType;
-          projectData.branches.forEach((branch, index) => {
+          projectData.branches.forEach(branch => {
             if (!other.branchesOptions.includes(branch)) {
               other.branchesOptions.push(branch);
-              if (/(^|\/)(main|master|develop|dev|phz|panhezeng)$/.test(branch)) {
-                initData.branches.push(branch);
-              }
+              // if (/(^|\/)(main|master|develop|dev|phz|panhezeng)$/.test(branch)) {
+              //   initData.branches.push(branch);
+              // }
             }
           });
         }
-        data.branches = initData.branches.slice();
-        data.author = `${personalizeStore.logQuery.author}`;
+        // data.branches = initData.branches.slice();
+        data.author = personalizeStore.logQuery.author || '潘何增\\|panhezeng';
         data.dedup = personalizeStore.logQuery.dedup;
         data.noMerges = personalizeStore.logQuery.noMerges;
         data.onlyMessage = personalizeStore.logQuery.onlyMessage;

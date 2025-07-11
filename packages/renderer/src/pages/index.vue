@@ -376,11 +376,15 @@ ${projectData.name}
 
     const logOptions: string[] = [];
 
-    logQueryData.branches.forEach(branch => {
-      if (projectData.branches.includes(branch)) {
-        logOptions.push(branch);
-      }
-    });
+    if (logQueryData.branches.length) {
+      logQueryData.branches.forEach(branch => {
+        if (projectData.branches.includes(branch)) {
+          logOptions.push(branch);
+        }
+      });
+    } else {
+      logOptions.push(`--all`);
+    }
 
     if (logQueryData.author) {
       logOptions.push(`--author=${logQueryData.author}`);

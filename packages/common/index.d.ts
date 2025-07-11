@@ -27,3 +27,5 @@ export namespace channel {
 export namespace config {
     let appTitle: string;
 }
+
+export function convertWindowsPathToUnix(winPath: string): string;

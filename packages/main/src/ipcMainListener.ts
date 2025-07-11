@@ -1,5 +1,5 @@
 import type {WindowElectronParameters, ProjectData} from '*.vue|ts|tsx';
-import {channel, config} from '@vite-electron-builder/common';
+import {channel, config, convertWindowsPathToUnix} from '@vite-electron-builder/common';
 import type {OpenDialogOptions} from 'electron';
 import {app, dialog, ipcMain} from 'electron';
 import Store from 'electron-store';
@@ -136,7 +136,7 @@ function createProjectGit(project: ProjectData) {
   });
   let address = project.repositoryAddress;
   if (project.protocolType === 'ssh') {
-    const GIT_SSH_COMMAND = `ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${project.sshKey}`;
+    const GIT_SSH_COMMAND = `ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -i ${convertWindowsPathToUnix(project.sshKey)}`;
     git.env('GIT_SSH_COMMAND', GIT_SSH_COMMAND);
   } else {
     address = repositoryAuthUrl(project.repositoryAddress, project.username, project.password);
