@@ -152,10 +152,12 @@ ipcMain.handle(
     if (/temp[/\\]git/.test(project.directoryPath)) {
       await git.init();
       await git.addRemote('origin', address);
-    }
-    try {
-      await git.fetch([`--shallow-since="${shallowSince || '1 months ago'}"`]);
-    } catch (e) {
+      try {
+        await git.fetch([`--shallow-since="${shallowSince || '1 months ago'}"`]);
+      } catch (e) {
+        await git.remote(['update']);
+      }
+    } else {
       await git.remote(['update']);
     }
     const branchSummary: BranchSummary = await git.branch(['-r']);
@@ -168,9 +170,13 @@ ipcMain.handle(
   async (event, projectString: string, logOptions: string[], shallowSince: string) => {
     const project = JSON.parse(projectString) as ProjectData;
     const {git} = createProjectGit(project);
-    try {
-      await git.fetch([`--shallow-since="${shallowSince || '1 months ago'}"`]);
-    } catch (e) {
+    if (/temp[/\\]git/.test(project.directoryPath)) {
+      try {
+        await git.fetch([`--shallow-since="${shallowSince || '1 months ago'}"`]);
+      } catch (e) {
+        await git.remote(['update']);
+      }
+    } else {
       await git.remote(['update']);
     }
     const logResult: LogResult = await git.log(logOptions);
